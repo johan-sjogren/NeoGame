@@ -16,6 +16,7 @@ def wins(x, y, max=4, min=0):
         return 0
 
 
+# TODO: put in real test file
 assert calc_score([1, 1, 1, 1, 1], [2, 3, 4, 0, 0]) == 5
 assert calc_score([2, 3, 4, 0, 0], [1, 1, 1, 1, 1]) == 10
 
@@ -41,7 +42,7 @@ class Game(object):
         self.n_classes = n_classes
         for x in range(n_classes):
             deque += [x] * card_per_class
-        self.deque = deque# np.array(deque)
+        self.deque = deque  # np.array(deque)
         self.player_score = 0
         self.opponent_score = 0
         self.n_cards_in_hand = 5

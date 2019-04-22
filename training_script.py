@@ -6,8 +6,8 @@ from QAgent import QAgent
 
 # %%
 game = Game()
-player = QAgent()
-opponent = QAgent()
+player = QTableAgent()
+opponent = QTableAgent()
 
 game.get_actions_string()
 # %%

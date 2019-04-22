@@ -1,7 +1,11 @@
 import numpy as np
+from abc import ABC
 
+# TODO: Implement abc class for agents to inherit from
+class ABCAgent(ABC):
+    pass
 
-class QAgent(object):
+class QTableAgent(object):
 
     def __init__(self):
         self.Q = {}
@@ -49,3 +53,11 @@ class QAgent(object):
         new_value = self.get_Q(state, action) * (1 - self.learning_rate) + \
             self.learning_rate * reward
         self.set_Q(state, action, new_value)
+
+
+class DeepQAgent(object):
+    pass
+
+
+class GreedyAgent(object):
+    pass
