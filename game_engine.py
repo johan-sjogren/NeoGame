@@ -1,15 +1,16 @@
 from random import shuffle
-from itertools import combinations
+from itertools import combinations, permutations
 import numpy as np
 
 
+# TODO: Use player class to store hand/table info
 class Player(object):
-    
+
     def __init__(self, score=0, hand=None, table=None, played=None):
         self.score = score
         self.hand = hand
         self.table = table
-        self.played = played # Card(s) played this round i.e. chosen actions    
+        self.played = played  # Card(s) played this round i.e. chosen actions
 
 
 # TODO: Generalize to multiplayer
@@ -18,7 +19,7 @@ class Game(object):
     def __init__(self, n_classes=5, card_per_class=5, episodes=5):
         deque = []
         self.n_classes = n_classes
-        for x in range(n_classes):
+        for x in range(1, n_classes+1):
             deque += [x] * card_per_class
         self.deque = np.array(deque)
         self.player_score = []
@@ -33,7 +34,9 @@ class Game(object):
 
     @staticmethod
     def calc_score(player1_final, player2_final):
-        return sum(Game.wins(x, y) for x in player1_final for y in player2_final)
+        return sum(Game.wins(x, y)
+                   for x in player1_final
+                   for y in player2_final)
 
     @staticmethod
     def wins(x, y, max=4, min=0):
@@ -72,11 +75,21 @@ class Game(object):
     def get_actions(self, as_string=True):
         '''
         The actions are possible ways that you can pick n_cards_to_play cards
-        from hand by index
+        from hand by index !NOTE BY INDEX!!
+        TODO: Actions should insted be possible boolean arrays
+                ex. [0 1 1 0 0] to pick the second and third card in hand.
         '''
-        if self.actions == None:
-            self.actions = list(combinations(
-                range(self.n_classes), self.n_cards_to_play))
+
+        if self.actions is None:
+            # self.actions = list(combinations(
+                # range(self.n_classes), self.n_cards_to_play))
+            
+            n_ones = self.n_cards_to_play
+            n_zeros = self.n_cards_in_hand-self.n_cards_to_play
+            self.actions = np.array(list(set(
+                            permutations(n_ones*[1]+n_zeros * [0],
+                                         self.n_cards_in_hand))))
+            print('Possible actions: ', self.actions)
             return self.get_actions(as_string=as_string)
         elif as_string:
             return [''.join([str(x) for x in y]) for y in self.actions]
@@ -102,27 +115,33 @@ class Game(object):
             return state
 
     def set_player_action(self, cards_choosen):
+        # TODO: This should change the table and hand list
         self.player_cards_chosen = cards_choosen
         return self
 
     def set_opponent_action(self, cards_choosen):
+        # TODO: This should change the table and hand list
         self.opponent_cards_chosen = cards_choosen
         return self
 
     def score_player(self):
         player_cards = np.concatenate(
-            [self.player_table, self.player_cards_chosen])
+            [self.player_table,
+             self.player_hand[self.player_cards_chosen]])
         opponent_cards = np.concatenate(
-            [self.opponent_table, self.opponent_cards_chosen])
+            [self.opponent_table,
+             self.opponent_hand[self.opponent_cards_chosen]])
         score = Game.calc_score(player_cards, opponent_cards)
         self.player_score.append(score)
         return score
 
     def score_opponent(self):
         player_cards = np.concatenate(
-            [self.player_table, self.player_cards_chosen])
+            [self.player_table,
+             self.player_hand[self.player_cards_chosen]])
         opponent_cards = np.concatenate(
-            [self.opponent_table, self.opponent_cards_chosen])
+            [self.opponent_table,
+             self.opponent_hand[self.opponent_cards_chosen]])
         score = Game.calc_score(opponent_cards, player_cards)
         self.opponent_score.append(score)
         return score

@@ -19,16 +19,19 @@ class ABCAgent(ABC):
 
 class QTableAgent(ABCAgent):
 
-    def __init__(self):
+    def __init__(self, learning_rate=0.1, epsilon=0.9,
+                 decay_rate=1e-5, unexplored=0,
+                 discount_rate=0.95):
 
-        self.Q = {}
-        self.n_cards_to_pick = 2
-        self.epsilon = 0.9         # Starting exploration probability
-        self.learning_rate = 0.7   # Learning rate
-        # self.gamma = 0.95        # Discount rate
+        self.Q = {}                # Q-table (Dict)
+        self.learning_rate = learning_rate   # Learning rate
+        self.discount_rate = discount_rate        # Discount rate
+        
         # Exploration parameters
-        self.decay_rate = 0.00001
-        self.unexplored = 0 # This can be used in on-policy learning to force exploration
+        self.epsilon = epsilon         # Starting exploration probability
+        self.decay_rate = decay_rate  
+        self.unexplored = unexplored   # Default value of unexplored state
+        # This can be used in on-policy learning to force exploration
 
     def get_Q(self, state, action):
         if state in self.Q and action in self.Q[state]:
@@ -42,30 +45,29 @@ class QTableAgent(ABCAgent):
         else:
             self.Q[state] = {action: value}
 
-    def get_action(self, state, actions, pure_exploitation=False, as_string=True):
+    def get_action(self, state, actions,
+                   explore_exploit='none',
+                   as_string=True):
         """ Implements an epsilon greedy algorithm for exploration/exploitation
 
         Args:
             state (string): String representation of the current game state
             actions (list): list of available actions
-
+            explore_exploit: Options 'explore', 'exploit' or 'none'(default)
         Returns:
-           string: String representation of the chosen action
+           string/list: String or list representation of the chosen action
         """
 
-        # if pure_exploitation:
-        #     exp_tradeoff = self.epsilon + 1
-        # else:
         exp_tradeoff = np.random.uniform(0, 1)
 
+        if explore_exploit == 'explore':
+            action = np.random.choice(actions,  1)[0]            
         # If this number > greater than epsilon --> exploitation
-        if exp_tradeoff > self.epsilon or pure_exploitation:
+        elif exp_tradeoff > self.epsilon or explore_exploit == 'exploit':
             _, action = max(map(lambda m: (self.get_Q(state, m), m), actions),
                             key=lambda x: x[0])
-           # print('Exploit')
         # Else doing a random choice --> exploration
         else:
-            # print('Explore')
             action = np.random.choice(actions,  1)
 
         # Reduce epsilon (because we need less and less exploration)
@@ -77,10 +79,11 @@ class QTableAgent(ABCAgent):
 
     def update_Q(self, state, action, reward):
         """Updates the Q-table values via the Q-learning algorithn
-            Q[state, action] = Q[state, action]
-                             + learning_rate * (reward
-                                                + discount_rate * MAX(Q[new_state])
-                                                - Q[state, action])
+            Q[state, action] =
+                 Q[state, action] + 
+                    learning_rate * (reward +
+                                        discount_rate * MAX(Q[new_state]) -
+                                            Q[state, action])
         Args:
             state (string):  String representation of the current game state
             action (string): String representation of the action performed
@@ -89,16 +92,31 @@ class QTableAgent(ABCAgent):
         Returns:
             self
         """
-
+        # max_q = max(map(lambda a: self.get_Q(new_state, a), actions))
+        # Since our actions doesn't influence the next step (randomly
+        # drawn cards) the new state is not of importance
+        max_q = 0
         new_value = self.get_Q(state, action) * (1 - self.learning_rate) + \
-                    self.learning_rate * reward
-        # Since our actions doesn't influence the next step (randomly drawn cards) the
-        # new state is not of importance
+            self.learning_rate * (reward + max_q*self.discount_rate)
 
         self.set_Q(state, action, new_value)
         return self
 
     def learn(self, state, action, reward, new_state=None):
+        """Performs the alorithms learning stage. 
+        
+        Args:
+            state (list/string): representation of game state
+            action (list/string): representation of chosen action
+            reward (list/string): Immediate reward
+            new_state (list/string, optional): representation of 
+                                               new game state.
+                                               Defaults to None.
+        
+        Returns:
+            self
+        """
+        # For Q-learning all that is needed is to update the table
         self.update_Q(state, action, reward)
         return self
 
@@ -108,9 +126,33 @@ class QTableAgent(ABCAgent):
         else:
             return self.Q
 
+
 class DeepQAgent(ABCAgent):
     pass
 
 
 class GreedyAgent(ABCAgent):
-    pass
+
+    def get_action(self, state, actions, value_func, as_string=True):
+        print('Greedy actions: ', actions)
+        print('Greedy state: ', state)
+        player_hand = np.array(state[:5])
+        opponent_table = state[-2:]
+
+        print(player_hand, opponent_table)
+        # max_q = max(map(lambda a: self.get_Q(new_state, a), actions))
+
+        possibles = [player_hand[a == 1] for a in actions]
+        print(possibles)
+        # print(list(map(lambda a: value_func(a, opponent_table), possibles)))
+        # print(max(map(lambda a: (value_func(a, opponent_table), a), possibles)))
+        action = actions[0]
+        if as_string:
+            return action
+        else:
+            return list(int(x) for x in action)
+        return 0
+
+    def learn(self, state, action, reward, new_state=None):
+        # Static strategy, just return self
+        return self
