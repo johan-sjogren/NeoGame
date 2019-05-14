@@ -3,7 +3,7 @@ from itertools import combinations, permutations
 import numpy as np
 
 
-# TODO: Use player class to store hand/table info
+# TODO: Use player class to store hand/table info?
 class Player(object):
 
     def __init__(self, score=0, hand=None, table=None, played=None):
@@ -13,13 +13,15 @@ class Player(object):
         self.played = played  # Card(s) played this round i.e. chosen actions
 
 
+# TODO: Export as json
+# TODO: Export only as list and json
 # TODO: Generalize to multiplayer
 class Game(object):
 
     def __init__(self, n_classes=5, card_per_class=5, episodes=5):
         deque = []
         self.n_classes = n_classes
-        for x in range(1, n_classes+1):
+        for x in range(n_classes):
             deque += [x] * card_per_class
         self.deque = np.array(deque)
         self.player_score = []
@@ -52,8 +54,7 @@ class Game(object):
         return self
 
     def dealCards(self):
-        """Randomly deal cards 
-
+        """Randomly deal cards
         Returns:
             self
         """
@@ -72,65 +73,50 @@ class Game(object):
         return ((self.opponent_hand, self.opponent_table),
                 (self.player_hand, self.player_table))
 
-    def get_actions(self, as_string=True):
+    def get_actions(self):
         '''
         The actions are possible ways that you can pick n_cards_to_play cards
-        from hand by index !NOTE BY INDEX!!
-        TODO: Actions should insted be possible boolean arrays
-                ex. [0 1 1 0 0] to pick the second and third card in hand.
+        from hand. In this case represented by a boolean array for cards chosen
         '''
 
         if self.actions is None:
-            # self.actions = list(combinations(
-                # range(self.n_classes), self.n_cards_to_play))
-            
             n_ones = self.n_cards_to_play
             n_zeros = self.n_cards_in_hand-self.n_cards_to_play
             self.actions = np.array(list(set(
                             permutations(n_ones*[1]+n_zeros * [0],
                                          self.n_cards_in_hand))))
-            print('Possible actions: ', self.actions)
-            return self.get_actions(as_string=as_string)
-        elif as_string:
-            return [''.join([str(x) for x in y]) for y in self.actions]
-        else:
-            return self.actions
 
-    def get_player_state(self, as_string=True):
+        return self.actions
+
+    def get_player_state(self):
         state = np.concatenate([self.player_hand,
                                 self.player_table,
                                 self.opponent_table])
-        if as_string:
-            return ''.join(str(x) for x in state)
-        else:
-            return state
+        return state
 
-    def get_opponent_state(self, as_string=True):
+    def get_opponent_state(self):
         state = np.concatenate([self.opponent_hand,
                                 self.opponent_table,
                                 self.player_table])
-        if as_string:
-            return ''.join(str(x) for x in state)
-        else:
-            return state
+        return state
 
-    def set_player_action(self, cards_choosen):
+    def set_player_action(self, action):
         # TODO: This should change the table and hand list
-        self.player_cards_chosen = cards_choosen
+        self.player_action = action
         return self
 
-    def set_opponent_action(self, cards_choosen):
+    def set_opponent_action(self, action):
         # TODO: This should change the table and hand list
-        self.opponent_cards_chosen = cards_choosen
+        self.opponent_action = action
         return self
 
     def score_player(self):
         player_cards = np.concatenate(
             [self.player_table,
-             self.player_hand[self.player_cards_chosen]])
+             self.player_hand[self.player_action]])
         opponent_cards = np.concatenate(
             [self.opponent_table,
-             self.opponent_hand[self.opponent_cards_chosen]])
+             self.opponent_hand[self.opponent_action]])
         score = Game.calc_score(player_cards, opponent_cards)
         self.player_score.append(score)
         return score
@@ -138,10 +124,10 @@ class Game(object):
     def score_opponent(self):
         player_cards = np.concatenate(
             [self.player_table,
-             self.player_hand[self.player_cards_chosen]])
+             self.player_hand[self.player_action]])
         opponent_cards = np.concatenate(
             [self.opponent_table,
-             self.opponent_hand[self.opponent_cards_chosen]])
+             self.opponent_hand[self.opponent_action]])
         score = Game.calc_score(opponent_cards, player_cards)
         self.opponent_score.append(score)
         return score

@@ -6,19 +6,19 @@ from QAgent import QTableAgent, GreedyAgent
 
 # %%
 game = Game()
-player = GreedyAgent()
+player = GreedyAgent(value_func=Game.calc_score)
 opponent = QTableAgent()
 
-game.get_actions(as_string=False)
+game.get_actions()
 
 # %%
 game.get_player_state()
 game.dealCards().get_player_state()
 
 # %%
-player_action = player.get_action(game.get_player_state(as_string=False),
-                                  game.get_actions(as_string=False),
-                                  value_func=Game.calc_score)
+player_action = player.get_action(game.get_player_state(),
+                                  game.get_actions()
+                                  )
 print(player_action)
 # opponent_action = opponent.get_action(game.get_opponent_state(),
 #                                       game.get_actions())
