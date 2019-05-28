@@ -33,7 +33,6 @@ class ActiveTable(QTableAgent.QTableAgent):
         except:
             return False
 
-
     def learn(self, state, action, reward, new_state=None):
         """
         Calls the learn function of the standard QTable
