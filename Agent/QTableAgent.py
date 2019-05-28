@@ -1,16 +1,22 @@
 import pandas as pd
 import numpy as np
-from BaseAgent import BaseAgent
+from . import BaseAgent
 
 
-class QTableAgent(BaseAgent):
+class QTableAgent(BaseAgent.BaseAgent):
 
-    def __init__(self, learning_rate=0.1, epsilon=0.9,
-                 decay_rate=1e-5, unexplored=0,
+    def __init__(self,
+                 learning_rate=0.1,
+                 lr_decay=False,
+                 epsilon=0.9,
+                 decay_rate=1e-5,
+                 unexplored=0,
                  discount_rate=0.95):
 
         self.Q = {}                # Q-table (Dict)
         self.learning_rate = learning_rate   # Learning rate
+        self.learning_rate_decay = lr_decay
+        self.lr_decay = 0.99
         self.discount_rate = discount_rate        # Discount rate
 
         # Exploration parameters
@@ -35,7 +41,7 @@ class QTableAgent(BaseAgent):
                    explore_exploit='none',
                    as_string=False):
         """ Implements an epsilon greedy algorithm for exploration/exploitation
-
+            or accepts an override argument that dictates explore or explot
         Args:
             state (list): String representation of the current game state
             actions (list): list of available actions
@@ -58,8 +64,9 @@ class QTableAgent(BaseAgent):
         # Else doing a random choice --> exploration
         else:
             action = np.random.choice(actions_str,  1)[0]
-        # Reduce epsilon (because we need less and less exploration)
-        self.epsilon *= np.exp(-self.decay_rate)
+            # Reduce epsilon (because we need less and less exploration)
+            self.epsilon *= np.exp(-self.decay_rate)
+
         if as_string:
             return action
         else:
@@ -110,6 +117,10 @@ class QTableAgent(BaseAgent):
 
         # For Q-learning all that is needed is to update the table
         self.update_Q(state_str, action_str, reward)
+
+        if self.learning_rate_decay:
+            self.learning_rate *= self.lr_decay
+
         return self
 
     def get_QTable(self, as_dataframe=False):
@@ -126,43 +137,4 @@ class QTableAgent(BaseAgent):
         self.Q = pd.read_csv(filename,
                              dtype={0: str}
                              ).set_index('Unnamed: 0').to_dict()
-        return self
-
-
-class DeepQAgent(BaseAgent):
-    pass
-
-
-class GreedyAgent(BaseAgent):
-
-    def __init__(self, value_func=None):
-        self.value_func = value_func
-
-    def get_action(self, state, actions, as_string=False):
-        print('Greedy actions: ', actions)
-        print('Greedy state: ', state)
-        player_hand = np.array(state[:5])
-        opponent_table = state[-2:]
-
-        print(player_hand, opponent_table)
-        # max_q = max(map(lambda a: self.get_Q(new_state, a), actions))
-
-        possibles = [player_hand[a == 1] for a in actions]
-        print('Possible action: ', possibles)
-        # print(list(self.value_func(x, opponent_table) for x in possibles))
-        print(list(
-                map(
-                    lambda a: (self.value_func(player_hand[a == 1], opponent_table), a),
-                        actions)))
-        # print(max(map(lambda a: (value_func(a, opponent_table), a),
-        #                possibles)))
-        action = actions[0]
-        if as_string:
-            return action
-        else:
-            return list(int(x) for x in action)
-        return 0
-
-    def learn(self, state, action, reward, new_state=None):
-        # Static strategy, just return self
         return self

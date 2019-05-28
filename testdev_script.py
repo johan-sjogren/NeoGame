@@ -1,12 +1,15 @@
 # %%
 import numpy as np
-from game_engine import Game
-# from tqdm import tqdm
-from QAgent import QTableAgent, GreedyAgent
+from Engine import Game
+from tqdm import tqdm
+from Agent.QTableAgent import QTableAgent
+from Agent.GreedyAgent import GreedyAgent
+from Agent.ActiveTable import ActiveTable
 
 # %%
 game = Game()
 player = GreedyAgent(value_func=Game.calc_score)
+player = ActiveTable()
 opponent = QTableAgent()
 
 game.get_actions()
@@ -24,32 +27,50 @@ print(player_action)
 #                                       game.get_actions())
 # print(opponent_action)
 
-""" 
-play_env, opp_env = game.getEnv()
 
-print("Player Action " + player_action[0])
-acts = list(int(x) for x in player_action[0])
-# print( acts)
-print('Player Env', play_env[0], play_env[1])
-# print(play_env[1][1] )
-print('Player line', play_env[0][acts], '  ', play_env[1])
+TEST_EPISODES = 1000
 
-acts = list(int(x) for x in player_action[0])
-# print( acts)
-print('Oppone line', opp_env[0][acts], '  ', opp_env[1])
-# print(opp_env[1][1] )
-print('Oppone Env',  opp_env[0], opp_env[1])
+for _ in range(1):
+    # for i in tqdm(range(TEST_EPISODES)):
+    for i in range(TEST_EPISODES):
+        game.dealCards()
+        player_action = player.get_action(game.get_player_state(),
+                                          game.get_actions(),
+                                          )
 
+        opponent_action = opponent.get_action(game.get_opponent_state(),
+                                              game.get_actions())
 
-print("Oppon Action " + opponent_action[0])
-player_score, opponent_score = (game.set_player_action([int(x) for x in
-                                                        player_action[0]])
-                                    .set_opponent_action([int(x) for x in
-                                                         opponent_action[0]])
-                                    .get_scores())
+        player_score, opponent_score = (game.set_player_action(player_action)
+                                        .set_opponent_action(opponent_action)
+                                        .get_scores())
 
-print(player_score, opponent_score)
+        player.learn(state=game.get_player_state(),
+                     action=player_action,
+                     reward=player_score-opponent_score)
+
+print(list(zip(game.opponent_score[-10:], game.player_score[-10:])))
+
 # %%
-print([y, x for x, x in game.getEnv())])
-print('Environment', np.concatenate(game.getEnv()))
- """
+player_wins = sum(
+    list(play > opp for opp, play in
+         zip(game.opponent_score[-TEST_EPISODES:],
+             game.player_score[-TEST_EPISODES:])
+         ))
+
+opponent_wins = sum(
+    list(play < opp for opp, play in
+         zip(game.opponent_score[-TEST_EPISODES:],
+             game.player_score[-TEST_EPISODES:])
+         ))
+
+print(player_wins)
+print(opponent_wins)
+
+
+print(game.dealCards().getEnv())
+if isinstance(player, ActiveTable):
+    print('Recommended state')
+    state = player.recommend_state()
+    print(state)
+    print(game.dealFromRecommendation(state).getEnv())

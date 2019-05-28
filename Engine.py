@@ -69,6 +69,27 @@ class Game(object):
         self.player_hand = np.sort(self.deque[j:i])
         return self
 
+    def dealFromRecommendation(self, state):
+        """
+        Deals cards according to agent recommendation
+        Returns:
+            self
+        """
+        i = self.n_cards_in_hand
+        self.player_hand = np.sort(state[:i])
+        j, i = i, i + self.n_cards_on_table
+        self.player_table = np.sort(state[j:i])
+        j, i = i, i + self.n_cards_on_table
+        self.opponent_table = np.sort(state[j:i])
+        j, i = i, i + self.n_cards_in_hand
+
+        temp_deque = list(self.deque)
+        [temp_deque.remove(x) for x in state if x in temp_deque]
+        shuffle(temp_deque)
+        self.opponent_hand = np.sort(np.array(temp_deque[j:i]))
+
+        return self
+
     def getEnv(self):
         return ((self.opponent_hand, self.opponent_table),
                 (self.player_hand, self.player_table))
