@@ -12,6 +12,7 @@ TRAIN_EPISODES = 100000
 TEST_EPISODES = 100
 game = Game()
 player = ActiveTable(unexplored=1)  # .load('test.csv')
+
 # player = QTable(unexplored=1)  # .load('test.csv')
 opponent = QTableAgent()
 # opponent = GreedyAgent(value_func=Game.calc_score)

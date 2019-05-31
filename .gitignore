@@ -107,4 +107,4 @@ venv.bak/
 .vscode/
 
 # None of Johans testcrap
-test*
+test*.*
