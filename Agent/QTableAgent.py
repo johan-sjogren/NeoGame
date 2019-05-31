@@ -6,7 +6,7 @@ from . import BaseAgent
 class QTableAgent(BaseAgent.BaseAgent):
 
     def __init__(self,
-                 learning_rate=0.1,
+                 learning_rate=0.05,
                  lr_decay=False,
                  epsilon=0.9,
                  decay_rate=1e-5,

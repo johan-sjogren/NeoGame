@@ -74,3 +74,5 @@ if isinstance(player, ActiveTable):
     state = player.recommend_state()
     print(state)
     print(game.dealFromRecommendation(state).getEnv())
+
+print(game.get_actions())

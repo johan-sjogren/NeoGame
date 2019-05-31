@@ -9,16 +9,10 @@ class GreedyAgent(BaseAgent.BaseAgent):
         self.value_func = value_func
 
     def get_action(self, state, actions, as_string=False):
-        # print('Greedy actions: ', actions)
-        # print('Greedy state: ', state)
         player_hand = np.array(state[:5])
         opponent_table = state[-2:]
-        # print('New action')
-        # print(player_hand, opponent_table)
 
         possibles = [player_hand[a == 1] for a in actions]
-        # print('Possible action: ', possibles)
-        # print(list(self.value_func(x, opponent_table) for x in possibles))
 
         def diff_score(player, opponent):
             return (self.value_func(player, opponent) -
@@ -30,11 +24,7 @@ class GreedyAgent(BaseAgent.BaseAgent):
                                 player_hand[a == 1], opponent_table), a),
                             actions))
 
-        # print(greedy_list)
-
-        # print('Greediest action:', max(greedy_list, key=lambda x: x[0]))
         _, action = max(greedy_list, key=lambda x: x[0])
-        # print(action)
 
         if as_string:
             return action
