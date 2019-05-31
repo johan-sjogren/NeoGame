@@ -180,6 +180,8 @@ def main():
         assert Game.calc_score(arr1, arr2) == 7
         assert Game.calc_score(arr2, arr1) == 6
 
+def test():
+    main()
 
 if __name__ == "__main__":
     main()
