@@ -28,9 +28,9 @@ class GreedyAgent(BaseAgent.BaseAgent):
         _, action = max(greedy_list, key=lambda x: x[0])
 
         if as_string:
-            return action
+            return ''.join([str(x) for x in action])
         else:
-            return list(int(x) for x in action)
+            return action
         return 0
 
     def learn(self, state, action, reward, new_state=None):
