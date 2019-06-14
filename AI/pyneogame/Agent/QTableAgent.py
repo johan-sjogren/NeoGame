@@ -14,7 +14,7 @@ class QTableAgent(BaseAgent.BaseAgent):
                  discount_rate=0.95):
 
         self.Q = {}                # Q-table (Dict)
-        self.learning_rate = learning_rate   # Learning rate
+        self.learning_rate = learning_rate  # Learning rate
         self.learning_rate_decay = lr_decay
         self.lr_decay = 0.99
         self.discount_rate = discount_rate        # Discount rate
@@ -24,6 +24,9 @@ class QTableAgent(BaseAgent.BaseAgent):
         self.decay_rate = decay_rate
         self.unexplored = unexplored   # Default value of unexplored state
         # This can be used in on-policy learning to force exploration
+
+    def __str__(self):
+        return "QTable Agent"
 
     def _get_Q(self, state, action):
         if state in self.Q and action in self.Q[state]:
@@ -70,7 +73,8 @@ class QTableAgent(BaseAgent.BaseAgent):
         if as_string:
             return action
         else:
-            return list(int(x) for x in action)
+            # return [int(x) for x in action]
+            return np.array([int(x) for x in action])
 
     def update_Q(self, state, action, reward):
         """Updates the Q-table values via the Q-learning algorithn

@@ -123,12 +123,12 @@ class Game(object):
 
     def set_player_action(self, action):
         # TODO: This should change the table and hand list
-        self.player_action = action
+        self.player_action = action.astype(bool)
         return self
 
     def set_opponent_action(self, action):
         # TODO: This should change the table and hand list
-        self.opponent_action = action
+        self.opponent_action = action.astype(bool)
         return self
 
     def score_player(self):
@@ -156,6 +156,22 @@ class Game(object):
     def get_scores(self):
         return self.score_player(), self.score_opponent()
 
+    def test_player(self, player):
+        """ Routine to make sure that everyone plays nicely together """
+        self.dealCards()
+        player_action = player.get_action(self.get_player_state(),
+                                          actions=self.get_actions())
+        
+        # Check that action is an numpy array
+        assert isinstance(player_action, np.ndarray)
+
+        # Check that the player action produces the required number of cards
+        try:
+            assert len(self.player_hand[player_action.astype(bool)]) == self.n_cards_to_play
+        except:
+            print('Test failed for ', str(player))
+            print('Expected number of cards:', self.n_cards_to_play)
+            print('Got: ', len(self.player_hand[player_action]))
 
 def test():
     game = Game()
@@ -172,6 +188,15 @@ def test():
     assert game.calc_score([2, 3, 4, 0, 0], [1, 1, 1, 1, 1]) == 10
     assert Game.calc_score([2, 3, 4, 0, 0], [1, 1, 1, 1, 1]) == 10
     assert Game.calc_score([1, 1, 1, 1, 1], [2, 3, 4, 0, 0]) == 5
+
+    for _ in range(500):
+        arr1 = np.random.randint(0,5,4)
+        arr2 = np.random.randint(0,5,4)
+        try:
+            assert Game.calc_score(arr1, arr2)<4*4
+        except AssertionError:
+            print(arr1)
+            print(arr2)
 
     # Scoring should be insensitive to permutations
     for _ in range(4):

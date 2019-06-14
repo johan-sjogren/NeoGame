@@ -1,16 +1,16 @@
 # %%
 import numpy as np
-from Engine import Game
+from pyneogame.Engine import Game
 from tqdm import tqdm
-from Agent.QTableAgent import QTableAgent
-from Agent.GreedyAgent import GreedyAgent
-from Agent.ActiveTable import ActiveTable
+from pyneogame.Agent.QTableAgent import QTableAgent
+from pyneogame.Agent.GreedyAgent import GreedyAgent
+from pyneogame.Agent.ActiveTable import ActiveTable
 
 # %%
 game = Game()
 player = GreedyAgent(value_func=Game.calc_score)
 player = ActiveTable()
-opponent = QTableAgent()
+nn = QTableAgent()
 
 game.get_actions()
 
@@ -23,9 +23,9 @@ player_action = player.get_action(game.get_player_state(),
                                   game.get_actions()
                                   )
 print(player_action)
-# opponent_action = opponent.get_action(game.get_opponent_state(),
+# opponent_action = nn.get_action(game.get_nn_state(),
 #                                       game.get_actions())
-# print(opponent_action)
+# print(nn_action)
 
 
 TEST_EPISODES = 1000

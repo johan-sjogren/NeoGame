@@ -1,21 +1,23 @@
+
 # %%
 import numpy as np
-from Engine import Game
+from pyneogame.Engine import Game
 from tqdm import tqdm
-from Agent.QTableAgent import QTableAgent
-from Agent.GreedyAgent import GreedyAgent
-from Agent.ActiveTable import ActiveTable
+from pyneogame.Agent.QTableAgent import QTableAgent
+from pyneogame.Agent.GreedyAgent import GreedyAgent
+from pyneogame.Agent.ActiveTable import ActiveTable
+from pyneogame.Agent.RandomAgent import RandomAgent
 from collections import defaultdict
 
 # %%
-TRAIN_EPISODES = 100000
-TEST_EPISODES = 100
+TRAIN_EPISODES = 500000
+TEST_EPISODES = 10000
 game = Game()
-player = ActiveTable(unexplored=1)  # .load('test.csv')
+player = ActiveTable(unexplored=1).load('test.csv')
 
 # player = QTable(unexplored=1)  # .load('test.csv')
-opponent = QTableAgent()
-# opponent = GreedyAgent(value_func=Game.calc_score)
+# opponent = RandomAgent()
+opponent = GreedyAgent()
 exp_states = defaultdict(int)
 
 for i in tqdm(range(TRAIN_EPISODES)):
@@ -46,13 +48,17 @@ for i in tqdm(range(TRAIN_EPISODES)):
                  action=player_action,
                  reward=1 if player_score-opponent_score > 0 else -1)
 
-maximum = max(exp_states, key=exp_states.get)
-minimum = min(exp_states, key=exp_states.get)
-print(maximum, exp_states[maximum])
-print(minimum, exp_states[minimum])
+if isinstance(player, ActiveTable):
+    maximum = max(player.state_count, key=player.state_count.get)
+    minimum = min(player.state_count, key=player.state_count.get)
+else:
+    maximum = max(exp_states, key=exp_states.get)
+    minimum = min(exp_states, key=exp_states.get)
+    print(maximum, exp_states[maximum])
+    print(minimum, exp_states[minimum])
 
-print(list((x, exp_states[x]) for x in sorted(exp_states,
-                                              key=exp_states.get)[:10]))
+# print(list((x, exp_states[x]) for x in sorted(exp_states,
+#                                               key=exp_states.get)[:10]))
 
 # print(min(exp_states, key=lambda x: x[1]), max(exp_states))
 # print(player.get_QTable(as_dataframe=True))
@@ -65,8 +71,8 @@ player.save('test.csv')
 # print(saved_loaded.columns)
 
 player = QTableAgent().load('test.csv')
-print(player.get_QTable(as_dataframe=True))
-# opponent = GreedyAgent(value_func=Game.calc_score)
+# print(player.get_QTable(as_dataframe=True))
+opponent = GreedyAgent()
 player_wins = []
 opponent_wins = []
 n_test = 20
