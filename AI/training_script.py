@@ -10,7 +10,7 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from collections import defaultdict
 
 # %%
-TRAIN_EPISODES = 500000
+TRAIN_EPISODES = 1000000
 TEST_EPISODES = 10000
 game = Game()
 player = ActiveTable(unexplored=1).load('test.csv')
@@ -70,7 +70,7 @@ player.save('test.csv')
 # print(saved_loaded)
 # print(saved_loaded.columns)
 
-player = QTableAgent().load('test.csv')
+player = ActiveTable().load('test.csv')
 # print(player.get_QTable(as_dataframe=True))
 opponent = GreedyAgent()
 player_wins = []

@@ -207,7 +207,13 @@ def test():
         assert Game.calc_score(arr1, arr2) == 7
         assert Game.calc_score(arr2, arr1) == 6
 
+    for _ in range(10):
+        game1 = Game()
+        game2 = Game()
+        assert (game1.get_actions() == game2.get_actions()).all()
+
     print('Engine tests completed')
+
 
 def main():
     test()
