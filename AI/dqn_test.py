@@ -17,16 +17,16 @@ player = DeepQAgent(state_size=len(game.get_player_state()),
                     update_interval=10000,
                     memory_size=40000,
                     verbose=0)
-player.load('DQN_model.h5')
+# player.load('DQN_model.h5')
 
 opponent = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-for _ in tqdm(range(1000000)):
+for _ in tqdm(range(100000)):
     game.dealCards()
 
-    player_action = player.get_action(game.get_player_state())
+    player_action = player.get_action(game.get_player_state(), explore_exploit='explore')
     opponent_action = opponent.get_action(game.get_opponent_state(),
                                         game.get_actions())
 

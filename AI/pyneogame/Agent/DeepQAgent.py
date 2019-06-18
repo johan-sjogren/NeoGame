@@ -6,6 +6,7 @@ from os import path
 from keras import Model
 from keras. models import save_model, load_model
 from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional
+from keras.layers import Dropout
 from keras.callbacks import EarlyStopping
 
 from . import BaseAgent
@@ -13,6 +14,7 @@ from . import BaseAgent
 # TODO: Create a Dueling DQN
 # TODO: Prioritized experience replay
 # TODO: Create and compare with a policy learning agent
+
 
 class DeepQAgent(BaseAgent.BaseAgent):
     """ Deep Q-learning Agent
@@ -51,15 +53,15 @@ class DeepQAgent(BaseAgent.BaseAgent):
 
     def save(self, filename, method='h5'):
         if filename.split('.')[-1].lower() != 'h5':
-            print("Warning: Default method is to save as a H5 file. Advised to use" + 
-                   "appropriate ending")                       
+            print("Warning: Default method is to save as a H5 file. Advised to use" +
+                  "appropriate ending")
         self.dnn_model.save(filename)
         return self
 
     def load(self, filename):
         if path.isfile('./'+filename):
             print('Model loaded')
-            self.dnn_model = load_model(filename)            
+            self.dnn_model = load_model(filename)
         else:
             print("File doesn't exist no model loaded")
         return self
@@ -67,12 +69,13 @@ class DeepQAgent(BaseAgent.BaseAgent):
     def _make_model(self):
         '''Start with a simple default model for now'''
         input_layer = Input(shape=(self.state_size,))
-        embedding = Embedding(input_dim=5, output_dim=4)(input_layer)
+        embedding = Embedding(input_dim=5, output_dim=2)(input_layer)
         flat = Flatten()(embedding)
-        dense_1 = Dense(100, activation='sigmoid')(flat) # input_layer)
-        dense_2 = Dense(100, activation='sigmoid')(dense_1)
-        output = Dense(len(self.actions), activation='sigmoid')(dense_2)
-        model = Model(inputs = input_layer, outputs=output)
+        dense_1 = Dense(200, activation='sigmoid')(flat)  # input_layer)
+        x = Dense(200, activation='sigmoid')(dense_1)
+        #x = Dropout(0.1)(dense_2)
+        output = Dense(len(self.actions), activation='sigmoid')(x)
+        model = Model(inputs=input_layer, outputs=output)
         model.compile(loss='mse',
                       optimizer='adam')
         if self.verbose:
@@ -88,7 +91,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
         # flat = Flatten()(x_layer)
         dense_2 = Dense(10, activation='sigmoid')(x_layer)
         output = Dense(len(self.actions), activation='sigmoid')(dense_2)
-        model = Model(inputs = input_layer, outputs=output)
+        model = Model(inputs=input_layer, outputs=output)
         model.compile(loss='mse',
                       optimizer='adam')
         if self.verbose:
@@ -117,9 +120,9 @@ class DeepQAgent(BaseAgent.BaseAgent):
             self.epsilon *= np.exp(-self.decay_rate)
         return action
 
-    def remember(self, state, action, reward, new_state=None, done= None):
+    def remember(self, state, action, reward, new_state=None, done=None):
         # The action have to be converted back into the index given by the NN
-        act_idx= np.where(np.all(self.actions == action,axis=1))[0]
+        act_idx = np.where(np.all(self.actions == action, axis=1))[0]
         self.memory.append((state, act_idx, reward))
 
     def learn(self, state, action, reward, new_state=None):
@@ -134,26 +137,27 @@ class DeepQAgent(BaseAgent.BaseAgent):
             self.r_sum = 0
             self.replay_experience()
 
-    def replay_experience(self, batch_size=64, epochs=20):
+    def replay_experience(self, batch_size=64, epochs=30):
         if self.verbose > 0:
             print('Doing replay')
         # TODO: Do actual batch run rather than selecting a subset of the data and loop over it
         # Extract data from the experience buffer
         player_mem = np.asarray(self.memory)
-        states = np.vstack(player_mem[:,0])
-        actions = np.vstack(player_mem[:,1])
-        rewards = player_mem[:,2]
+        states = np.vstack(player_mem[:, 0])
+        actions = np.vstack(player_mem[:, 1])
+        rewards = player_mem[:, 2]
 
         # Use current model to predict state action values
         target = self.dnn_model.predict(states)
 
-        # Update the target values with the known rewards. Not that 
+        # Update the target values with the known rewards. Not that
         # this games is essentionatlly series of one-shots
         for i, act_idx in enumerate(actions):
-            target[i, act_idx]=rewards[i]
+            target[i, act_idx] = rewards[i]
 
         # TODO: Use Early stopping or not?
-        es = EarlyStopping(monitor='val_loss', mode='min', verbose=0, patience=2)
+        es = EarlyStopping(monitor='val_loss', mode='min',
+                           verbose=0, patience=2)
         history = self.dnn_model.fit(states,
                                      target,
                                      epochs=epochs,
