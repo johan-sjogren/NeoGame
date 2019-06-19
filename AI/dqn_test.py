@@ -7,15 +7,16 @@ from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.ActiveTable import ActiveTable
 from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Agent.RandomAgent import RandomAgent
+from pyneogame.Agent.PolicyGradient import ReInforce
 
 from keras.callbacks import EarlyStopping
 
 # %% 
 game = Game()
-player = DeepQAgent(state_size=len(game.get_player_state()),
+player = ReInforce(state_size=len(game.get_player_state()),
                     actions=game.get_actions(),
                     update_interval=10000,
-                    memory_size=40000,
+                    memory_size=100000,
                     verbose=0)
 # player.load('DQN_model.h5')
 
@@ -23,10 +24,10 @@ opponent = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-for _ in tqdm(range(100000)):
+for _ in tqdm(range(1000000)):
     game.dealCards()
 
-    player_action = player.get_action(game.get_player_state(), explore_exploit='explore')
+    player_action = player.get_action(game.get_player_state(), explore_exploit='exploit')
     opponent_action = opponent.get_action(game.get_opponent_state(),
                                         game.get_actions())
 
@@ -40,7 +41,7 @@ for _ in tqdm(range(100000)):
 
     player.learn(state=game.get_player_state(),
                 action=player_action,
-                reward=player_score-opponent_score)
+                reward=1 if player_score-opponent_score>0 else 0)
 
 print(player.avg_r_sum)
 player.save('DQN_model.h5')
@@ -48,12 +49,12 @@ import matplotlib.pyplot as plt
 plt.plot(player.avg_r_sum)
 plt.show()
 
-player = DeepQAgent(state_size=len(game.get_player_state()),
-                    actions=game.get_actions(),
-                    update_interval=10000,
-                    memory_size=40000,
-                    verbose=0)
-player.load('DQN_model.h5')
+# player = DeepQAgent(state_size=len(game.get_player_state()),
+#                     actions=game.get_actions(),
+#                     update_interval=10000,
+#                     memory_size=40000,
+#                     verbose=0)
+# player.load('DQN_model.h5')
 
 TEST_EPISODES = 10
 player_wins = []
@@ -77,7 +78,7 @@ for _ in tqdm(range(n_test)):
 
         player.learn(state=game.get_player_state(),
                     action=player_action,
-                    reward=player_score-opponent_score)
+                    reward=1 if player_score-opponent_score>0 else 0)
         
     player_wins.append(sum(
             list(play > opp for opp, play in
