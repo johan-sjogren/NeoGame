@@ -1,4 +1,5 @@
 # %%
+import matplotlib.pyplot as plt
 import numpy as np
 from pyneogame.Engine import Game
 from tqdm import tqdm
@@ -11,26 +12,26 @@ from pyneogame.Agent.PolicyGradient import ReInforce
 
 from keras.callbacks import EarlyStopping
 
-# %% 
+# %%
 game = Game()
 player = ReInforce(state_size=len(game.get_player_state()),
-                    actions=game.get_actions(),
-                    update_interval=10000,
-                    memory_size=100000,
-                    verbose=0)
+                   actions=game.get_actions(),
+                   update_interval=10000,
+                   memory_size=100000,
+                   verbose=0)
 # player.load('DQN_model.h5')
 
 opponent = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-for _ in tqdm(range(1000000)):
+for _ in tqdm(range(200000)):
     game.dealCards()
 
-    player_action = player.get_action(game.get_player_state(), explore_exploit='exploit')
+    player_action = player.get_action(
+        game.get_player_state(), explore_exploit='exploit')
     opponent_action = opponent.get_action(game.get_opponent_state(),
-                                        game.get_actions())
-
+                                          game.get_actions())
 
     # print(type(player_action), type(opponent_action))
     # print(player_action,opponent_action)
@@ -40,12 +41,13 @@ for _ in tqdm(range(1000000)):
     # print(player_score, opponent_score)
 
     player.learn(state=game.get_player_state(),
-                action=player_action,
-                reward=1 if player_score-opponent_score>0 else 0)
+                 action=player_action,
+                 reward=player_score-opponent_score
+                 #1 if player_score-opponent_score>0 else 0
+                 )
 
 print(player.avg_r_sum)
 player.save('DQN_model.h5')
-import matplotlib.pyplot as plt
 plt.plot(player.avg_r_sum)
 plt.show()
 
@@ -65,9 +67,10 @@ for _ in tqdm(range(n_test)):
     for i in range(TEST_EPISODES):
         game.dealCards()
 
-        player_action = player.get_action(game.get_player_state(), explore_exploit='exploit')
+        player_action = player.get_action(
+            game.get_player_state(), explore_exploit='exploit')
         opponent_action = opponent.get_action(game.get_opponent_state(),
-                                            game.get_actions())
+                                              game.get_actions())
 
         # print(type(player_action), type(opponent_action))
         # print(player_action,opponent_action)
@@ -77,21 +80,23 @@ for _ in tqdm(range(n_test)):
         # print(player_score, opponent_score)
 
         player.learn(state=game.get_player_state(),
-                    action=player_action,
-                    reward=1 if player_score-opponent_score>0 else 0)
-        
+                     action=player_action,
+                     reward=player_score-opponent_score
+                     #1 if player_score-opponent_score>0 else 0
+                     )
+
     player_wins.append(sum(
-            list(play > opp for opp, play in
-                zip(game.opponent_score[-TEST_EPISODES:],
-                    game.player_score[-TEST_EPISODES:])
-                )))
+        list(play > opp for opp, play in
+             zip(game.opponent_score[-TEST_EPISODES:],
+                 game.player_score[-TEST_EPISODES:])
+             )))
 
     opponent_wins.append(
-            sum(
-                list(play < opp for opp, play in
-                    zip(game.opponent_score[-TEST_EPISODES:],
-                        game.player_score[-TEST_EPISODES:])
-                    )))
+        sum(
+            list(play < opp for opp, play in
+                 zip(game.opponent_score[-TEST_EPISODES:],
+                     game.player_score[-TEST_EPISODES:])
+                 )))
 
 # print(list(zip(game.opponent_score[-10:], game.player_score[-10:])))
 # print(player_wins)
@@ -99,13 +104,16 @@ for _ in tqdm(range(n_test)):
 print(sum(play > opp for play, opp in
           zip(player_wins, opponent_wins)
           )/len(player_wins))
+print(sum(play < opp for play, opp in
+          zip(player_wins, opponent_wins)
+          )/len(player_wins))
+
 
 player.save('DQN_model.h5')
 
-import matplotlib.pyplot as plt
 plt.plot(np.array(player_wins) - np.array(opponent_wins))
 plt.show()
-#%%
+# %%
 # player_mem = np.asarray(player.memory)
 # states = np.vstack(player_mem[:,0])
 # actions = np.vstack(player_mem[:,1])
@@ -131,4 +139,4 @@ plt.show()
 # plt.plot(history.history['val_loss'])
 # plt.show()
 
-#%%
+# %%

@@ -53,11 +53,11 @@ class ReInforce(DeepQAgent.DeepQAgent):
     def _make_model(self):
         '''Start with a simple default model for now'''
         input_layer = Input(shape=(self.state_size,))
-        embedding = Embedding(input_dim=5, output_dim=2)(input_layer)
+        embedding = Embedding(input_dim=5, output_dim=3)(input_layer)
         flat = Flatten()(embedding)
         dense_1 = Dense(200, activation='sigmoid')(flat)  # input_layer)
         x = Dense(200, activation='sigmoid')(dense_1)
-        #x = Dropout(0.1)(dense_2)
+        x = Dropout(0.1)(x)
         action_dist = Dense(self.actions_size, activation='softmax')(x)
         
 
@@ -97,7 +97,13 @@ class ReInforce(DeepQAgent.DeepQAgent):
         actions = np.vstack(player_mem[:, 1])
         rewards = player_mem[:, 2]
 
-        target = actions * rewards[:, np.newaxis]
+        # Need to deal with the space of rewards. -X -> X becomes 0 < X
+        # TODO: Change this and inform user that it is happening. Perhaps by
+        # setting a mapping
+        #target = actions * 1/np.exp(-1*rewards.astype(float))[:, np.newaxis]
+        # target = actions * rewards[:, np.newaxis]
+        target = actions
+
         # TODO: Use Early stopping or not?
         es = EarlyStopping(monitor='val_loss', mode='min',
                            verbose=0, patience=2)
@@ -107,7 +113,8 @@ class ReInforce(DeepQAgent.DeepQAgent):
                                      verbose=0,
                                      batch_size=batch_size,
                                      callbacks=[es],
-                                     validation_split=0.10
+                                     validation_split=0.10,
+                                     sample_weight=np.exp(rewards.astype(float))
                                      )
         return history
 
