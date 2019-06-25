@@ -76,6 +76,8 @@ class Game(object):
             self
         """
         i = self.n_cards_in_hand
+        # TODO: Should the engine really sort the cards? Maybe leave that to the Agents
+        # as some agents (e.g. DQNs) should be insensitive to the order
         self.player_hand = np.sort(state[:i])
         j, i = i, i + self.n_cards_on_table
         self.player_table = np.sort(state[j:i])
@@ -122,12 +124,12 @@ class Game(object):
         return state
 
     def set_player_action(self, action):
-        # TODO: This should change the table and hand list
+        # TODO: Perhaps this should change the table and hand list
         self.player_action = action.astype(bool)
         return self
 
     def set_opponent_action(self, action):
-        # TODO: This should change the table and hand list
+        # TODO: Perhaps this should change the table and hand list
         self.opponent_action = action.astype(bool)
         return self
 

@@ -50,6 +50,38 @@ class ReInforce(DeepQAgent.DeepQAgent):
     def __str__(self):
         return "Policy Gradient Agent: ReInforce"
 
+    def reward_loss(self, y_true, y_pred):
+        y_cross = tf.abs(y_true) * tf.exp(y_true) * tf.log(y_pred) +tf.abs(y_true)* tf.exp(-y_true)*tf.log(1-y_pred)
+        # result = - tf.reduce_sum(y_cross, 1)
+        result = - tf.reduce_mean(y_cross, 1)
+        return result
+
+    #  def reward_loss(self, y_true, y_pred):
+    #     if y_true < 0:
+    #         y_cross = -y_true * tf.log(1 - y_pred)
+    #     else:
+    #         y_cross = y_true * tf.log(y_pred)
+    #     # result = - tf.reduce_sum(y_cross, 1)
+    #     result = - tf.reduce_mean(y_cross, 1)
+    #     return result
+
+    # @tf.function
+    # def reward_loss(self, y_true, y_pred):
+        
+    #     print(y_true, y_pred)
+
+    #     if y_true < 0:
+    #         y_cross = -y_true * tf.log(1 - y_pred)
+    #     else:
+    #         y_cross = y_true * tf.log(y_pred)
+    #     # result = - tf.reduce_sum(y_cross, 1)
+    #     result = - tf.reduce_mean(y_cross, 1)
+    #     return result
+
+   #  def prioritize_replay(self):
+
+
+
     def _make_model(self):
         '''Start with a simple default model for now'''
         input_layer = Input(shape=(self.state_size,))
@@ -59,14 +91,17 @@ class ReInforce(DeepQAgent.DeepQAgent):
         x = Dense(200, activation='sigmoid')(dense_1)
         x = Dropout(0.1)(x)
         action_dist = Dense(self.actions_size, activation='softmax')(x)
-        
+        # action_dist = Dense(self.actions_size, activation='sigmoid')(x)  
 
         model_act = Model(inputs=input_layer, outputs= action_dist)
-        model_act.compile(loss= 'categorical_crossentropy', # TODO: Improve loss# self.reward_loss,
+        model_act.compile(
+                      # loss = 'binary_crossentropy',
+                      # loss= 'categorical_crossentropy', 
+                     loss = self.reward_loss,
+                     # loss = self.
                       optimizer='adam')
                       
         if self.verbose:
-      
             print(model_act.summary())
         return model_act
 
@@ -78,8 +113,13 @@ class ReInforce(DeepQAgent.DeepQAgent):
         act_dist = self.dnn_model.predict(state)
 
         idx = np.random.choice(range(act_dist.shape[1]), 
-                                        p=act_dist.ravel(), size=2)
-        
+                                         p=act_dist.ravel(), size=2)
+
+        #idx = np.random.choice(range(act_dist.shape[1]), 
+        #                                p=act_dist.ravel()/act_dist.sum(), size=2)                                        
+
+        # print(act_dist.ravel()/act_dist.sum())
+
         action = np.zeros(act_dist.shape[1])
         action[idx] = 1
         return action
@@ -90,7 +130,7 @@ class ReInforce(DeepQAgent.DeepQAgent):
     def replay_experience(self, batch_size=64, epochs=30):
         if self.verbose > 0:
             print('Doing replay')
-        # TODO: Do actual batch run rather than selecting a subset of the data and loop over it
+        
         # Extract data from the experience buffer
         player_mem = np.asarray(self.memory)
         states = np.vstack(player_mem[:, 0])
@@ -101,9 +141,21 @@ class ReInforce(DeepQAgent.DeepQAgent):
         # TODO: Change this and inform user that it is happening. Perhaps by
         # setting a mapping
         #target = actions * 1/np.exp(-1*rewards.astype(float))[:, np.newaxis]
-        # target = actions * rewards[:, np.newaxis]
-        target = actions
+        
+        def sigmoid(x):
+            return 1/(1+np.exp(-x))
 
+        # target = actions *rewards[:, np.newaxis] # Doesn't converge
+        # target = actions * (sigmoid(rewards.astype(float))-0.5)[:, np.newaxis] # Doesn't converge
+        # target = actions * np.exp(rewards.astype(float))[:, np.newaxis] # Works like sample weighting
+        # target = actions # + sample weight = Works
+        # target = actions * rewards[:, np.newaxis] # +custom loss (reduce sum) Not working
+        # target = actions * rewards[:, np.newaxis] # +custom loss (reduce mean) 
+        # target = actions *rewards[:, np.newaxis] # With sigmoid and binary cross entropy # No convergence
+        # target = actions 
+        # target = np.stack(actions, rewards[:, np.newaxis])
+        target = actions * rewards[:, np.newaxis]
+        #print(target.shape)
         # TODO: Use Early stopping or not?
         es = EarlyStopping(monitor='val_loss', mode='min',
                            verbose=0, patience=2)
@@ -114,7 +166,8 @@ class ReInforce(DeepQAgent.DeepQAgent):
                                      batch_size=batch_size,
                                      callbacks=[es],
                                      validation_split=0.10,
-                                     sample_weight=np.exp(rewards.astype(float))
+                                     # sample_weight=np.exp(rewards.astype(float))
                                      )
+
         return history
 

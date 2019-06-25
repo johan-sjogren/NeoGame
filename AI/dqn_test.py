@@ -17,7 +17,7 @@ game = Game()
 player = ReInforce(state_size=len(game.get_player_state()),
                    actions=game.get_actions(),
                    update_interval=10000,
-                   memory_size=100000,
+                   memory_size=40000,
                    verbose=0)
 # player.load('DQN_model.h5')
 
@@ -25,7 +25,7 @@ opponent = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-for _ in tqdm(range(200000)):
+for _ in tqdm(range(50000)):
     game.dealCards()
 
     player_action = player.get_action(
@@ -45,6 +45,7 @@ for _ in tqdm(range(200000)):
                  reward=player_score-opponent_score
                  #1 if player_score-opponent_score>0 else 0
                  )
+
 
 print(player.avg_r_sum)
 player.save('DQN_model.h5')
