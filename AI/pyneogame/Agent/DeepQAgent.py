@@ -74,7 +74,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
         dense_1 = Dense(200, activation='sigmoid')(flat)  # input_layer)
         x = Dense(200, activation='sigmoid')(dense_1)
         #x = Dropout(0.1)(dense_2)
-        output = Dense(len(self.actions), activation='sigmoid')(x)
+        output = Dense(len(self.actions))(x) # Linear as it is predicting a Q value
         model = Model(inputs=input_layer, outputs=output)
         model.compile(loss='mse',
                       optimizer='adam')
@@ -101,6 +101,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
     def _act(self, state):
         state = state.reshape(1, state.shape[0])
         act_values = self.dnn_model.predict(state)
+        # Get and return the action given by the index 
         act_idx = np.argmax(act_values[0])
         return self.actions[act_idx]
 
@@ -140,7 +141,6 @@ class DeepQAgent(BaseAgent.BaseAgent):
     def replay_experience(self, batch_size=64, epochs=30):
         if self.verbose > 0:
             print('Doing replay')
-        # TODO: Do actual batch run rather than selecting a subset of the data and loop over it
         # Extract data from the experience buffer
         player_mem = np.asarray(self.memory)
         states = np.vstack(player_mem[:, 0])

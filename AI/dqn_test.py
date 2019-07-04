@@ -8,13 +8,13 @@ from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.ActiveTable import ActiveTable
 from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Agent.RandomAgent import RandomAgent
-from pyneogame.Agent.PolicyGradient import ReInforce
+from pyneogame.Agent.PolicyGradient import ReInforce, ReInforce_v2
 
 from keras.callbacks import EarlyStopping
 
 # %%
 game = Game()
-player = ReInforce(state_size=len(game.get_player_state()),
+player = ReInforce_v2(state_size=len(game.get_player_state()),
                    actions=game.get_actions(),
                    update_interval=10000,
                    memory_size=30000,
@@ -25,7 +25,7 @@ opponent = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-for _ in tqdm(range(500000)):
+for _ in tqdm(range(100000)):
     game.dealCards()
 
     player_action = player.get_action(
@@ -102,10 +102,10 @@ for _ in tqdm(range(n_test)):
 # print(list(zip(game.opponent_score[-10:], game.player_score[-10:])))
 # print(player_wins)
 # print(opponent_wins)
-print(sum(play > opp for play, opp in
+print('Player win percentage: ',sum(play > opp for play, opp in
           zip(player_wins, opponent_wins)
           )/len(player_wins))
-print(sum(play < opp for play, opp in
+print('Opponent win percentage: ',sum(play < opp for play, opp in
           zip(player_wins, opponent_wins)
           )/len(player_wins))
 
