@@ -14,10 +14,10 @@ from keras.callbacks import EarlyStopping
 
 # %%
 game = Game()
-player = ReInforce_v2(state_size=len(game.get_player_state()),
+player = ReInforce(state_size=len(game.get_player_state()),
                    actions=game.get_actions(),
-                   update_interval=10000,
-                   memory_size=30000,
+                   update_interval=32,
+                   memory_size=32,
                    verbose=0)
 # player.load('DQN_model.h5')
 

@@ -16,8 +16,10 @@ from . import DeepQAgent
 # TODO: Create a Dueling DQN
 # TODO: Prioritized experience replay
 
-class ReInforce(DeepQAgent.DeepQAgent):
-    """ ReInforce PolicyGradient Agent
+class ReInforce_v2(DeepQAgent.DeepQAgent):
+    """ ReInforce PolicyGradient Agent:
+        Picks cards (two in this case) from the DNN
+        probability distribution
     """
 
     def __init__(self, state_size, actions,
@@ -118,8 +120,10 @@ class ReInforce(DeepQAgent.DeepQAgent):
         return history
 
 
-class ReInforce_v2(DeepQAgent.DeepQAgent):
-    """ ReInforce PolicyGradient Agent
+class ReInforce(DeepQAgent.DeepQAgent):
+    """ ReInforce PolicyGradient Agent:
+        DNN Model returns a probability distribution for the actions,
+        i.e. all possible ways to select two cards from the given set.
     """
 
     def __init__(self, state_size, actions,
@@ -210,7 +214,7 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
     def replay_experience(self, batch_size=64, epochs=30):
         if self.verbose > 0:
             print('Doing replay')
-        
+        batch_size = batch_size if len(self.memory) > batch_size else len(self.memory)
         # Extract data from the experience buffer
         player_mem = np.asarray(self.memory)
         states = np.vstack(player_mem[:, 0])

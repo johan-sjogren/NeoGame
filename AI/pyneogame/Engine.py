@@ -158,6 +158,7 @@ class Game(object):
     def get_scores(self):
         return self.score_player(), self.score_opponent()
 
+    # TODO: Move to test file
     def test_player(self, player):
         """ Routine to make sure that everyone plays nicely together """
         self.dealCards()
@@ -175,6 +176,7 @@ class Game(object):
             print('Expected number of cards:', self.n_cards_to_play)
             print('Got: ', len(self.player_hand[player_action]))
 
+# TODO: Move to testfile
 def test():
     game = Game()
     print('Running Engine tests')
