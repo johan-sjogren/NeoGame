@@ -10,12 +10,11 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from collections import defaultdict
 
 # %%
-TRAIN_EPISODES = 1000000
+TRAIN_EPISODES = 10000
 TEST_EPISODES = 10000
 game = Game()
-player = ActiveTable(unexplored=1).load('test.csv')
-
-# player = QTable(unexplored=1)  # .load('test.csv')
+# player = ActiveTable(unexplored=1).load('test.csv')
+player = QTableAgent(unexplored=1)  # .load('test.csv')
 # opponent = RandomAgent()
 opponent = GreedyAgent()
 exp_states = defaultdict(int)
@@ -24,12 +23,12 @@ for i in tqdm(range(TRAIN_EPISODES)):
 
     if isinstance(player, ActiveTable) and i > 10:
 
-        if player.seenState(game.dealCards().get_player_state()):
+        if player.seen_state(game.deal_cards().get_player_state()):
             state = player.recommend_state()
             game.dealFromRecommendation(state)
 
     else:
-        game.dealCards().get_player_state()
+        game.deal_cards().get_player_state()
 
     player_action = player.get_action(game.get_player_state(),
                                       game.get_actions(),
@@ -62,7 +61,7 @@ else:
 
 # print(min(exp_states, key=lambda x: x[1]), max(exp_states))
 # print(player.get_QTable(as_dataframe=True))
-print(len(player.get_QTable(as_dataframe=True).columns))
+print(len(player.get_qtable(as_dataframe=True).columns))
 player.save('test.csv')
 # saved_loaded = (player.save('test.csv')
 #                       .load('test.csv').get_QTable(as_dataframe=True)
@@ -79,7 +78,7 @@ n_test = 20
 for _ in tqdm(range(n_test)):
     game = Game()
     for i in range(TEST_EPISODES):
-        game.dealCards().get_player_state()
+        game.deal_cards().get_player_state()
         player_action = player.get_action(game.get_player_state(),
                                           game.get_actions(),
                                           explore_exploit='exploit')
@@ -97,15 +96,15 @@ for _ in tqdm(range(n_test)):
 
     player_wins.append(sum(
         list(play > opp for opp, play in
-             zip(game.opponent_score[-TEST_EPISODES:],
-                 game.player_score[-TEST_EPISODES:])
+             zip(list(game.opponent_score)[-TEST_EPISODES:],
+                 list(game.player_score)[-TEST_EPISODES:])
              )))
 
     opponent_wins.append(
         sum(
             list(play < opp for opp, play in
-                 zip(game.opponent_score[-TEST_EPISODES:],
-                     game.player_score[-TEST_EPISODES:])
+                 zip(list(game.opponent_score)[-TEST_EPISODES:],
+                     list(game.player_score)[-TEST_EPISODES:])
                  )))
 
 # print(list(zip(game.opponent_score[-10:], game.player_score[-10:])))

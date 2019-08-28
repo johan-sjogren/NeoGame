@@ -11,5 +11,5 @@ class BaseAgent(ABC):
         pass
 
     @abstractmethod
-    def learn(self, state, action, reward, new_state):
+    def learn(self, state, action, reward, new_state, done):
         pass

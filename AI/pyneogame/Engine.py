@@ -27,7 +27,7 @@ class Game(object):
         self.n_cards_on_table = cards_on_table
         self.actions = None
         # Initial setup
-        self.dealCards()
+        self.deal_cards()
 
     @staticmethod
     def calc_score(player1_final, player2_final):
@@ -36,7 +36,7 @@ class Game(object):
                    for y in player2_final)
 
     @staticmethod
-    def wins(x, y, max_cls=self.n_classes-1, min_cls=0):
+    def wins(x, y, max_cls=4, min_cls=0):
         if x + 1 == y:
             return 1
         elif x == max_cls and y == min_cls:
@@ -44,13 +44,13 @@ class Game(object):
         else:
             return 0
 
-    def shuffleDeck(self):
+    def shuffle_deck(self):
         shuffle(self.deck)
         return self
 
-    def dealCards(self):
+    def deal_cards(self):
         """Randomly deal cards"""
-        self.shuffleDeck()
+        self.shuffle_deck()
         i = self.n_cards_on_table
         self.opponent_table = self.deck[:i]
         j, i = i, i + self.n_cards_in_hand
@@ -61,7 +61,7 @@ class Game(object):
         self.player_hand = self.deck[j:i]
         return self
 
-    def dealFromRecommendation(self, state):
+    def deal_from_recommendation(self, state):
         """ Deals cards according to agent recommendation.
         Arguments:
             state {[int]} -- Integer list describing the recommended state
@@ -87,7 +87,7 @@ class Game(object):
         self.opponent_hand = np.array(temp_deck[j:i])
         return self
 
-    def getEnv(self):
+    def get_env(self):
         return ((self.opponent_hand, self.opponent_table),
                 (self.player_hand, self.player_table))
 
@@ -130,30 +130,18 @@ class Game(object):
         self.opponent_action = action.astype(bool)
         return self
 
-    def score_player(self):
-        player_cards = np.concatenate(
-            [self.player_table,
-             self.player_hand[self.player_action]])
-        opponent_cards = np.concatenate(
-            [self.opponent_table,
-             self.opponent_hand[self.opponent_action]])
-        score = Game.calc_score(player_cards, opponent_cards)
-        self.player_score.append(score)
-        return score
-
-    def score_opponent(self):
-        player_cards = np.concatenate(
-            [self.player_table,
-             self.player_hand[self.player_action]])
-        opponent_cards = np.concatenate(
-            [self.opponent_table,
-             self.opponent_hand[self.opponent_action]])
-        score = Game.calc_score(opponent_cards, player_cards)
-        self.opponent_score.append(score)
-        return score
-
     def get_scores(self):
-        return self.score_player(), self.score_opponent()
+        player_cards = np.concatenate(
+            [self.player_table,
+             self.player_hand[self.player_action]])
+        opponent_cards = np.concatenate(
+            [self.opponent_table,
+             self.opponent_hand[self.opponent_action]])
+        player_score = Game.calc_score(player_cards, opponent_cards)
+        self.player_score.append(player_score)
+        opp_score = Game.calc_score(opponent_cards, player_cards)
+        self.opponent_score.append(opp_score)
+        return player_score, opp_score
 
     def test_player(self, agent):
         """Routine to test agent behaviour
@@ -161,7 +149,7 @@ class Game(object):
             agent {BaseAgent} -- Agent class inheriting from BaseAgent
         """
 
-        self.dealCards()
+        self.deal_cards()
         agent_action = agent.get_action(self.get_player_state(),
                                         actions=self.get_actions())
 
@@ -186,9 +174,9 @@ def test():
     game = Game()
     print('Running Engine tests')
 
-    # Make sure that dealCards function actually randomizes
+    # Make sure that deal_cards function actually randomizes
     for _ in range(10):
-        setup_1, setup_2 = game.getEnv(), game.dealCards().getEnv()
+        setup_1, setup_2 = game.getEnv(), game.deal_cards().getEnv()
         com_arrs = [np.array_equal(a, b) for x, y in zip(
             setup_1, setup_2) for a, b in zip(x, y)]
         # There is a chance that arrays will be similar just by chance

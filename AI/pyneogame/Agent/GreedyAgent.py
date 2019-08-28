@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from . import BaseAgent
 from pyneogame.Engine import Game
+# TODO: Move test
+
 
 class GreedyAgent(BaseAgent.BaseAgent):
 
@@ -16,7 +18,7 @@ class GreedyAgent(BaseAgent.BaseAgent):
         opponent_table = np.array(state[-2:])
 
         # possibles = [player_hand[a == 1] for a in actions]
-        
+
         def diff_score(player, opponent):
             return (self.value_func(player, opponent) -
                     self.value_func(opponent, player))
@@ -39,20 +41,20 @@ class GreedyAgent(BaseAgent.BaseAgent):
     def learn(self, state, action, reward, new_state=None):
         # Static strategy, just return self
         return self
-    
+
 
 def test():
     print("Running 3 tests on the greedy agent")
     game = Game()
     actions = game.get_actions()
     agent = GreedyAgent(value_func=Game.calc_score)
-    
+
     state_1 = [1, 2, 3, 4, 4, 0, 0, 1, 3]
     action_1 = agent.get_action(state_1, actions).tolist()
     # There are three equally good solutions here...
-    assert ( action_1 == [1,1,0,0,0] or 
-             action_1 == [1,0,1,0,0] or
-             action_1 == [0,1,1,0,0]
+    assert (action_1 == [1, 1, 0, 0, 0] or
+            action_1 == [1, 0, 1, 0, 0] or
+            action_1 == [0, 1, 1, 0, 0]
             )
 
     state_2 = [2, 3, 3, 4, 4, 0, 4, 1, 4]
@@ -64,9 +66,9 @@ def test():
     assert action_3 == [0, 1, 1, 0, 0]
     print("Greedy agent passed all tests")
 
+
 def main():
-    pass
-    
+    test()
+
 if __name__ == "__main__":
     main()
-

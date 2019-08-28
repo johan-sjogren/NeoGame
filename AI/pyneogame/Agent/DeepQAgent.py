@@ -13,7 +13,6 @@ from . import BaseAgent
 
 # TODO: Create a Dueling DQN
 # TODO: Prioritized experience replay
-# TODO: Create and compare with a policy learning agent
 
 
 class DeepQAgent(BaseAgent.BaseAgent):
@@ -53,8 +52,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
 
     def save(self, filename, method='h5'):
         if filename.split('.')[-1].lower() != 'h5':
-            print("Warning: Default method is to save as a H5 file. Advised to use" +
-                  "appropriate ending")
+            print("Warning: Default method is to save as a H5 file." +
+                  "Advised to use appropriate ending")
         self.dnn_model.save(filename)
         return self
 
@@ -73,8 +72,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
         flat = Flatten()(embedding)
         dense_1 = Dense(200, activation='sigmoid')(flat)  # input_layer)
         x = Dense(200, activation='sigmoid')(dense_1)
-        #x = Dropout(0.1)(dense_2)
-        output = Dense(len(self.actions))(x) # Linear as it is predicting a Q value
+        # x = Dropout(0.1)(dense_2)
+        output = Dense(len(self.actions))(x)  # Linear, is predicting Q value
         model = Model(inputs=input_layer, outputs=output)
         model.compile(loss='mse',
                       optimizer='adam')
@@ -101,7 +100,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
     def _act(self, state):
         state = state.reshape(1, state.shape[0])
         act_values = self.dnn_model.predict(state)
-        # Get and return the action given by the index 
+        # Get and return the action given by the index
         act_idx = np.argmax(act_values[0])
         return self.actions[act_idx]
 
@@ -167,13 +166,3 @@ class DeepQAgent(BaseAgent.BaseAgent):
                                      validation_split=0.10
                                      )
         return history
-
-        # TODO: Delete old code below
-        # batches = random.sample(self.memory, batch_size if len(self.memory)>batch_size else len(self.memory))
-        # for state, action_idx, reward in batches:
-        #     if self.verbose > 0:
-        #         print(state, action_idx, reward)
-        #     state = state.reshape(1, state.shape[0])
-        #     target = self.dnn_model.predict(state)
-        #     target[0][action_idx] = reward
-        #     self.dnn_model.fit(state, target, epochs=1, verbose=0)
