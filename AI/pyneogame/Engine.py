@@ -162,7 +162,7 @@ class Game(object):
             assert len(self.player_hand[agent_action.astype(
                 bool)]) == self.n_cards_to_play
         except:
-            print('Test failed for ', str(player))
+            print('Test failed for ', str(agent))
             print('Expected number of cards:', self.n_cards_to_play)
             print('Got: ', len(self.player_hand[agent_action]))
 
@@ -176,7 +176,7 @@ def test():
 
     # Make sure that deal_cards function actually randomizes
     for _ in range(10):
-        setup_1, setup_2 = game.getEnv(), game.deal_cards().getEnv()
+        setup_1, setup_2 = game.get_env(), game.deal_cards().get_env()
         com_arrs = [np.array_equal(a, b) for x, y in zip(
             setup_1, setup_2) for a, b in zip(x, y)]
         # There is a chance that arrays will be similar just by chance
