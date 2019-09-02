@@ -10,13 +10,13 @@ from pyneogame.Agent.ActiveTable import ActiveTable
 game = Game()
 player = GreedyAgent(value_func=Game.calc_score)
 player = ActiveTable()
-nn = QTableAgent()
+opponent = QTableAgent()
 
 game.get_actions()
 
 # %%
 game.get_player_state()
-game.dealCards().get_player_state()
+game.deal_cards().get_player_state()
 
 # %%
 player_action = player.get_action(game.get_player_state(),
@@ -29,11 +29,13 @@ print(player_action)
 
 
 TEST_EPISODES = 1000
+player_wins = []
+opponent_wins = []
 
 for _ in range(1):
     # for i in tqdm(range(TEST_EPISODES)):
     for i in range(TEST_EPISODES):
-        game.dealCards()
+        game.deal_cards()
         player_action = player.get_action(game.get_player_state(),
                                           game.get_actions(),
                                           )
@@ -49,30 +51,29 @@ for _ in range(1):
                      action=player_action,
                      reward=player_score-opponent_score)
 
-print(list(zip(game.opponent_score[-10:], game.player_score[-10:])))
-
 # %%
-player_wins = sum(
+player_wins.append(sum(
     list(play > opp for opp, play in
-         zip(game.opponent_score[-TEST_EPISODES:],
-             game.player_score[-TEST_EPISODES:])
-         ))
+         zip(list(game.opponent_score)[-TEST_EPISODES:],
+             list(game.player_score)[-TEST_EPISODES:])
+         )))
 
-opponent_wins = sum(
-    list(play < opp for opp, play in
-         zip(game.opponent_score[-TEST_EPISODES:],
-             game.player_score[-TEST_EPISODES:])
-         ))
+opponent_wins.append(
+    sum(
+        list(play < opp for opp, play in
+             zip(list(game.opponent_score)[-TEST_EPISODES:],
+                 list(game.player_score)[-TEST_EPISODES:])
+             )))
 
 print(player_wins)
 print(opponent_wins)
 
 
-print(game.dealCards().getEnv())
+print(game.deal_cards().get_env())
 if isinstance(player, ActiveTable):
     print('Recommended state')
     state = player.recommend_state()
     print(state)
-    print(game.dealFromRecommendation(state).getEnv())
+    print(game.deal_from_recommendation(state).get_env())
 
 print(game.get_actions())
