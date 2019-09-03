@@ -65,10 +65,3 @@ def test():
     action_3 = agent.get_action(state_3, actions).tolist()
     assert action_3 == [0, 1, 1, 0, 0]
     print("Greedy agent passed all tests")
-
-
-def main():
-    test()
-
-if __name__ == "__main__":
-    main()

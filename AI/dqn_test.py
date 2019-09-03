@@ -26,7 +26,7 @@ player_action = player.get_action(game.get_player_state())
 print(player_action)
 
 for _ in tqdm(range(100000)):
-    game.dealCards()
+    game.deal_cards()
 
     player_action = player.get_action(
         game.get_player_state(), explore_exploit='exploit')

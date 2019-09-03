@@ -5,12 +5,13 @@ from tqdm import tqdm
 from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.ActiveTable import ActiveTable
+from pyneogame.Agent.RandomAgent import RandomAgent
 
 # %%
 game = Game()
 player = GreedyAgent(value_func=Game.calc_score)
 player = ActiveTable()
-opponent = QTableAgent()
+opponent = RandomAgent()
 
 game.get_actions()
 

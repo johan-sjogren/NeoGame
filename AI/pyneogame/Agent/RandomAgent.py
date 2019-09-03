@@ -1,5 +1,5 @@
 import random
-from . import BaseAgent
+from . import BaseAgent # Work for python dev_script
 
 
 class RandomAgent(BaseAgent.BaseAgent):
@@ -23,11 +23,6 @@ class RandomAgent(BaseAgent.BaseAgent):
 
 
 def test():
+    # TODO: Implement
+    print('Not implemented')
     pass
-
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
