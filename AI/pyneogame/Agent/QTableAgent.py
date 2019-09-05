@@ -13,7 +13,7 @@ class QTableAgent(BaseAgent.BaseAgent):
                  unexplored=0,
                  discount_rate=0.95):
 
-        self.Q = {}                # Q-table (Dict)
+        self.q = {}                # Q-table (Dict)
         self.learning_rate = learning_rate  # Learning rate
         self.learning_rate_decay = lr_decay
         self.lr_decay = 0.99
@@ -26,19 +26,19 @@ class QTableAgent(BaseAgent.BaseAgent):
         # This can be used in on-policy learning to force exploration
 
     def __str__(self):
-        return "QTable Agent"
+        return "qTable Agent"
 
-    def _get_Q(self, state, action):
-        if state in self.Q and action in self.Q[state]:
-            return self.Q[state][action]
+    def _get_q(self, state, action):
+        if state in self.q and action in self.q[state]:
+            return self.q[state][action]
         else:
             return self.unexplored
 
-    def _set_Q(self, state, action, value):
-        if state in self.Q:
-            self.Q[state][action] = value
+    def _set_q(self, state, action, value):
+        if state in self.q:
+            self.q[state][action] = value
         else:
-            self.Q[state] = {action: value}
+            self.q[state] = {action: value}
 
     def get_action(self, state, actions,
                    explore_exploit='none',
@@ -61,7 +61,7 @@ class QTableAgent(BaseAgent.BaseAgent):
             action = np.random.choice(actions_str,  1)[0]
         # If this number > greater than epsilon --> exploitation
         elif exp_tradeoff > self.epsilon or explore_exploit == 'exploit':
-            _, action = max(map(lambda m: (self._get_Q(state_str, m), m),
+            _, action = max(map(lambda m: (self._get_q(state_str, m), m),
                                 actions_str),
                             key=lambda x: x[0])
         # Else doing a random choice --> exploration
@@ -73,16 +73,15 @@ class QTableAgent(BaseAgent.BaseAgent):
         if as_string:
             return action
         else:
-            # return [int(x) for x in action]
             return np.array([int(x) for x in action])
 
-    def update_Q(self, state, action, reward):
-        """Updates the Q-table values via the Q-learning algorithn
-            Q[state, action] =
-                 Q[state, action] +
+    def update_q(self, state, action, reward):
+        """Updates the q-table values via the Q-learning algorithn
+            q[state, action] =
+                 q[state, action] +
                     learning_rate * (reward +
-                                        discount_rate * MAX(Q[new_state]) -
-                                            Q[state, action])
+                                        discount_rate * MAX(q[new_state]) -
+                                            q[state, action])
         Args:
             state (string):  String representation of the current game state
             action (string): String representation of the action performed
@@ -91,14 +90,14 @@ class QTableAgent(BaseAgent.BaseAgent):
         Returns:
             self
         """
-        # max_q = max(map(lambda a: self._get_Q(new_state, a), actions))
+        # max_q = max(map(lambda a: self._get_q(new_state, a), actions))
         # Since our actions doesn't influence the next step (randomly
-        # drawn cards) the new state is not of importance
+        # drawn cards) the new state is not of importance i.e. max_q = 0
         max_q = 0
-        new_value = self._get_Q(state, action) * (1 - self.learning_rate) + \
+        new_value = self._get_q(state, action) * (1 - self.learning_rate) + \
             self.learning_rate * (reward + max_q*self.discount_rate)
 
-        self._set_Q(state, action, new_value)
+        self._set_q(state, action, new_value)
         return self
 
     def learn(self, state, action, reward, new_state=None):
@@ -119,26 +118,26 @@ class QTableAgent(BaseAgent.BaseAgent):
         action_str = ''.join([str(x) for x in action])
         state_str = ''.join([str(x) for x in state])
 
-        # For Q-learning all that is needed is to update the table
-        self.update_Q(state_str, action_str, reward)
+        # For q-learning all that is needed is to update the table
+        self.update_q(state_str, action_str, reward)
 
         if self.learning_rate_decay:
             self.learning_rate *= self.lr_decay
 
         return self
 
-    def get_QTable(self, as_dataframe=False):
+    def get_qtable(self, as_dataframe=False):
         if as_dataframe:
-            return pd.DataFrame.from_dict(self.Q)
+            return pd.DataFrame.from_dict(self.q)
         else:
-            return self.Q
+            return self.q
 
     def save(self, filename):
-        self.get_QTable(as_dataframe=True).to_csv(filename)
+        self.get_qtable(as_dataframe=True).to_csv(filename)
         return self
 
     def load(self, filename):
-        self.Q = pd.read_csv(filename,
+        self.q = pd.read_csv(filename,
                              dtype={0: str}
                              ).set_index('Unnamed: 0').to_dict()
         return self

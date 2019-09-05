@@ -1,5 +1,6 @@
 import random
-from . import BaseAgent
+from . import BaseAgent # Work for python dev_script
+
 
 class RandomAgent(BaseAgent.BaseAgent):
 
@@ -7,7 +8,7 @@ class RandomAgent(BaseAgent.BaseAgent):
         return "Random Agent"
 
     def get_action(self, state, actions, as_string=False):
-        
+
         action = random.choice(actions)
 
         if as_string:
@@ -19,14 +20,9 @@ class RandomAgent(BaseAgent.BaseAgent):
     def learn(self, state, action, reward, new_state=None):
         # Static strategy, just return self
         return self
-    
+
 
 def test():
+    # TODO: Implement
+    print('Not implemented')
     pass
-
-
-def main():
-    pass
-    
-if __name__ == "__main__":
-    main()

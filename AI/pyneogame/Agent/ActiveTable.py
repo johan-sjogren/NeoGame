@@ -19,13 +19,12 @@ class ActiveTable(QTableAgent.QTableAgent):
 
     def recommend_state(self, as_string=False):
         minimum = min(self.state_count, key=self.state_count.get)
-        # print(minimum, self.state_count[minimum])
         if as_string:
             return minimum
         else:
             return list(int(x) for x in minimum)
 
-    def seenState(self, state):
+    def seen_state(self, state):
         state_str = ''.join([str(x) for x in state])
         try:
             self.state_count[state_str]
