@@ -5,7 +5,7 @@ import random
 from os import path
 from keras import Model
 from keras. models import save_model, load_model
-from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional
+from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional, BatchNormalization
 from keras.layers import Dropout
 from keras.callbacks import EarlyStopping
 
@@ -44,7 +44,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
 
         if model is None:
             print("Building default model")
-            self.dnn_model = self._make_model()
+            self.dnn_model = self._make_model3()
         else:
             self.dnn_model = model
 
@@ -71,8 +71,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
         input_layer = Input(shape=(self.state_size,))
         embedding = Embedding(input_dim=5, output_dim=2)(input_layer)
         flat = Flatten()(embedding)
-        dense_1 = Dense(200, activation='sigmoid')(flat)  # input_layer)
-        x = Dense(200, activation='sigmoid')(dense_1)
+        dense_1 = Dense(200, activation='relu')(flat)  # input_layer)
+        x = Dense(200, activation='relu')(dense_1)
         #x = Dropout(0.1)(dense_2)
         output = Dense(len(self.actions))(x) # Linear as it is predicting a Q value
         model = Model(inputs=input_layer, outputs=output)
@@ -87,10 +87,29 @@ class DeepQAgent(BaseAgent.BaseAgent):
         input_layer = Input(shape=(self.state_size,))
         embedding = Embedding(input_dim=5, output_dim=5)(input_layer)
         # x_layer = Bidirectional(LSTM(10))(embedding)
-        # x_layer = Dense(100, activation='sigmoid')(x_layer)
+        # x_layer = Dense(100, activation='relu')(x_layer)
         # flat = Flatten()(x_layer)
-        dense_2 = Dense(10, activation='sigmoid')(x_layer)
-        output = Dense(len(self.actions), activation='sigmoid')(dense_2)
+        dense_2 = Dense(10, activation='relu')(x_layer)
+        output = Dense(len(self.actions), activation='relu')(dense_2)
+        model = Model(inputs=input_layer, outputs=output)
+        model.compile(loss='mse',
+                      optimizer='adam')
+        if self.verbose:
+            print(model.summary())
+        return model
+    
+    def _make_model3(self):
+        '''Start with a simple default model for now'''
+        input_layer = Input(shape=(self.state_size,))
+        #print('state size is: ' + str(self.state_size))
+        #print('========================================')
+        embedding = Embedding(input_dim=5, output_dim=4)(input_layer)
+        flat = Flatten()(embedding)
+        dense_1 = Dense(32, activation='relu')(flat)  # input_layer)
+        #dense_2 = Dense(16, activation='relu')(dense_1)
+        x = Dense(8, activation='relu')(dense_1)
+        #x = Dropout(0.1)(dense_2)
+        output = Dense(len(self.actions))(x) # Linear as it is predicting a Q value
         model = Model(inputs=input_layer, outputs=output)
         model.compile(loss='mse',
                       optimizer='adam')
@@ -103,12 +122,20 @@ class DeepQAgent(BaseAgent.BaseAgent):
         act_values = self.dnn_model.predict(state)
         # Get and return the action given by the index 
         act_idx = np.argmax(act_values[0])
+        #q_values = act_values[0]
+        #q_exp = np.exp(q_values)
+        #probabilities = q_exp / sum(q_exp)
+        #ct_idx = np.argmax(act_values[0])
+        #print('======== len of')
+        #print(len(probabilities))
+        #act_idx = np.random.choice(range(len(self.actions)), p = probabilities)
         return self.actions[act_idx]
 
     def get_action(self, state, actions=None,
                    explore_exploit='none',
                    as_string=False):
 
+        state = self._preprocess(state)
         exp_tradeoff = np.random.uniform(0, 1)
         if explore_exploit == 'explore':
             action = random.choice(self.actions)
@@ -127,6 +154,11 @@ class DeepQAgent(BaseAgent.BaseAgent):
         self.memory.append((state, act_idx, reward))
 
     def learn(self, state, action, reward, new_state=None):
+        #if reward > 0:
+        #    reward = 1
+        #elif reward < 0:
+        #    reward = -1
+        state = self._preprocess(state)
         self.remember(state, action, reward, new_state)
         self.episode_counter += 1
         self.r_sum += reward
@@ -137,6 +169,15 @@ class DeepQAgent(BaseAgent.BaseAgent):
             self.episode_counter = 0
             self.r_sum = 0
             self.replay_experience()
+    
+    def _preprocess(self, state):
+        
+        offset = state[0]
+        for i in range(len(state)):
+            state[i] -= offset
+            if state[i] < 0:
+                state[i] += 5
+        return state
 
     def replay_experience(self, batch_size=64, epochs=30):
         if self.verbose > 0:

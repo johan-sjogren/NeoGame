@@ -7,13 +7,16 @@ from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.ActiveTable import ActiveTable
 from pyneogame.Agent.RandomAgent import RandomAgent
+from pyneogame.Agent.DeepQAgent import DeepQAgent
 from collections import defaultdict
 
 # %%
-TRAIN_EPISODES = 1000000
-TEST_EPISODES = 10000
+TRAIN_EPISODES = 10000
+TEST_EPISODES = 1000
 game = Game()
-player = ActiveTable(unexplored=1).load('test.csv')
+#player = ActiveTable(unexplored=1).load('test.csv')
+player = DeepQAgent(state_size=len(game.get_player_state()),
+                    actions=game.get_actions())
 
 # player = QTable(unexplored=1)  # .load('test.csv')
 # opponent = RandomAgent()
@@ -62,15 +65,15 @@ else:
 
 # print(min(exp_states, key=lambda x: x[1]), max(exp_states))
 # print(player.get_QTable(as_dataframe=True))
-print(len(player.get_QTable(as_dataframe=True).columns))
-player.save('test.csv')
+#print(len(player.get_QTable(as_dataframe=True).columns))
+#player.save('test.csv')
 # saved_loaded = (player.save('test.csv')
 #                       .load('test.csv').get_QTable(as_dataframe=True)
 #                 )
 # print(saved_loaded)
 # print(saved_loaded.columns)
 
-player = ActiveTable().load('test.csv')
+#player = ActiveTable().load('test.csv')
 # print(player.get_QTable(as_dataframe=True))
 opponent = GreedyAgent()
 player_wins = []

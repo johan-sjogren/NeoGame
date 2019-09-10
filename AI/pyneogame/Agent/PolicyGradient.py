@@ -167,18 +167,22 @@ class ReInforce(DeepQAgent.DeepQAgent):
     def _make_model(self):
         '''Start with a simple default model for now'''
         input_layer = Input(shape=(self.state_size,))
-        embedding = Embedding(input_dim=5, output_dim=3)(input_layer)
+        print('===============================')
+        print('state size is: ' + str(self.state_size))
+        print('===============================')
+        embedding = Embedding(input_dim=5, output_dim=5)(input_layer)
         # lstm = Bidirectional(LSTM(20))(embedding)
         flat = Flatten()(embedding)
-        x = Dense(200,
+        x = Dense(64,
                   activation='relu',
                   # kernel_regularizer=regularizers.l2(0.01)
                   )(flat)  # input_layer)
-        x = Dense(200,
-                  activation='sigmoid',
+        #x = Dropout(0.5)(x)
+        x = Dense(32,
+                  activation='relu',
                   # kernel_regularizer=regularizers.l2(0.01)
                   )(x)
-        x = Dropout(0.1)(x)
+        #x = Dropout(0.5)(x)
         action_dist = Dense(len(self.actions), activation='softmax')(x)
         model_act = Model(inputs=input_layer, outputs= action_dist)
         model_act.compile(loss = self.reward_loss,

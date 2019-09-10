@@ -5,11 +5,14 @@ from tqdm import tqdm
 from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.ActiveTable import ActiveTable
+from pyneogame.Agent.DeepQAgent import DeepQAgent
 
 # %%
 game = Game()
 player = GreedyAgent(value_func=Game.calc_score)
 player = ActiveTable()
+
+#player = DeepQAgent(14, 5)
 nn = QTableAgent()
 
 game.get_actions()

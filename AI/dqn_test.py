@@ -14,24 +14,33 @@ from keras.callbacks import EarlyStopping
 
 # %%
 game = Game()
-player = ReInforce(state_size=len(game.get_player_state()),
-                   actions=game.get_actions(),
-                   update_interval=32,
-                   memory_size=32,
-                   verbose=0)
+#player = ReInforce(state_size=len(game.get_player_state()),
+#                   actions=game.get_actions(),
+#                   update_interval=32,
+#                   memory_size=32,
+#                   verbose=0)
 # player.load('DQN_model.h5')
 
-opponent = GreedyAgent()
+player = DeepQAgent(state_size=len(game.get_player_state()),
+                    actions=game.get_actions())
+
+#opponent_deep = DeepQAgent(state_size=len(game.get_player_state()),
+#                    actions=game.get_actions())
+
+#opponent = RandomAgent()
+opponent_greedy = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-for _ in tqdm(range(100000)):
+training_iterations = 50000
+
+for _ in tqdm(range(training_iterations)):
     game.dealCards()
 
     player_action = player.get_action(
         game.get_player_state(), explore_exploit='exploit')
-    opponent_action = opponent.get_action(game.get_opponent_state(),
-                                          game.get_actions())
+    opponent_action = player.get_action(
+        game.get_opponent_state(), explore_exploit='exploit')
 
     # print(type(player_action), type(opponent_action))
     # print(player_action,opponent_action)
@@ -43,6 +52,12 @@ for _ in tqdm(range(100000)):
     player.learn(state=game.get_player_state(),
                  action=player_action,
                  reward=player_score-opponent_score
+                 #1 if player_score-opponent_score>0 else 0
+                 )
+    
+    player.learn(state=game.get_opponent_state(),
+                 action=opponent_action,
+                 reward=opponent_score-player_score
                  #1 if player_score-opponent_score>0 else 0
                  )
 
@@ -63,6 +78,8 @@ TEST_EPISODES = 10
 player_wins = []
 opponent_wins = []
 n_test = 1000
+
+opponent_greedy = GreedyAgent()
 for _ in tqdm(range(n_test)):
     game = Game()
     for i in range(TEST_EPISODES):
@@ -70,7 +87,7 @@ for _ in tqdm(range(n_test)):
 
         player_action = player.get_action(
             game.get_player_state(), explore_exploit='exploit')
-        opponent_action = opponent.get_action(game.get_opponent_state(),
+        opponent_action = opponent_greedy.get_action(game.get_opponent_state(),
                                               game.get_actions())
 
         # print(type(player_action), type(opponent_action))
