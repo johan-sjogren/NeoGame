@@ -3,15 +3,20 @@
 # ----------------------------------------------
 # ----------------------------------------------
 from flask import Flask, jsonify, request, send_file
-import sys
-import os
-sys.path.append(os.path.abspath('AI'))
+from flask_cors import CORS, cross_origin
 
+import os
+import sys
+sys.path.append(os.path.abspath('AI'))
 from pyneogame.Engine import Game
+
+
 from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 
 app = Flask(__name__)
+CORS(app, support_credentials=True)
+
 game = Game()
 
 
@@ -31,8 +36,8 @@ def get_game():
     actions = game.get_actions()
     return_dict['version'] = '0.1'
     return_dict['opponent_action'] = agent.get_action(
-                                                game.get_opponent_state(),
-                                                actions).tolist()
+        game.get_opponent_state(),
+        actions).tolist()
 
     return_dict['player_hand'] = game.player_hand.tolist()
     return_dict['player_table'] = game.player_table.tolist()
@@ -43,6 +48,7 @@ def get_game():
 
 # POST for game state and opponent action from specific agent/opponent
 @app.route('/ai/game/v1.0', methods=['POST'])
+
 def post_game():
     return_dict = {}
     opp_name = request.json.get('opponent_name', "")
@@ -61,8 +67,8 @@ def post_game():
     actions = game.get_actions()
     return_dict['version'] = '0.1'
     return_dict['opponent_action'] = agent.get_action(
-                                                game.get_opponent_state(),
-                                                actions).tolist()
+        game.get_opponent_state(),
+        actions).tolist()
 
     return_dict['player_hand'] = game.player_hand.tolist()
     return_dict['player_table'] = game.player_table.tolist()
@@ -73,3 +79,4 @@ def post_game():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
