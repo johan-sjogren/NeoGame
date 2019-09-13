@@ -1,3 +1,4 @@
+# %%
 
 # %%
 import numpy as np
@@ -10,8 +11,8 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from collections import defaultdict
 
 # %%
-TRAIN_EPISODES = 10000
-TEST_EPISODES = 10000
+TRAIN_EPISODES = 10 #10000
+TEST_EPISODES = 10 #10000
 game = Game()
 # player = ActiveTable(unexplored=1).load('test.csv')
 player = QTableAgent(unexplored=1)  # .load('test.csv')

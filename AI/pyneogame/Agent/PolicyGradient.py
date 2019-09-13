@@ -51,7 +51,9 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         return "Policy Gradient Agent: ReInforce"
 
     def reward_loss(self, y_true, y_pred):
-        # The loss ha to deal with the rewards being both positive and negative
+        # The loss has to deal with the rewards being both positive and negative
+        _epsilon = _to_tensor(epsilon(), output.dtype.base_dtype)#
+        y_pred = tf.clip_by_value(y_pred, _epsilon, 1 - _epsilon)#
         y_cross = y_true * tf.log(y_pred)
         y_crossNeg = -y_true * tf.log(1-y_pred)
         bool_idx = tf.greater(y_true, 0)
@@ -101,6 +103,7 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         states = np.vstack(player_mem[:, 0])
         actions = np.vstack(player_mem[:, 1])
         rewards = player_mem[:, 2]
+        #target = actions 
         target = actions * rewards[:, np.newaxis]
 
         es = EarlyStopping(monitor='val_loss', mode='min',
@@ -112,11 +115,25 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
                                      verbose=0,
                                      batch_size=batch_size,
                                      callbacks=[es],
-                                     validation_split=0.10,
-                                     # sample_weight=np.exp(rewards.astype(float))
+                                     validation_split=0.10
+                                     #sample_weight=np.exp(rewards.astype(float))
                                      )
 
         return history
+    
+    def get_entry(self):
+        return self.state_size
+    
+    def get_action_size(self):
+        return self.actions_size
+    
+    def input_model(self, model):
+        if model.optimizer==None: #Another way to check if model is compiled?
+            print("Compiling model: loss=reward_loss, optimizer=Adam")
+            model.compile(loss=self.reward_loss,
+                          optimizer='adam')
+        self.dnn_model=model
+        #print(self.dnn_model.summary())
 
 
 class ReInforce(DeepQAgent.DeepQAgent):
@@ -232,3 +249,16 @@ class ReInforce(DeepQAgent.DeepQAgent):
                                      )
 
         return history
+    
+    def get_entry(self):
+        return self.state_size
+    
+    def get_action_size(self):
+        return len(self.actions)
+    
+    def input_model(self, model):
+        if model.optimizer==None: #Another way to check if model is compiled?
+            print("Compiling model: loss=reward_loss, optimizer=Adam")
+            model.compile(loss=self.reward_loss,
+                          optimizer='adam')
+        self.dnn_model=model

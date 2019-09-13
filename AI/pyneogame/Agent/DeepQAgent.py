@@ -45,6 +45,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
             print("Building default model")
             self.dnn_model = self._make_model()
         else:
+            model.compile(loss='mse',
+                      optimizer='adam')
             self.dnn_model = model
 
     def __str__(self):
@@ -119,7 +121,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
             # Reduce epsilon (because we need less and less exploration)
             self.epsilon *= np.exp(-self.decay_rate)
         return action
-
+    
     def remember(self, state, action, reward, new_state=None, done=None):
         # The action have to be converted back into the index given by the NN
         act_idx = np.where(np.all(self.actions == action, axis=1))[0]
@@ -166,3 +168,16 @@ class DeepQAgent(BaseAgent.BaseAgent):
                                      validation_split=0.10
                                      )
         return history
+    
+    def get_entry(self):
+        return self.state_size
+    
+    def get_action_size(self):
+        return len(self.actions)
+    
+    def input_model(self, model):
+        if model.optimizer==None: #Another way to check if model is compiled?
+            print("Compiling model: loss=mse, optimizer=Adam")
+            model.compile(loss='mse',
+                          optimizer='adam')
+        self.dnn_model=model
