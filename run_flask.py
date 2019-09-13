@@ -48,13 +48,6 @@ def post_game():
     except KeyError:
         agent = RandomAgent()
         return_dict['opponent_name'] = 'Agent not found'
-    # if opp_name == 'Random':
-    #     agent = RandomAgent()
-    # elif opp_name == 'Greedy':
-    #     agent = GreedyAgent()
-    # else:
-    #     return_dict['opponent_name'] = "Random"  # 'RandomAgent'
-    #     agent = RandomAgent()
 
     actions = game.get_actions()
     game.deal_cards()    
