@@ -19,6 +19,7 @@ CORS(app, support_credentials=True)
 
 game = Game()
 
+# All agents to be included by the api is listed here
 agent_dict = {'Random': RandomAgent(),
               'Greedy': GreedyAgent()}
 
@@ -40,7 +41,6 @@ def get_game():
 
 # POST for game state and opponent action from specific agent/opponent
 @app.route('/ai/game/v1.0', methods=['POST'])
-
 def post_game():
     return_dict = {}
     opp_name = request.json.get('opponent_name', "")
@@ -50,10 +50,10 @@ def post_game():
         return_dict['opponent_name'] = opp_name  # 'RandomAgent'
     except KeyError:
         agent = RandomAgent()
-        return_dict['opponent_name'] = 'Agent not found'
+        return_dict['opponent_name'] = 'Default'
 
     actions = game.get_actions()
-    game.deal_cards()    
+    game.deal_cards()
     return_dict['version'] = '0.1'
     return_dict['opponent_action'] = agent.get_action(
         game.get_opponent_state(),
@@ -68,4 +68,3 @@ def post_game():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    

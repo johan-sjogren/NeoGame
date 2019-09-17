@@ -106,8 +106,5 @@ venv.bak/
 # vscode
 .vscode/
 
-# None of Johans testcrap
-test*.*
-
 # Don't save the DNN model files
 *.h5 
