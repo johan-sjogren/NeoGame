@@ -3,12 +3,12 @@ import unittest
 import numpy as np
 from pyneogame.Engine import Game
 from random import shuffle
-#from pyneogame.Agent.QTableAgent import QTableAgent
+from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
-#from pyneogame.Agent.ActiveTable import ActiveTable
-#from pyneogame.Agent.DeepQAgent import DeepQAgent
+from pyneogame.Agent.ActiveTable import ActiveTable
+from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Agent.RandomAgent import RandomAgent
-#from pyneogame.Agent.PolicyGradient import ReInforce, ReInforce_v2
+from pyneogame.Agent.PolicyGradient import ReInforce, ReInforce_v2
 
 # %%
 class test(unittest.TestCase):
@@ -17,9 +17,27 @@ class test(unittest.TestCase):
         self.game = Game()
         
     def test_random(self):
-        print("TODO: implement test for random agent. Hur testar vi?")
         print("Running routine agent test for Random Agent")
         self.game.test_player(RandomAgent()) 
+
+    def test_QTable(self):
+        print("Running routine agent test for Q Table")
+        self.game.test_player(QTableAgent()) 
+
+    def test_DeepQAgent(self):
+        print("Running routine agent test for Deep Q Agent")
+        self.game.test_player(DeepQAgent(state_size=len(self.game.get_player_state()),
+                       actions=self.game.get_actions()))
+
+    def test_ReInforce(self):
+        print("Running routine agent test for ReInforce")
+        self.game.test_player(ReInforce(state_size=len(self.game.get_player_state()),
+                       actions=self.game.get_actions()))
+
+    def test_ReInforce_v2(self):
+        print("Running routine agent test for ReInforce v2")
+        self.game.test_player(ReInforce_v2(state_size=len(self.game.get_player_state()),
+                       actions=self.game.get_actions()))
             
     def test_greedy(self):
         """
