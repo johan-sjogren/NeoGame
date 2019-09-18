@@ -52,8 +52,8 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
 
     def reward_loss(self, y_true, y_pred):
         # The loss has to deal with the rewards being both positive and negative
-        _epsilon = _to_tensor(epsilon(), output.dtype.base_dtype)#
-        y_pred = tf.clip_by_value(y_pred, _epsilon, 1 - _epsilon)#
+        _epsilon = tf.convert_to_tensor(tf.keras.backend.epsilon(), y_pred.dtype.base_dtype)
+        y_pred = tf.clip_by_value(y_pred, _epsilon, 1 - _epsilon)
         y_cross = y_true * tf.log(y_pred)
         y_crossNeg = -y_true * tf.log(1-y_pred)
         bool_idx = tf.greater(y_true, 0)
@@ -121,20 +121,15 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
 
         return history
     
-    def get_entry(self):
-        return self.state_size
-    
     def get_action_size(self):
         return self.actions_size
     
     def input_model(self, model):
-        if model.optimizer==None: #Another way to check if model is compiled?
-            print("Compiling model: loss=reward_loss, optimizer=Adam")
+        if model.optimizer==None:
+            print("Compiling model, default loss and optimizer")
             model.compile(loss=self.reward_loss,
                           optimizer='adam')
         self.dnn_model=model
-        #print(self.dnn_model.summary())
-
 
 class ReInforce(DeepQAgent.DeepQAgent):
     """ ReInforce PolicyGradient Agent:
@@ -173,6 +168,8 @@ class ReInforce(DeepQAgent.DeepQAgent):
 
     def reward_loss(self, y_true, y_pred):
         # The loss ha to deal with the rewards being both positive and negative
+        _epsilon = tf.convert_to_tensor(tf.keras.backend.epsilon(), y_pred.dtype.base_dtype)
+        y_pred = tf.clip_by_value(y_pred, _epsilon, 1 - _epsilon)
         y_cross = y_true * tf.log(y_pred)
         y_crossNeg = -y_true * tf.log(1-y_pred)
         bool_idx = tf.greater(y_true, 0)
@@ -250,15 +247,9 @@ class ReInforce(DeepQAgent.DeepQAgent):
 
         return history
     
-    def get_entry(self):
-        return self.state_size
-    
-    def get_action_size(self):
-        return len(self.actions)
-    
     def input_model(self, model):
-        if model.optimizer==None: #Another way to check if model is compiled?
-            print("Compiling model: loss=reward_loss, optimizer=Adam")
+        if model.optimizer==None: 
+            print("Compiling model, default loss and optimizer")
             model.compile(loss=self.reward_loss,
                           optimizer='adam')
         self.dnn_model=model

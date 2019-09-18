@@ -28,7 +28,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
                  decay_rate=1e-5,
                  update_interval=200,
                  memory_size=10000,
-                 verbose=0):
+                 verbose=0,
+                 loss="mse"):
 
         self.actions = actions
         self.verbose = verbose
@@ -40,6 +41,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
         self.state_size = state_size
         self.r_sum = 0
         self.avg_r_sum = []
+        self.loss=loss
 
         if model is None:
             print("Building default model")
@@ -77,7 +79,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
         # x = Dropout(0.1)(dense_2)
         output = Dense(len(self.actions))(x)  # Linear, is predicting Q value
         model = Model(inputs=input_layer, outputs=output)
-        model.compile(loss='mse',
+        model.compile(loss=self.loss,
                       optimizer='adam')
         if self.verbose:
             print(model.summary())
@@ -93,7 +95,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
         dense_2 = Dense(10, activation='sigmoid')(x_layer)
         output = Dense(len(self.actions), activation='sigmoid')(dense_2)
         model = Model(inputs=input_layer, outputs=output)
-        model.compile(loss='mse',
+        model.compile(loss=self.loss,
                       optimizer='adam')
         if self.verbose:
             print(model.summary())
@@ -176,8 +178,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
         return len(self.actions)
     
     def input_model(self, model):
-        if model.optimizer==None: #Another way to check if model is compiled?
-            print("Compiling model: loss=mse, optimizer=Adam")
-            model.compile(loss='mse',
+        if model.optimizer==None:
+            print("Compiling model, default loss and optimizer")
+            model.compile(loss=self.loss,
                           optimizer='adam')
         self.dnn_model=model

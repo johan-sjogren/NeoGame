@@ -11,11 +11,9 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.PolicyGradient import ReInforce, ReInforce_v2
 
 from keras.callbacks import EarlyStopping
-
-# %%
-from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional, Dropout
+from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional, Dropout, BatchNormalization
 from keras import Model
-import keras
+from keras.optimizers import adam
 
 # %%
 game = Game()
@@ -37,7 +35,7 @@ dq_player.input_model(model)
 
 # %%
 game = Game()
-pg_player = ReInforce(state_size=len(game.get_player_state()),
+pg_player = ReInforce_v2(state_size=len(game.get_player_state()),
                        actions=game.get_actions())
 
 entry=pg_player.get_entry()
@@ -47,14 +45,13 @@ input_layer = Input(shape=(entry,))
 embedding = Embedding(input_dim=5, output_dim=3)(input_layer)
 flat = Flatten()(embedding)
 x = Dense(150, activation='relu')(flat)  #kernel_regularizer=keras.regularizers.l2(0.001)
-x = keras.layers.BatchNormalization()(x)
+x = BatchNormalization()(x)
 x = Dense(75, activation='tanh')(x)
 x = Dropout(0.1)(x)
 action_dist = Dense(actionsize, activation='softmax')(x)
 model_act = Model(inputs=input_layer, outputs=action_dist)
 
-model_act.compile(loss= pg_player.reward_loss,  #"categorical_crossentropy",
-                          optimizer=keras.optimizers.adam(lr=0.0001))
+model_act.compile(loss= pg_player.reward_loss, optimizer=adam(lr=0.0001))
 
 pg_player.input_model(model_act)
 
@@ -70,11 +67,11 @@ game = Game()
 player=pg_player
 # player.load('DQN_model.h5') 
 
-opponent = RandomAgent()
+opponent = GreedyAgent()
 player_action = player.get_action(game.get_player_state())
 print(player_action)
 
-training_episodes=100000
+training_episodes=10000
 for _ in tqdm(range(training_episodes)):
     game.deal_cards()
 
