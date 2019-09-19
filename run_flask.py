@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------
-# ----------------------------------------------
-# TODO: Game måste blanda korten
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
 from collections import defaultdict
-
-import os
-import sys
-sys.path.append(os.path.abspath('AI'))
+# Holds flask configurations
+import config
 from pyneogame.Engine import Game
 from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
@@ -19,7 +15,7 @@ CORS(app, support_credentials=True)
 
 game = Game()
 
-# All agents to be included by the api is listed here
+# All agents included is listed here
 agent_dict = {'Random': RandomAgent(),
               'Greedy': GreedyAgent()}
 
@@ -28,14 +24,13 @@ agent_dict = {'Random': RandomAgent(),
 @app.route('/')
 def index():
     return send_file('Web/src/index.html')
-    # return app.send_static_file('index.html')
 
 
 # GET for getting game info and available agents
 @app.route('/ai/game/v1.0', methods=['GET'])
 def get_game():
     return_dict = {}
-    return_dict['Available models'] = list(agent_dict.keys())
+    return_dict['opponents'] = list(agent_dict.keys())
     return jsonify(return_dict)
 
 
@@ -44,10 +39,9 @@ def get_game():
 def post_game():
     return_dict = {}
     opp_name = request.json.get('opponent_name', "")
-    print(opp_name)
     try:
         agent = agent_dict[opp_name]
-        return_dict['opponent_name'] = opp_name  # 'RandomAgent'
+        return_dict['opponent_name'] = opp_name
     except KeyError:
         agent = RandomAgent()
         return_dict['opponent_name'] = 'Default'
