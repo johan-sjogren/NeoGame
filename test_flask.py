@@ -59,7 +59,7 @@ class FlaskTests(unittest.TestCase):
             for model in models + ['']:
                 results.append(self._post_test(path, model=model))
 
-        # Check that shuffleing is being done.
+        # Check that cards are shuffled
         for cardlist in ['opponent_action', 'opponent_hand', 'opponent_table',
                          'player_hand', 'player_table']:
             prev = None
@@ -68,7 +68,7 @@ class FlaskTests(unittest.TestCase):
                 if prev is not None:
                     tot += 1 if x[cardlist] == prev else 0
                 prev = x[cardlist]
-            # TODO: This limit should depend upon the lenght of the lists and 
+            # TODO: This limit should depend upon the length of the lists and 
             # the range of numbers included
             self.assertLess(tot, int(iterations/2))
 
