@@ -23,40 +23,44 @@ dq_player = DeepQAgent(state_size=len(game.get_player_state()),
 entry=dq_player.get_entry()
 actionsize=dq_player.get_action_size()
 
-input_layer = Input(shape=(entry,))
-embedding = Embedding(input_dim=5, output_dim=2)(input_layer)
-flat = Flatten()(embedding)
-dense_1 = Dense(150, activation='relu')(flat)
-dense_2 = Dense(100, activation='relu')(dense_1)
-output_layer = Dense(actionsize)(dense_2)
-model = Model(inputs=input_layer, outputs=output_layer)
+def dq_model(entry,actionsize):
+    input_layer = Input(shape=(entry,))
+    embedding = Embedding(input_dim=5, output_dim=2)(input_layer)
+    flat = Flatten()(embedding)
+    dense_1 = Dense(150, activation='relu')(flat)
+    dense_2 = Dense(100, activation='relu')(dense_1)
+    output_layer = Dense(actionsize, activation='linear')(dense_2)
+    model = Model(inputs=input_layer, outputs=output_layer)
+    return model
 
-dq_player.input_model(model)
+dq_player.input_model(dq_model(entry,actionsize))
 
 # %%
 game = Game()
 pg_player = ReInforce_v2(state_size=len(game.get_player_state()),
-                       actions=game.get_actions())
+                        actions=game.get_actions())
 
 entry=pg_player.get_entry()
 actionsize=pg_player.get_action_size()
 
-input_layer = Input(shape=(entry,))
-embedding = Embedding(input_dim=5, output_dim=3)(input_layer)
-flat = Flatten()(embedding)
-x = Dense(150, activation='relu')(flat)  #kernel_regularizer=keras.regularizers.l2(0.001)
-x = BatchNormalization()(x)
-x = Dense(75, activation='tanh')(x)
-x = Dropout(0.1)(x)
-action_dist = Dense(actionsize, activation='softmax')(x)
-model_act = Model(inputs=input_layer, outputs=action_dist)
+def pg_model(entry,actionsize):
+    input_layer = Input(shape=(entry,))
+    embedding = Embedding(input_dim=5, output_dim=3)(input_layer)
+    flat = Flatten()(embedding)
+    x = Dense(150, activation='relu')(flat)  #kernel_regularizer=keras.regularizers.l2(0.001)
+    x = BatchNormalization()(x)
+    x = Dense(75, activation='tanh')(x)
+    x = Dropout(0.1)(x)
+    action_dist = Dense(actionsize, activation='softmax')(x)
+    model = Model(inputs=input_layer, outputs=action_dist)
 
-model_act.compile(loss= pg_player.reward_loss, optimizer=adam(lr=0.0001))
+    model.compile(loss= pg_player.reward_loss, optimizer=adam(lr=0.0001))
+    return model
 
-pg_player.input_model(model_act)
+pg_player.input_model(pg_model(entry,actionsize))
 
 # %%
-from tqdm import tqdm
+
 game = Game()
 #player = ReInforce(state_size=len(game.get_player_state()),
 #                   actions=game.get_actions(),
@@ -65,11 +69,12 @@ game = Game()
 #                   verbose=0)
 #player=dq_player
 player=pg_player
+
 # player.load('DQN_model.h5') 
 
 opponent = GreedyAgent()
+
 player_action = player.get_action(game.get_player_state())
-print(player_action)
 
 training_episodes=10000
 for _ in tqdm(range(training_episodes)):
@@ -157,7 +162,7 @@ print('Opponent win percentage: ',sum(play < opp for play, opp in
           )/len(player_wins))
 
 
-player.save('DQN_model.h5')
+#player.save('DQN_model.h5')
 
 #plt.plot(np.array(player_wins) - np.array(opponent_wins))
 #plt.show()

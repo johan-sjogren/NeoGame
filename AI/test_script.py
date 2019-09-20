@@ -47,7 +47,7 @@ class test(unittest.TestCase):
         self.game.test_player(GreedyAgent())
         
         actions = self.game.get_actions()
-        print(actions)
+        #print(actions)
         agent = GreedyAgent(value_func=self.game.calc_score)
 
         state_1 = [1, 2, 3, 4, 4, 0, 0, 1, 3]
@@ -78,12 +78,7 @@ class test(unittest.TestCase):
             com_arrs = [np.array_equal(a, b) for x, y in zip(
                 setup_1, setup_2) for a, b in zip(x, y)]
             # There is a chance that arrays will be similar just by chance
-            try:
-                self.assertTrue(sum(com_arrs) < 3)
-            except AssertionError:
-                print(com_arrs)
-                print(setup_1)
-                print(setup_2)
+            self.assertTrue(sum(com_arrs) < 3, msg= [com_arrs,setup_1,setup_2])
 
         # Test that the scoring function returns expected values
         self.assertTrue(self.game.calc_score([1, 1, 1, 1, 1], [2, 3, 4, 0, 0]) == 5)
@@ -95,12 +90,9 @@ class test(unittest.TestCase):
         for _ in range(500):
             arr1 = np.random.randint(0, 5, 4)
             arr2 = np.random.randint(0, 5, 4)
-            try:
-                max_score = (self.game.n_cards_on_table + self.game.n_cards_to_play)**2
-                self.assertTrue(self.game.calc_score(arr1, arr2) <= max_score)
-            except AssertionError:
-                print(arr1)
-                print(arr2)
+
+            max_score = (self.game.n_cards_on_table + self.game.n_cards_to_play)**2
+            self.assertTrue(self.game.calc_score(arr1, arr2) <= max_score, msg=[arr1,arr2])
 
         # Scoring should be insensitive to permutations
         for _ in range(4):
@@ -118,7 +110,6 @@ class test(unittest.TestCase):
             self.assertTrue((game1.get_actions() == game2.get_actions()).all())
 
         print('Engine tests completed')
-
 
 # %%
 if __name__ == "__main__":

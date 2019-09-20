@@ -86,7 +86,9 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         act_dist = self.dnn_model.predict(state)
 
         idx = np.random.choice(range(act_dist.shape[1]),
-                               p=act_dist.ravel(), size=2)
+                               p=act_dist.ravel(), 
+                               size=2, 
+                               replace=False)
         action = np.zeros(act_dist.shape[1])
         action[idx] = 1
         return action
