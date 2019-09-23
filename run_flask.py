@@ -23,7 +23,7 @@ agent_dict = {'Random': RandomAgent(),
 # Serve the webpage
 @app.route('/')
 def index():
-    return send_file('Web/src/index.html')
+    return send_file('Web/public/index.html')
 
 
 # GET for getting game info and available agents
