@@ -1,6 +1,7 @@
 import React from "react";
 
 function SettingsBox(props) {
+  //TODO: Get opponent list from flask api
   return (
     <>
       <select
