@@ -1,0 +1,23 @@
+table {
+  border-spacing: 15px;
+  border-collapse: separate;
+}
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 30px;
+  font-size: 43px;
+}
+td.backCard {
+  background: #ff7fa4;
+  color: rgb(32, 32, 32);
+}
+td.frontCard {
+  background: #0067a5;
+  color: #ede;
+}
+td.pickedCard {
+  background: rgba(12, 187, 70, 0.212);
+  color: rgb(128, 128, 128);
+}
