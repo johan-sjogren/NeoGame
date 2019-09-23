@@ -17,6 +17,7 @@ game = Game()
 # player = ActiveTable(unexplored=1).load('test.csv')
 player = QTableAgent(unexplored=1)  # .load('test.csv')
 # opponent = RandomAgent()
+
 opponent = GreedyAgent()
 exp_states = defaultdict(int)
 
@@ -121,3 +122,6 @@ print(sum(play > opp for play, opp in
 if isinstance(player, ActiveTable):
     print('Recommended state')
     player.recommend_state()
+
+
+#%%

@@ -47,6 +47,8 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         else:
             self.dnn_model = model
 
+        self.save_weights = self.dnn_model.get_weights()
+
     def __str__(self):
         return "Policy Gradient Agent: ReInforce"
 
@@ -111,6 +113,7 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         es = EarlyStopping(monitor='val_loss', mode='min',
                            verbose=0, patience=2)
 
+        #self.dnn_model.set_weights(self.save_weights)
         history = self.dnn_model.fit(states,
                                      target,
                                      epochs=epochs,
@@ -132,6 +135,7 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
             model.compile(loss=self.reward_loss,
                           optimizer='adam')
         self.dnn_model=model
+        #self.save_weights = self.dnn_model.get_weights()
 
 class ReInforce(DeepQAgent.DeepQAgent):
     """ ReInforce PolicyGradient Agent:
@@ -209,7 +213,6 @@ class ReInforce(DeepQAgent.DeepQAgent):
 
         state = state.reshape(1, state.shape[0])
         act_dist = self.dnn_model.predict(state)
-
         idx = np.random.choice(range(act_dist.shape[1]),
                                p=act_dist.ravel(), size=1)
         return self.actions[idx][0]
