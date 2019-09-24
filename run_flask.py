@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, render_template
 from flask_cors import CORS, cross_origin
 from collections import defaultdict
 # Holds flask configurations
@@ -10,7 +10,9 @@ from pyneogame.Engine import Game
 from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_folder="Web/build/static",
+            template_folder="Web/build")
 CORS(app, support_credentials=True)
 
 game = Game()
@@ -23,7 +25,9 @@ agent_dict = {'Random': RandomAgent(),
 # Serve the webpage
 @app.route('/')
 def index():
-    return send_file('Web/public/index.html')
+    return render_template('index.html')
+    # return send_file('Web/public/index.html')
+    # return send_file('Web/public/index.html')    
 
 
 # GET for getting game info and available agents

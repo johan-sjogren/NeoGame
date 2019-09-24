@@ -7,3 +7,8 @@ NeoGame will be a web based 2 player card game, where one player takes the role 
 This is an internal side-project at Neodev AB:
 
 ## Current status: Work In Progress
+
+To run locally:
+1. Install yarn/npm
+2. In Web-folder run: yarn/npm build
+3. In root run: python run_flask.py
