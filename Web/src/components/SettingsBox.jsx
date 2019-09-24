@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function SettingsBox(props) {
-  //TODO: Get opponent list from flask api
+  const [opponents, setOpponents] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:5000/ai/game/v1.0`).then(res => {
+      setOpponents(res.data.opponents);
+    });
+  }, []);
+
   return (
     <>
       <select
@@ -9,8 +17,9 @@ function SettingsBox(props) {
           props.setOpponent(event.target.value);
         }}
       >
-        <option value="Greedy">Greedy</option>
-        <option value="Random">Random</option>
+        {opponents.map(opponent => {
+          return <option value={opponent}>{opponent}</option>;
+        })}
       </select>
       <button
         onClick={() => {
