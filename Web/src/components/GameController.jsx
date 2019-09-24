@@ -45,6 +45,7 @@ function GameController(props) {
   };
 
   const actionBoolToIndex = action => {
+    // Maps the boolean opponent action outputted from the model to normal indices
     let idxAction = [];
     action.forEach((val, idx) => {
       if (val) idxAction.push(idx);
@@ -53,6 +54,7 @@ function GameController(props) {
   };
 
   const cardWins = (x, y, max_cls = 4, min_cls = 0) => {
+    // Returns true if x wins over y
     if (x === max_cls && y === min_cls) {
       return true;
     } else if (x + 1 === y) {
@@ -63,6 +65,7 @@ function GameController(props) {
   };
 
   const getWinner = () => {
+    //Retrieves the winner based on the current state
     const playerCards = table.player_cards;
     const opponentCards = table.opponent_cards;
     let ppoints = 0;
@@ -91,6 +94,7 @@ function GameController(props) {
   };
 
   const playCards = () => {
+    //Plays a round if two cards are given by the player.
     if (idxPicks.length === 2) {
       getWinner();
       const picks = [];
@@ -101,6 +105,7 @@ function GameController(props) {
   };
 
   const pickCard = (card, idx) => {
+    // Picks a card from the player hand
     if (table.player_cards.length < 4) {
       const newTable = { ...table };
       newTable.player_cards.push(card);
@@ -113,6 +118,7 @@ function GameController(props) {
   };
 
   const undoPick = () => {
+    //Removes the latest picked card
     if (table.player_cards.length > 2) {
       const newTable = { ...table };
       newTable.player_cards.pop();
