@@ -1,0 +1,59 @@
+.theTable {
+  width: 500px;
+  height: 20em;
+  background-color: #0067a5;
+  border-radius: 100px;
+  border: 15px solid #a95555;
+  position: relative;
+  margin: 0 auto;
+}
+.theTable:before {
+  content: "";
+  border: 7px solid rgba(0, 0, 0, 0.1);
+  display: block;
+  width: 515px;
+  height: 21em;
+  border-radius: 100px;
+  top: -15px;
+  left: -15px;
+  position: absolute;
+}
+.theTable:after {
+  content: "";
+  border: 7px solid rgba(0, 0, 0, 0.1);
+  display: block;
+  width: 485px;
+  height: 19.1em;
+  border-radius: 85px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.cardTable {
+  border-spacing: 10px;
+  border-collapse: separate;
+  margin: 0 auto;
+  margin-top: 70px;
+}
+.frontCard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  height: 80px;
+  width: 56px;
+  border-radius: 5px;
+  border-collapse: collapse;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  z-index: 2;
+}
+.backCard {
+  height: 80px;
+  width: 56px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 5px;
+  background-image: url(../cards/mb_neocard_back_blue.svg);
+  background-size: contain;
+  text-align: center;
+  transform: rotateY(180deg);
+}

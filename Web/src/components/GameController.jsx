@@ -21,7 +21,9 @@ function GameController(props) {
   const [idxPicks, setIdxPicks] = useState([]);
   const getTable = () => {
     axios
-      .post(`http://localhost:5000/ai/game/v1.0`, { opponent_name: opponent })
+      .post(`http://192.168.1.233:5000/ai/game/v1.0`, {
+        opponent_name: opponent
+      })
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -108,6 +110,7 @@ function GameController(props) {
     // Picks a card from the player hand
     if (table.player_cards.length < 4) {
       const newTable = { ...table };
+
       newTable.player_cards.push(card);
       setTable(newTable);
 
@@ -117,17 +120,18 @@ function GameController(props) {
     }
   };
 
-  const undoPick = () => {
-    //Removes the latest picked card
-    if (table.player_cards.length > 2) {
-      const newTable = { ...table };
-      newTable.player_cards.pop();
-      setTable(newTable);
+  const unpickCard = (card, idx) => {
+    //Unpicks a card
+    const newTable = { ...table };
 
-      const picks = [...idxPicks];
-      picks.pop();
-      setIdxPicks(picks);
-    }
+    const idxToRemove = newTable.player_cards.lastIndexOf(card);
+    if (idxToRemove !== -1) newTable.player_cards.splice(idxToRemove, 1);
+    setTable(newTable);
+
+    const picks = [...idxPicks];
+    const pickToRemove = picks.lastIndexOf(idx);
+    if (pickToRemove !== -1) picks.splice(pickToRemove, 1);
+    setIdxPicks(picks);
   };
 
   return (
@@ -137,6 +141,7 @@ function GameController(props) {
       <Player
         hand={table.player_hand}
         pickCard={pickCard}
+        unpickCard={unpickCard}
         picks={idxPicks}
       ></Player>
       <SettingsBox
@@ -144,7 +149,6 @@ function GameController(props) {
         playCards={playCards}
         message={message}
         setOpponent={setOpponent}
-        undoPick={undoPick}
       ></SettingsBox>
     </div>
   );

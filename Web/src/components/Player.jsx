@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-
+import React from "react";
+import styles from "./player.module.css";
 function Player(props) {
   return (
-    <>
-      <table>
+    <div>
+      <table className={styles.cardTable}>
         <tbody>
           <tr>
             {props.hand.map((card, idx) => {
               if (props.picks.includes(idx)) {
                 return (
-                  <td key={idx} className="pickedCard">
+                  <td
+                    key={idx}
+                    className={styles.pickedCard}
+                    onClick={() => {
+                      props.unpickCard(card, idx);
+                    }}
+                  >
                     {card}
                   </td>
                 );
@@ -17,7 +23,7 @@ function Player(props) {
                 return (
                   <td
                     key={idx}
-                    className="frontCard"
+                    className={styles.frontCard}
                     onClick={() => {
                       props.pickCard(card, idx);
                     }}
@@ -30,7 +36,7 @@ function Player(props) {
           </tr>
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
 
