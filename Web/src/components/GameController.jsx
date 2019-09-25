@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import GameTable from "./GameTable";
 import axios from "axios";
 import SettingsBox from "./SettingsBox";
-import "./GameController.css";
+import styles from "./gameController.module.css";
 import Opponent from "./Opponent";
 import Player from "./Player";
 
