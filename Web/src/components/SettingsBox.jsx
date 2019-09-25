@@ -19,7 +19,11 @@ function SettingsBox(props) {
         }}
       >
         {opponents.map(opponent => {
-          return <option value={opponent}>{opponent}</option>;
+          return (
+            <option key={opponent} value={opponent}>
+              {opponent}
+            </option>
+          );
         })}
       </select>
       <br />
