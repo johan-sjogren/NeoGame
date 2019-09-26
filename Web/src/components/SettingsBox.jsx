@@ -5,7 +5,7 @@ function SettingsBox(props) {
   const [opponents, setOpponents] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://192.168.1.233:5000/ai/game/v1.0`).then(res => {
+    axios.get(`http://localhost:5000/ai/game/v1.0`).then(res => {
       setOpponents(res.data.opponents);
     });
   }, []);

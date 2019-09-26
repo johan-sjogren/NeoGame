@@ -21,7 +21,7 @@ function GameController(props) {
   const [idxPicks, setIdxPicks] = useState([]);
   const getTable = () => {
     axios
-      .post(`http://192.168.1.233:5000/ai/game/v1.0`, {
+      .post(`http://localhost:5000/ai/game/v1.0`, {
         opponent_name: opponent
       })
       .then(res => {
