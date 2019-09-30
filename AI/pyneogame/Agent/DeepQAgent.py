@@ -111,7 +111,6 @@ class DeepQAgent(BaseAgent.BaseAgent):
     def get_action(self, state, actions=None,
                    explore_exploit='none',
                    as_string=False):
-
         exp_tradeoff = np.random.uniform(0, 1)
         if explore_exploit == 'explore':
             action = random.choice(self.actions)
@@ -123,7 +122,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
             # Reduce epsilon (because we need less and less exploration)
             self.epsilon *= np.exp(-self.decay_rate)
         return action
-    
+
     def remember(self, state, action, reward, new_state=None, done=None):
         # The action have to be converted back into the index given by the NN
         act_idx = np.where(np.all(self.actions == action, axis=1))[0]

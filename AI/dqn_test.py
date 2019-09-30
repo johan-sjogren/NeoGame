@@ -31,6 +31,7 @@ def dq_model(entry,actionsize):
     dense_2 = Dense(100, activation='relu')(dense_1)
     output_layer = Dense(actionsize, activation='linear')(dense_2)
     model = Model(inputs=input_layer, outputs=output_layer)
+    model.compile(loss='mse', optimizer='adam')
     return model
 
 dq_player.input_model(dq_model(entry,actionsize))
@@ -68,8 +69,8 @@ game = Game()
 #                   update_interval=32,
 #                   memory_size=32,
 #                   verbose=0)
-#player=dq_player
-player= pg_player
+player=dq_player
+#player= pg_player
 
 # player.load('DQN_model.h5') 
 

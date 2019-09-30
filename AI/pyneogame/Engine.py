@@ -153,12 +153,7 @@ class Game(object):
             agent_action = agent.get_action(self.get_player_state(),
                                             actions=self.get_actions())
 
-            # Check that action recieved is a numpy array
-            assert isinstance(agent_action, np.ndarray)
-
-            # Check that the player action produces the required number of cards
-            # Also checks that action can be convertet to boolean array
-            
+            assert isinstance(agent_action, np.ndarray), "The received action is not of type numpy array"
             assert len(self.player_hand[agent_action.astype(
-                    bool)]) == self.n_cards_to_play
+                    bool)]) == self.n_cards_to_play, "Wrong number of cards played, or the action can not be converted to boolean array" 
 

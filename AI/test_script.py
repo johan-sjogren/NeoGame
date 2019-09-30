@@ -88,11 +88,13 @@ class test(unittest.TestCase):
 
         # Check that scoring never exceeds the highest possible score
         for _ in range(500):
+            np.random.seed(_)
             arr1 = np.random.randint(0, 5, 4)
+            np.random.seed(500+_)
             arr2 = np.random.randint(0, 5, 4)
 
             max_score = (self.game.n_cards_on_table + self.game.n_cards_to_play)**2
-            self.assertTrue(self.game.calc_score(arr1, arr2) <= max_score, msg=[arr1,arr2])
+            self.assertTrue(self.game.calc_score(arr1, arr2) <= max_score, msg=[arr1,arr2,_,500+_])
 
         # Scoring should be insensitive to permutations
         for _ in range(4):
