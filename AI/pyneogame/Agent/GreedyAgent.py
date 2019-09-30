@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 from . import BaseAgent
 from pyneogame.Engine import Game
-# TODO: Move test
-
 
 class GreedyAgent(BaseAgent.BaseAgent):
 
@@ -41,27 +39,3 @@ class GreedyAgent(BaseAgent.BaseAgent):
     def learn(self, state, action, reward, new_state=None):
         # Static strategy, just return self
         return self
-
-
-def test():
-    print("Running 3 tests on the greedy agent")
-    game = Game()
-    actions = game.get_actions()
-    agent = GreedyAgent(value_func=Game.calc_score)
-
-    state_1 = [1, 2, 3, 4, 4, 0, 0, 1, 3]
-    action_1 = agent.get_action(state_1, actions).tolist()
-    # There are three equally good solutions here...
-    assert (action_1 == [1, 1, 0, 0, 0] or
-            action_1 == [1, 0, 1, 0, 0] or
-            action_1 == [0, 1, 1, 0, 0]
-            )
-
-    state_2 = [2, 3, 3, 4, 4, 0, 4, 1, 4]
-    action_2 = agent.get_action(state_2, actions).tolist()
-    assert action_2 == [0, 1, 1, 0, 0]
-
-    state_3 = [0, 2, 2, 4, 4, 1, 2, 0, 3]
-    action_3 = agent.get_action(state_3, actions).tolist()
-    assert action_3 == [0, 1, 1, 0, 0]
-    print("Greedy agent passed all tests")
