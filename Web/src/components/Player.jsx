@@ -5,42 +5,34 @@ function Player(props) {
     let cards = props.hand.map((card, idx) => {
       if (props.picks.includes(idx)) {
         return (
-          <td
+          <div
             key={idx}
-            className={styles.pickedCard}
+            className={styles.pickedCard + " " + styles.card}
             onClick={() => {
               props.unpickCard(card, idx);
             }}
           >
             {card}
-          </td>
+          </div>
         );
       } else {
         return (
-          <td
+          <div
             key={idx}
-            className={styles.frontCard}
+            className={styles.frontCard + " " + styles.card}
             onClick={() => {
               props.pickCard(card, idx);
             }}
           >
             {card}
-          </td>
+          </div>
         );
       }
     });
     return cards;
   };
 
-  return (
-    <div>
-      <table className={styles.cardTable}>
-        <tbody>
-          <tr>{renderCards()}</tr>
-        </tbody>
-      </table>
-    </div>
-  );
+  return <div className={styles.playerContainer}>{renderCards()}</div>;
 }
 
 export default Player;

@@ -6,18 +6,20 @@ function GameTable(props) {
     let cards = props.table.opponent_cards.map((card, idx) => {
       if (props.roundDone) {
         return (
-          <td id="card" key={idx} className={styles.frontCard}>
+          <td key={idx} className={styles.frontCard + " " + styles.card}>
             {card}
           </td>
         );
       } else if (idx < 2) {
         return (
-          <td id="card" key={idx} className={styles.frontCard}>
+          <td key={idx} className={styles.frontCard + " " + styles.card}>
             {card}
           </td>
         );
       } else {
-        return <td id="card" key={idx} className={styles.backCard}></td>;
+        return (
+          <td key={idx} className={styles.backCard + " " + styles.card}></td>
+        );
       }
     });
     return cards;
@@ -25,7 +27,7 @@ function GameTable(props) {
   const renderPlayerCards = () => {
     let cards = props.table.player_cards.map((card, idx) => {
       return (
-        <td id="card" key={idx} className={styles.frontCard}>
+        <td key={idx} className={styles.frontCard + " " + styles.card}>
           {card}
         </td>
       );

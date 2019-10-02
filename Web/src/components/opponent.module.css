@@ -1,28 +1,38 @@
-.cardTable {
-  border-collapse: separate;
-  margin: 0 auto;
-  margin-bottom: 30px;
+/*container and card class kind of the same, lift it up somehow?*/
+.opponentContainer {
+  width: 100%;
+  padding: 2rem 0;
+  clip-path: polygon(0 2%, 100% 0, 100% 100%, 0 96%);
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-color: #74f0c1;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, 0.247);
+}
+.card {
+  display: table-row;
+  height: 8rem;
+  line-height: 8rem;
+  width: 5.6rem;
+  margin: 0.2rem;
+  border-radius: 0.5rem;
+  font-size: 3rem;
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .frontCard {
-  height: 120px;
-  width: 80px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-  border-radius: 5px;
-  font-size: 30px;
-  text-align: center;
   background-color: rgb(255, 255, 255);
+  cursor: pointer;
 }
+
 .backCard {
   transition: 0.3s;
   transform: rotateY(180deg);
   transform-style: preserve-3d;
   background-image: url(../cards/mb_neocard_back_blue.svg);
   background-size: cover;
-  height: 66px;
-  width: 27px;
-  border-radius: 5px;
-  border-collapse: collapse;
-  padding: 30px;
-  font-size: 30px;
+  background-position: center;
 }

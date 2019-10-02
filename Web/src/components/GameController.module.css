@@ -1,0 +1,8 @@
+.row {
+  display: inline-flex;
+  width: 100%;
+  padding: 2.5rem 0;
+  clip-path: polygon(0 0, 100% 2%, 100% 100%, 0 99%);
+
+  background-color: #0067a5;
+}

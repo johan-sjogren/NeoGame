@@ -1,4 +1,44 @@
 .settingsBox {
-  width: 200px;
-  margin: auto;
+  display: flex;
+  height: 8rem;
+  justify-content: center;
+}
+
+.stn {
+  display: inline-flex;
+  border: 0px;
+  border-radius: 0.4rem;
+  margin: 0.5rem;
+}
+
+.btn {
+  width: 8.5rem;
+  height: 4rem;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+  box-shadow: 0 4px 16px 2px rgba(0, 0, 0, 0.2);
+}
+button.btn:active {
+  box-shadow: 0 4px 16px 1px rgba(0, 0, 0, 0.2);
+}
+button:focus {
+  outline: 0;
+}
+
+.textBox {
+  padding: 0;
+  height: 4rem;
+  width: 8.5rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  font-size: 0.8rem;
+  resize: none;
+}
+.selectOpponent {
+  border: 0px;
+  height: 4rem;
+  width: 8.5rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }

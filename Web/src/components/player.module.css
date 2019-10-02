@@ -1,26 +1,40 @@
-.cardTable {
-  border-collapse: separate;
-  margin: 0 auto;
-  margin-top: 20px;
-  padding: 10px;
+.playerContainer {
+  width: 100%;
+  padding: 2rem 0;
+  clip-path: polygon(0 0, 100% 2%, 100% 96%, 0 100%);
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-color: #ff7fa4;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, 0.247);
 }
-.frontCard {
-  height: 120px;
-  width: 80px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  border-radius: 5px;
-  font-size: 30px;
+.card {
+  height: 8rem;
+  line-height: 8rem;
+  width: 5.6rem;
+  margin: 0.2rem;
+  border-radius: 0.5rem;
+  font-size: 3rem;
   text-align: center;
+  transition: 0.2s;
+  border: 0px;
+  cursor: pointer;
+}
+
+.card:active {
+  transform: translateY(0px);
+  box-shadow: 0 1px 4px 2px rgba(0, 0, 0, 0.2);
+}
+
+.frontCard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   background-color: rgb(255, 255, 255);
 }
+.frontCard:hover {
+  transform: translateY(-1px);
+}
 .pickedCard {
-  height: 120px;
-  width: 80px;
-  border-radius: 5px;
-  border-collapse: collapse;
-  font-size: 30px;
-  color: white;
-  text-align: center;
-  background-color: rgb(228, 227, 227);
+  box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.2);
+  background-color: rgb(240, 240, 240);
 }

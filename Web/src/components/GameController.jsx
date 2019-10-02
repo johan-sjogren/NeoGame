@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import GameTable from "./GameTable";
 import axios from "axios";
 import SettingsBox from "./SettingsBox";
-//import styles from "./gameController.module.css";
+import styles from "./gameController.module.css";
 import Opponent from "./Opponent";
 import Player from "./Player";
+import Score from "./Score";
 
 function GameController(props) {
   const [table, setTable] = useState({
@@ -16,6 +17,7 @@ function GameController(props) {
     version: 0.0
   });
   const [opponent, setOpponent] = useState("Greedy");
+  const [score, setScore] = useState([0, 0]);
   const [message, setMessage] = useState("");
   const [roundDone, setRoundDone] = useState(false);
   const [idxPicks, setIdxPicks] = useState([]);
@@ -88,9 +90,17 @@ function GameController(props) {
     winText += "Player: " + ppoints + "\nOpponent: " + opoints;
     if (ppoints > opoints) {
       winText += "\nPlayer Wins";
+      const new_score = [...score];
+      new_score[0] += 1;
+      setScore(new_score);
     } else if (ppoints === opoints) {
       winText += "\nRound is Draw!";
-    } else winText += "\nOpponent Wins!";
+    } else {
+      const new_score = [...score];
+      new_score[1] += 1;
+      setScore(new_score);
+      winText += "\nOpponent Wins!";
+    }
     setRoundDone(true);
     setMessage(winText);
   };
@@ -137,7 +147,11 @@ function GameController(props) {
   return (
     <div>
       <Opponent hand={table.opponent_hand} roundDone={roundDone}></Opponent>
-      <GameTable table={table} roundDone={roundDone} pickCard={pickCard} />
+      <div className={styles.row}>
+        <Score score={score[0]} player={true}></Score>
+        <GameTable table={table} roundDone={roundDone} pickCard={pickCard} />
+        <Score score={score[1]} player={false}></Score>
+      </div>
       <Player
         hand={table.player_hand}
         pickCard={pickCard}
