@@ -1,7 +1,7 @@
 .playerContainer {
   width: 100%;
   padding: 2rem 0;
-  clip-path: polygon(0 0, 100% 2%, 100% 96%, 0 100%);
+  clip-path: polygon(0 0, 100% 9%, 100% 96%, 0 100%);
   margin: 1rem auto;
   display: flex;
   justify-content: center;
