@@ -22,7 +22,3 @@ class RandomAgent(BaseAgent.BaseAgent):
         return self
 
 
-def test():
-    # TODO: Implement
-    print('Not implemented')
-    pass
