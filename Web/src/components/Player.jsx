@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./player.module.css";
-
 import Card from './Card';
 function Player(props) {
 

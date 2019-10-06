@@ -10,5 +10,6 @@ This is an internal side-project at Neodev AB:
 
 To run locally:
 1. Install yarn/npm
-2. In Web-folder run: yarn/npm build
-3. In root run: python run_flask.py
+1. In Web-folder run: yarn/npm build
+1. In root run: pip install -r requirements.txt
+1. In root run: python run_flask.py
