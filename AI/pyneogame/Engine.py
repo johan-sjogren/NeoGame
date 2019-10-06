@@ -20,6 +20,7 @@ class Game(object):
         for x in range(n_classes):
             deck += [x] * card_per_class
         self.deck = np.array(deck)
+        self.memory_length = memory_length
         self.player_score = deque(maxlen=memory_length)
         self.opponent_score = deque(maxlen=memory_length)
         self.n_cards_in_hand = cards_in_hand
@@ -153,11 +154,11 @@ class Game(object):
         for action in possible_actions:
             player_cards = np.concatenate(
                 [self.player_table,
-                self.player_hand[action.astype(bool)]])
+                 self.player_hand[action.astype(bool)]])
             player_score = self.calc_score(player_cards, opponent_cards)
             opponent_score = self.calc_score(opponent_cards, player_cards)
             diff = player_score - opponent_score
-            if optimal_result == None or diff >= optimal_result:
+            if optimal_result is None or diff >= optimal_result:
                 optimal_result = diff
         return optimal_result
 
@@ -171,7 +172,14 @@ class Game(object):
             agent_action = agent.get_action(self.get_player_state(),
                                             actions=self.get_actions())
 
-            assert isinstance(agent_action, np.ndarray), "The received action is not of type numpy array"
+            assert isinstance(agent_action, np.ndarray), \
+                "The received action is not of type numpy array"
             assert len(self.player_hand[agent_action.astype(
-                    bool)]) == self.n_cards_to_play, "Wrong number of cards played, or the action can not be converted to boolean array" 
+                    bool)]) == self.n_cards_to_play, \
+                "Wrong number of cards played, or the action" +\
+                "can not be converted to boolean array"
 
+    def restart(self):
+        """ Cleans all history an saved information """
+        self.player_score = deque(maxlen=self.memory_length)
+        self.opponent_score = deque(maxlen=self.memory_length)

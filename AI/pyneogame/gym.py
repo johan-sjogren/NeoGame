@@ -1,12 +1,13 @@
 
-#!/usr/bin/python3
-"""The Gym module used for training and evaluating agents playing NeoGame 
+# !/usr/bin/python3
+"""The Gym module used for training and
+    evaluating agents playing NeoGame
 
 Usage:
     from pyneogame.Gym import Gym
 
-    gym = Gym(<Agent>, <Agent>)
-    
+    gym = Gym(<Agent>, <Agent>, <Game>)
+
     gym.train()
     gym.eval_exp_states()
 
@@ -14,7 +15,7 @@ Usage:
     gym.eval()
 
 TODO: Define and implement tests
-TODO: Add ActiveTable specific code? 
+TODO: Add ActiveTable specific code?
 """
 
 from collections import defaultdict
@@ -24,11 +25,12 @@ from tqdm import tqdm
 
 from .Engine import Game
 
+
 class Gym:
 
-    def __init__(self, player, opponent):
-        
-        self.game = None
+    def __init__(self, player, opponent, game=Game()):
+
+        self.game = game
         self.player = player
         self.opponent = opponent
 
@@ -50,7 +52,7 @@ class Gym:
         Arguments:
             player_score
             opponent_score
-        
+
         TODO: Implement other reward functions?
         """
 
@@ -58,14 +60,14 @@ class Gym:
 
     def train(self, num_episodes=10000):
         """Train the player agent against the opponent
-        
+
         During training the player agent deploys an exploration strategy
 
         Arguments:
             num_episodes (int) - The number of episodes in the training
         """
 
-        self.game = Game()
+        self.game.restart()
 
         self.exp_states = defaultdict(int)
 
@@ -79,7 +81,7 @@ class Gym:
             player_action = self.player.get_action(player_state,
                                                    possible_actions,
                                                    explore_exploit='explore')
-            
+
             # Bookkeep visited states (?)
             player_state_str = np.array2string(player_state)
             self.exp_states[player_state_str] += 1
@@ -92,17 +94,17 @@ class Gym:
                      .set_opponent_action(opponent_action)
 
             player_score, opponent_score = self.game.get_scores()
-            
+
             reward = self._get_reward(player_score, opponent_score)
             self.player.learn(player_state,
-                         player_action,
-                         reward)
-        
+                              player_action,
+                              reward)
+
         print("Training done!")
 
     def eval_exp_table(self):
         """Get the min/max exp_states
-        
+
         TODO: Add a more descriptive print
         """
 
@@ -113,8 +115,9 @@ class Gym:
 
     def test(self, num_test=1000):
         """Test the player agent against the opponent
-        
-        During test the player agent chooses the action producing the highest reward
+
+        During test the player agent chooses the action
+        producing the highest reward
 
         Arguments:
             num_episodes (int) - The number of test games
@@ -126,22 +129,22 @@ class Gym:
         self.optimal_wins = 0
         self.optimal_losses = 0
 
-        self.game = Game()
+        self.game.restart()
 
         for test in range(num_test):
             self.game.deal_cards()
             possible_actions = self.game.get_actions()
-                
+
             player_state = self.game.get_player_state()
             player_action = self.player.get_action(player_state,
                                                    possible_actions,
                                                    explore_exploit='exploit')
             opponent_state = self.game.get_opponent_state()
             opponent_action = self.opponent.get_action(opponent_state,
-                                            possible_actions)
+                                                       possible_actions)
 
-            self.game.set_player_action(player_action)\
-                         .set_opponent_action(opponent_action)
+            (self.game.set_player_action(player_action)
+                      .set_opponent_action(opponent_action))
             player_score, opponent_score = self.game.get_scores()
 
             if player_score > opponent_score:
@@ -183,7 +186,8 @@ class Gym:
 
         # Ratio of win, loss diff between player and optimal
         # positive if the player beats opponent
-        relative_result = (ratio_player_win - ratio_opponent_win) / (ratio_optimal_win - ratio_optimal_loose)
+        relative_result = ((ratio_player_win - ratio_opponent_win) /
+                           (ratio_optimal_win - ratio_optimal_loose))
 
         print("\nResults Player Relative Optimal:")
         print("\tWins   {0:.2f}%".format(100.0 * ratio_player_win / ratio_optimal_win))

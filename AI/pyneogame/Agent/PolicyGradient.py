@@ -4,7 +4,7 @@ from collections import deque
 import random
 from os import path
 from keras import Model
-from keras. models import save_model, load_model
+# from keras. models import save_model, load_model
 from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional
 from keras.layers import Dropout
 from keras.callbacks import EarlyStopping
@@ -107,13 +107,13 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         states = np.vstack(player_mem[:, 0])
         actions = np.vstack(player_mem[:, 1])
         rewards = player_mem[:, 2]
-        #target = actions 
+        # target = actions 
         target = actions * rewards[:, np.newaxis]
 
         es = EarlyStopping(monitor='val_loss', mode='min',
                            verbose=0, patience=2)
 
-        #self.dnn_model.set_weights(self.save_weights)
+        # self.dnn_model.set_weights(self.save_weights)
         history = self.dnn_model.fit(states,
                                      target,
                                      epochs=epochs,
@@ -121,7 +121,7 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
                                      batch_size=batch_size,
                                      callbacks=[es],
                                      validation_split=0.10
-                                     #sample_weight=np.exp(rewards.astype(float))
+                                     # sample_weight=np.exp(rewards.astype(float))
                                      )
 
         return history
@@ -130,7 +130,7 @@ class ReInforce_v2(DeepQAgent.DeepQAgent):
         return self.actions_size
     
     def input_model(self, model):
-        if model.optimizer==None:
+        if model.optimizer is None:
             print("Compiling model, default loss and optimizer")
             model.compile(loss=self.reward_loss,
                           optimizer='adam')
@@ -174,7 +174,8 @@ class ReInforce(DeepQAgent.DeepQAgent):
 
     def reward_loss(self, y_true, y_pred):
         # The loss ha to deal with the rewards being both positive and negative
-        _epsilon = tf.convert_to_tensor(tf.keras.backend.epsilon(), y_pred.dtype.base_dtype)
+        _epsilon = tf.convert_to_tensor(tf.keras.backend.epsilon(),
+                                        y_pred.dtype.base_dtype)
         y_pred = tf.clip_by_value(y_pred, _epsilon, 1 - _epsilon)
         y_cross = y_true * tf.log(y_pred)
         y_crossNeg = -y_true * tf.log(1-y_pred)
@@ -212,7 +213,11 @@ class ReInforce(DeepQAgent.DeepQAgent):
                    as_string=False):
 
         state = state.reshape(1, state.shape[0])
-        act_dist = self.dnn_model.predict(state)
+        try:
+            act_dist = self.dnn_model.predict(state)
+        except ValueError:
+            print(state)
+            raise ValueError
         idx = np.random.choice(range(act_dist.shape[1]),
                                p=act_dist.ravel(), size=1)
         return self.actions[idx][0]

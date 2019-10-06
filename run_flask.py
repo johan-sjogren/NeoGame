@@ -9,25 +9,40 @@ import config
 from pyneogame.Engine import Game
 from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
+from pyneogame.Agent.PolicyGradient import ReInforce
+from pyneogame.Agent.DeepQAgent import DeepQAgent
 
 app = Flask(__name__,
             static_folder="Web/build/static",
             template_folder="Web/build")
-CORS(app, support_credentials=True)
+CORS(app)  # , support_credentials=True)
 
 game = Game()
 
+# TODO: Loop over several available models. Maybe check entire models folders
+DQ_FILE = 'AI/models/dq_best.h5'
+PG_FILE = 'AI/models/pg_best.h5'
+
+# Create PG model
+pg_agent = ReInforce(state_size=len(game.get_player_state()),
+                     actions=game.get_actions())
+pg_agent.load(PG_FILE, custom_objects={'reward_loss': pg_agent.reward_loss})
+
+dq_agent = DeepQAgent(state_size=len(game.get_player_state()),
+                      actions=game.get_actions()).load(DQ_FILE)
+
 # All agents included is listed here
 agent_dict = {'Random': RandomAgent(),
-              'Greedy': GreedyAgent()}
+              'Greedy': GreedyAgent(),
+              'DeepQ': dq_agent,
+              'PolicyGrad': pg_agent
+              }
 
 
 # Serve the webpage
 @app.route('/')
 def index():
     return render_template('index.html')
-    # return send_file('Web/public/index.html')
-    # return send_file('Web/public/index.html')    
 
 
 # GET for getting game info and available agents
