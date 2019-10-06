@@ -213,11 +213,7 @@ class ReInforce(DeepQAgent.DeepQAgent):
                    as_string=False):
 
         state = state.reshape(1, state.shape[0])
-        try:
-            act_dist = self.dnn_model.predict(state)
-        except ValueError:
-            print(state)
-            raise ValueError
+        act_dist = self.dnn_model.predict(state)
         idx = np.random.choice(range(act_dist.shape[1]),
                                p=act_dist.ravel(), size=1)
         return self.actions[idx][0]
