@@ -26,7 +26,7 @@ from .Engine import Game
 
 class Gym:
 
-    def __init__(self, player, opponent):
+    def __init__(self, player, opponent, name="autosave_model.h5"):
         
         self.game = None
         self.player = player
@@ -41,6 +41,8 @@ class Gym:
         self.num_test = None
         self.optimal_wins = None
         self.optimal_losses = None
+        self.name = name
+        self.last_test = None
 
     def _get_reward(self, player_score, opponent_score):
         """Get the reward of one round
@@ -53,8 +55,8 @@ class Gym:
         
         TODO: Implement other reward functions?
         """
-
-        return 1 if player_score-opponent_score > 0 else -1
+        return player_score - opponent_score
+        #return 1 if player_score-opponent_score > 0 else -1
 
     def train(self, num_episodes=10000):
         """Train the player agent against the opponent
@@ -78,7 +80,7 @@ class Gym:
             player_state = self.game.get_player_state()
             player_action = self.player.get_action(player_state,
                                                    possible_actions,
-                                                   explore_exploit='explore')
+                                                   explore_exploit='None')
             
             # Bookkeep visited states (?)
             player_state_str = np.array2string(player_state)
@@ -86,7 +88,8 @@ class Gym:
 
             opponent_state = self.game.get_opponent_state()
             opponent_action = self.opponent.get_action(opponent_state,
-                                                       possible_actions)
+                                                   possible_actions,
+                                                   explore_exploit='None')
 
             self.game.set_player_action(player_action)\
                      .set_opponent_action(opponent_action)
@@ -97,6 +100,15 @@ class Gym:
             self.player.learn(player_state,
                          player_action,
                          reward)
+            self.player.learn(opponent_state,
+                              opponent_action,
+                              -reward)
+            testing_iterations = num_episodes / 10
+            if i % testing_iterations == 0:
+                print("Mid training test time!")
+                self.test(1000)
+                self.eval()
+                self.save_model(self.name)
         
         print("Training done!")
 
@@ -189,3 +201,12 @@ class Gym:
         print("\tWins   {0:.2f}%".format(100.0 * ratio_player_win / ratio_optimal_win))
         print("\tLosses {0:.2f}%".format(100.0 * ratio_opponent_win / ratio_optimal_loose))
         print("\tScore {0:.2f}%".format(100.0 * relative_result))
+        
+        if self.last_test is not None:
+            print("Diff from last test score is {0:.2f}%".format(100.0 * (relative_result - self.last_test)))
+        self.last_test = relative_result
+
+    def save_model(self, file_name):
+        self.player.save(file_name)
+
+

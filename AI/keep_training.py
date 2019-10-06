@@ -1,5 +1,5 @@
 #/usr/bin/python3
-"""A sample training script for training and testing agents playing NeoGame"""
+"""Keep training a saved model!"""
 
 from pyneogame.gym import Gym
 from pyneogame.Agent.QTableAgent import QTableAgent
@@ -9,9 +9,12 @@ from pyneogame.Engine import Game
 
 # a) Setup the agents
 
+name = "dq_agent.h5"
+
 game = Game()
 player = DeepQAgent(state_size=len(game.get_player_state()),
                        actions=game.get_actions())
+player.load(name)
 opponent = GreedyAgent()
 
 # b) Setup the gym
