@@ -88,8 +88,7 @@ class Gym:
 
             opponent_state = self.game.get_opponent_state()
             opponent_action = self.opponent.get_action(opponent_state,
-                                                   possible_actions,
-                                                   explore_exploit='None')
+                                                   possible_actions)
 
             self.game.set_player_action(player_action)\
                      .set_opponent_action(opponent_action)
