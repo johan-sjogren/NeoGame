@@ -80,4 +80,14 @@ def post_game():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Changing between development and production')
+    parser.add_argument('--env', metavar='N', type=str, required=True,
+                        help='dev or prod.')
+    args = vars(parser.parse_args())
+
+    if 'prod' in args['env']:
+        app.run(host='0.0.0.0')
+    else:
+        app.run(debug=True)
