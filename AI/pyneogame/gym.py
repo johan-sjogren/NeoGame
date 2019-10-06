@@ -38,6 +38,9 @@ class Gym:
         # Placeholder for bookkeeping wins
         self.player_wins = None
         self.opponent_wins = None
+        self.num_test = None
+        self.optimal_wins = None
+        self.optimal_losses = None
 
     def _get_reward(self, player_score, opponent_score):
         """Get the reward of one round
@@ -108,91 +111,81 @@ class Gym:
         print(maximum, self.exp_states[maximum])
         print(minimum, self.exp_states[minimum])
 
-    def test(self, num_runs=20, num_episodes=1000):
+    def test(self, num_test=1000):
         """Test the player agent against the opponent
         
         During test the player agent chooses the action producing the highest reward
 
         Arguments:
-            runs (int)         - The number of test runs
-            num_episodes (int) - The number of episodes in each test run
+            num_episodes (int) - The number of test games
         """
 
-        self.player_wins = []
-        self.opponent_wins = []
+        self.num_test = num_test
+        self.player_wins = 0
+        self.opponent_wins = 0
+        self.optimal_wins = 0
+        self.optimal_losses = 0
 
-        for run in range(num_runs):
-            print("Run", run, "of", num_runs)
+        self.game = Game()
 
-            self.game = Game()
-
-            for i in tqdm(range(num_episodes)):
+        for test in range(num_test):
+            self.game.deal_cards()
+            possible_actions = self.game.get_actions()
                 
-                self.game.deal_cards()
-
-                possible_actions = self.game.get_actions()
-                
-                player_state = self.game.get_player_state()
-                player_action = self.player.get_action(player_state,
-                                                       possible_actions,
-                                                       explore_exploit='exploit')
-                
-                opponent_state = self.game.get_opponent_state()
-                opponent_action = self.opponent.get_action(opponent_state,
+            player_state = self.game.get_player_state()
+            player_action = self.player.get_action(player_state,
+                                                   possible_actions,
+                                                   explore_exploit='exploit')
+            opponent_state = self.game.get_opponent_state()
+            opponent_action = self.opponent.get_action(opponent_state,
                                             possible_actions)
 
-                self.game.set_player_action(player_action)\
+            self.game.set_player_action(player_action)\
                          .set_opponent_action(opponent_action)
-                
-                player_score, opponent_score = self.game.get_scores()
- 
-                reward = self._get_reward(player_score, opponent_score)
-                self.player.learn(player_state,
-                                  player_action,
-                                  reward)
+            player_score, opponent_score = self.game.get_scores()
 
-            last_player_scores = list(self.game.player_score)[-num_episodes:]
-            last_opp_scores = list(self.game.opponent_score)[-num_episodes:]
-            last_episode_scores = [(x, y) for x, y in zip(last_opp_scores,
-                                                          last_player_scores)]
+            if player_score > opponent_score:
+                self.player_wins += 1
+            elif opponent_score > player_score:
+                self.opponent_wins += 1
 
-            # Create boolean arrays from the zipped list and sum (draws not used)
-            did_player_win = [play > opp for opp, play in last_episode_scores]
-            self.player_wins.append(sum(did_player_win))
-            did_opp_win = [play < opp for opp, play in last_episode_scores]
-            self.opponent_wins.append(sum(did_opp_win))
+            optimal_result = self.game.get_optimal_result()
+            if optimal_result > 0:
+                self.optimal_wins += 1
+            elif optimal_result < 0:
+                self.optimal_losses += 1
 
         print("Testing done!")
 
     def eval(self):
         """Evaluate performance of the two agents
-
-        Performance metric: Aggregate wins
-        
-        TODO: Define the different metrics to evaluate
-        TODO: Define when an agent is significantly better than the other
+            Prints win, loss, tie ratio for player
+            and compares this to optimal play
         """
-        
-        # Aggregate wins
-        agg_wins = dict(player=0, opponent=0)
 
-        for p, o in zip(self.player_wins, self.opponent_wins):
-            if (p > o):
-                agg_wins['player'] += 1
-            elif (p < o):
-                agg_wins['opponent'] += 1
-            else:
-                # Draw, not used for now
-                pass
-        
-        diff = agg_wins['player'] - agg_wins['opponent']
-        if diff > 0:
-            print("Player won")
-        elif diff < 0:
-            print("Opponent won")
-        else:
-            print("Draw")
+        ratio_player_win = self.player_wins / self.num_test
+        ratio_opponent_win = self.opponent_wins / self.num_test
+        ratio_tie = 1.0 - ratio_player_win - ratio_opponent_win
 
-        print("\nAggregate wins:")
-        print("\tPlayer   {player:6d}".format(**agg_wins))
-        print("\tOpponent {opponent:6d}".format(**agg_wins))
+        print("\nPlayer Test Results:")
+        print("\tWins   {0:.2f}%".format(100.0 * ratio_player_win))
+        print("\tLosses {0:.2f}%".format(100.0 * ratio_opponent_win))
+        print("\tTie {0:.2f}%".format(100.0 * ratio_tie))
+
+        ratio_optimal_win = self.optimal_wins / self.num_test
+        ratio_optimal_loose = self.optimal_losses / self.num_test
+        ratio_optimal_tie = 1.0 - ratio_optimal_win - ratio_optimal_loose
+
+        print("\nOptimal Results:")
+        print("\tPlayer   {0:.2f}%".format(100.0 * ratio_optimal_win))
+        print("\tOpponent {0:.2f}%".format(100.0 * ratio_optimal_loose))
+        print("\tTie {0:.2f}%".format(100.0 * ratio_optimal_tie))
+
+        # Ratio of win, loss diff between player and optimal
+        # positive if the player beats opponent
+        relative_result = (ratio_player_win - ratio_opponent_win) / (ratio_optimal_win - ratio_optimal_loose)
+
+        print("\nResults Player Relative Optimal:")
+        print("\tWins   {0:.2f}%".format(100.0 * ratio_player_win / ratio_optimal_win))
+        print("\tLosses {0:.2f}%".format(100.0 * ratio_opponent_win / ratio_optimal_loose))
+        print("\tScore {0:.2f}%".format(100.0 * relative_result))

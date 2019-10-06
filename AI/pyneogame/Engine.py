@@ -143,6 +143,24 @@ class Game(object):
         self.opponent_score.append(opp_score)
         return player_score, opp_score
 
+    def get_optimal_result(self):
+        opponent_cards = np.concatenate(
+            [self.opponent_table,
+             self.opponent_hand[self.opponent_action]])
+        possible_actions = self.get_actions()
+
+        optimal_result = None
+        for action in possible_actions:
+            player_cards = np.concatenate(
+                [self.player_table,
+                self.player_hand[action.astype(bool)]])
+            player_score = self.calc_score(player_cards, opponent_cards)
+            opponent_score = self.calc_score(opponent_cards, player_cards)
+            diff = player_score - opponent_score
+            if optimal_result == None or diff >= optimal_result:
+                optimal_result = diff
+        return optimal_result
+
     def test_player(self, agent):
         """Routine to test agent behaviour
         Arguments:
