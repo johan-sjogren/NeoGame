@@ -5,25 +5,19 @@ function Opponent(props) {
     let cards = props.hand.map((card, idx) => {
       if (props.roundDone) {
         return (
-          <td key={idx} id="card" className={styles.frontCard}>
+          <div key={idx} className={styles.frontCard + " " + styles.card}>
             {card}
-          </td>
+          </div>
         );
       } else {
-        return <td key={idx} id="card" className={styles.backCard}></td>;
+        return (
+          <div key={idx} className={styles.backCard + " " + styles.card}></div>
+        );
       }
     });
     return cards;
   };
 
-  return (
-    <div className={styles.theTable}>
-      <table className={styles.cardTable}>
-        <tbody>
-          <tr>{renderCards()}</tr>
-        </tbody>
-      </table>
-    </div>
-  );
+  return <div className={styles.opponentContainer}>{renderCards()}</div>;
 }
 export default Opponent;

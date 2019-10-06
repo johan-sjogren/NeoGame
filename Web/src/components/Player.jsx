@@ -1,45 +1,21 @@
 import React from "react";
 import styles from "./player.module.css";
+import Card from './Card';
 function Player(props) {
-  const renderCards = () => {
-    let cards = props.hand.map((card, idx) => {
-      if (props.picks.includes(idx)) {
-        return (
-          <td
-            key={idx}
-            className={styles.pickedCard}
-            onClick={() => {
-              props.unpickCard(card, idx);
-            }}
-          >
-            {card}
-          </td>
-        );
-      } else {
-        return (
-          <td
-            key={idx}
-            className={styles.frontCard}
-            onClick={() => {
-              props.pickCard(card, idx);
-            }}
-          >
-            {card}
-          </td>
-        );
-      }
-    });
-    return cards;
-  };
 
-  return (
-    <div>
-      <table className={styles.cardTable}>
-        <tbody>
-          <tr>{renderCards()}</tr>
-        </tbody>
-      </table>
-    </div>
+return(
+  <div className={styles.playerContainer}>
+    {props.hand.map((id, idx) =>
+      <Card
+        key={idx}
+        cardId={id}
+        idx={idx}
+        pickCard={props.pickCard}
+        unpickCard={props.unpickCard}
+        picked = {props.picks.includes(idx)}
+      />
+    )}
+  </div>
   );
 }
 
