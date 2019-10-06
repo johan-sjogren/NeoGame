@@ -5,16 +5,18 @@ function Player(props) {
 
 return(
   <div className={styles.playerContainer}>
-    {props.hand.map((id, idx) =>
-      <Card
-        key={idx}
-        cardId={id}
-        idx={idx}
-        pickCard={props.pickCard}
-        unpickCard={props.unpickCard}
-        picked = {props.picks.includes(idx)}
-      />
-    )}
+    <div className={styles.playerCards}>
+      {props.hand.map((id, idx) =>
+        <Card
+          key={idx}
+          cardId={id}
+          idx={idx}
+          pickCard={props.pickCard}
+          unpickCard={props.unpickCard}
+          picked = {props.picks.includes(idx)}
+        />
+      )}
+    </div>
   </div>
   );
 }

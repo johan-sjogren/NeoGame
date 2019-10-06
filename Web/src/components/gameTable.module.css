@@ -1,11 +1,11 @@
 .theTable {
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
   position: relative;
-  width: 30%;
-  height: 19rem;
+  width: 60%;
+  height: 25rem;
   background-color: #ffffff;
-  border-radius: 3rem;
-  border: 0.5rem solid #000000;
+  border-radius: 1rem;
+  border: 0.2rem solid #000000;
   margin: 0 auto;
   top: 0.5rem;
 }
@@ -45,14 +45,25 @@
   transform: translate(-50%, -50%);
 }
 
+.cardContainer {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-evenly;
+  margin: auto 0;
+}
+
 .card {
   transition: 0.3s;
-  height: 3rem;
-  width: 2rem;
-  border-radius: 0.5rem;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  height: 10rem;
+  width: 7rem;
+  border-radius: 0.2rem;
+  background-size: cover;
   text-align: center;
 }
 

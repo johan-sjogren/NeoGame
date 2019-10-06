@@ -6,19 +6,19 @@ function GameTable(props) {
     let cards = props.table.opponent_cards.map((card, idx) => {
       if (props.roundDone) {
         return (
-          <td key={idx} className={styles.frontCard + " " + styles.card}>
+          <div key={idx} className={styles.frontCard + " " + styles.card}>
             {card}
-          </td>
+          </div>
         );
       } else if (idx < 2) {
         return (
-          <td key={idx} className={styles.frontCard + " " + styles.card}>
+          <div key={idx} className={styles.frontCard + " " + styles.card}>
             {card}
-          </td>
+          </div>
         );
       } else {
         return (
-          <td key={idx} className={styles.backCard + " " + styles.card}></td>
+          <div key={idx} className={styles.backCard + " " + styles.card}></div>
         );
       }
     });
@@ -27,9 +27,9 @@ function GameTable(props) {
   const renderPlayerCards = () => {
     let cards = props.table.player_cards.map((card, idx) => {
       return (
-        <td key={idx} className={styles.frontCard + " " + styles.card}>
+        <div key={idx} className={styles.frontCard + " " + styles.card}>
           {card}
-        </td>
+        </div>
       );
     });
 
@@ -40,12 +40,10 @@ function GameTable(props) {
   };
   return (
     <div className={styles.theTable}>
-      <table className={styles.cardTable}>
-        <tbody>
-          <tr>{renderOpponentCards()}</tr>
-          <tr>{renderPlayerCards()}</tr>
-        </tbody>
-      </table>
+      <div className={styles.cardContainer}>
+        <div className={styles.cardRow}>{renderOpponentCards()}</div>
+        <div className={styles.cardRow}>{renderPlayerCards()}</div>
+      </div>
     </div>
   );
 }
