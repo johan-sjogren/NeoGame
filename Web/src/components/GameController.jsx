@@ -6,7 +6,6 @@ import styles from "./gameController.module.css";
 import Opponent from "./Opponent";
 import Player from "./Player";
 import Score from "./Score";
-import host from "../../../config.json";
 
 function GameController(props) {
   const [table, setTable] = useState({
@@ -24,11 +23,15 @@ function GameController(props) {
   );
   const [roundDone, setRoundDone] = useState(false);
   const [idxPicks, setIdxPicks] = useState([]);
+
   const getTable = () => {
     axios
-      .post(`http://${host}:${port}/ai/game/v1.0`, {
-        opponent_name: opponent
-      })
+      .post(
+        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
+        {
+          opponent_name: opponent
+        }
+      )
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -150,37 +153,39 @@ function GameController(props) {
   };
 
   return (
-    <div>
-      <Opponent
-        hand={table.opponent_hand}
-        roundDone={roundDone}
-        message={message}
-      ></Opponent>
-      <div className={styles.row}>
-        <Score score={score[0]} player={true}></Score>
-        <GameTable
-          setOpponent={setOpponent}
-          table={table}
-          message={message}
+    <>
+      <div>
+        <Opponent
+          hand={table.opponent_hand}
           roundDone={roundDone}
-        />
-        <Score score={score[1]} player={false}></Score>
+          message={message}
+        ></Opponent>
+        <div className={styles.row}>
+          <Score score={score[0]} player={true}></Score>
+          <GameTable
+            setOpponent={setOpponent}
+            table={table}
+            message={message}
+            roundDone={roundDone}
+          />
+          <Score score={score[1]} player={false}></Score>
+        </div>
+        <Player
+          dealCards={getTable}
+          playCards={playCards}
+          hand={table.player_hand}
+          pickCard={pickCard}
+          unpickCard={unpickCard}
+          picks={idxPicks}
+        ></Player>
+        <SettingsBox
+          setOpponent={setOpponent}
+          dealCards={getTable}
+          playCards={playCards}
+          message={message}
+        ></SettingsBox>
       </div>
-      <Player
-        dealCards={getTable}
-        playCards={playCards}
-        hand={table.player_hand}
-        pickCard={pickCard}
-        unpickCard={unpickCard}
-        picks={idxPicks}
-      ></Player>
-      <SettingsBox
-        setOpponent={setOpponent}
-        dealCards={getTable}
-        playCards={playCards}
-        message={message}
-      ></SettingsBox>
-    </div>
+    </>
   );
 }
 export default GameController;
