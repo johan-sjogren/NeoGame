@@ -61,10 +61,13 @@ class DeepQAgent(BaseAgent.BaseAgent):
         self.dnn_model.save(filename)
         return self
 
-    def load(self, filename):
+    def load(self, filename, custom_objects=None, compile=True):
         if path.isfile('./'+filename):
             print('Model loaded')
-            self.dnn_model = load_model(filename)
+            self.dnn_model = load_model(filename,
+                                        custom_objects=custom_objects,
+                                        compile=compile)
+            self.dnn_model._make_predict_function()
         else:
             print("File doesn't exist no model loaded")
         return self
