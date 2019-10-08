@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./settingsBox.module.css";
+import host from "../../../config.json";
 function SettingsBox(props) {
   const [opponents, setOpponents] = useState([]);
   const { setOpponent } = props;
   useEffect(() => {
-    axios.get(`http://localhost:5000/ai/game/v1.0`).then(res => {
+    axios.get(`http://${host}:${port}/ai/game/v1.0`).then(res => {
       setOpponents(res.data.opponents);
       setOpponent(res.data.opponents[0]);
     });

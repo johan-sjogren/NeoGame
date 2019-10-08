@@ -11,7 +11,7 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 
 app = Flask(__name__,
-            static_folder="Web/build/static",
+            static_folder="Web/build/",
             template_folder="Web/build")
 CORS(app, support_credentials=True)
 

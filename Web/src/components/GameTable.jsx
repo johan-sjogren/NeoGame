@@ -12,9 +12,7 @@ function GameTable(props) {
             style={{
               backgroundImage: `url(/cards/project_${card}.svg)`
             }}
-          >
-            {card}
-          </div>
+          ></div>
         );
       } else if (idx < 2) {
         return (
@@ -24,9 +22,7 @@ function GameTable(props) {
             style={{
               backgroundImage: `url(/cards/project_${card}.svg)`
             }}
-          >
-            {card}
-          </div>
+          ></div>
         );
       } else {
         return (
@@ -45,14 +41,12 @@ function GameTable(props) {
           style={{
             backgroundImage: `url(/cards/team_${card}.svg)`
           }}
-        >
-          {card}
-        </div>
+        ></div>
       );
     });
 
-    while (cards < 4) {
-      cards.push(<td></td>);
+    while (cards.length < 4) {
+      cards.push(<div className={styles.frontCard + " " + styles.card}></div>);
     }
     return cards;
   };

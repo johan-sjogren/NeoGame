@@ -5,9 +5,13 @@ function Opponent(props) {
     let cards = props.hand.map((card, idx) => {
       if (props.roundDone) {
         return (
-          <div key={idx} className={styles.frontCard + " " + styles.card}>
-            {card}
-          </div>
+          <div
+            key={idx}
+            className={styles.frontCard + " " + styles.card}
+            style={{
+              backgroundImage: `url(/cards/project_${card}.svg)`
+            }}
+          ></div>
         );
       } else {
         return (

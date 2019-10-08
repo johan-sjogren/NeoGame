@@ -1,7 +1,7 @@
 .card {
   height: 8rem;
   line-height: 8rem;
-  width: 5.6rem;
+  width: 5.8rem;
   margin: 0.2rem;
   border-radius: 0.5rem;
   font-size: 3rem;
@@ -10,6 +10,7 @@
   border: 0px;
   cursor: pointer;
   background-color: #fff;
+  background-size: cover;
 }
 
 .card:active {
