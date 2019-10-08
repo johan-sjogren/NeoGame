@@ -147,9 +147,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
             self.training_iterations += 1
 
     def _preprocess(self, state):
-        return state
+        '''Offset all states with the first value for faster learning'''
         offset = state[0]
-        #np.delete(state, 0)
         for i in range(len(state)):
             state[i] -= offset
             if state[i] < 0:
