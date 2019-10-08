@@ -68,9 +68,8 @@
 }
 
 .frontCard {
-  background-image: url(../cards/mb_neocard_front_blue.svg);
 }
 .backCard {
-  background-image: url(../cards/mb_neocard_back_blue.svg);
+  background-image: url(/cards/mb_neocard_back_blue.svg);
   transform: rotateY(180deg);
 }

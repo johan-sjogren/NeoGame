@@ -18,14 +18,20 @@ function GameController(props) {
   });
   const [opponent, setOpponent] = useState("Greedy");
   const [score, setScore] = useState([0, 0]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(
+    "Press 'Deal Cards' to start a new round."
+  );
   const [roundDone, setRoundDone] = useState(false);
   const [idxPicks, setIdxPicks] = useState([]);
+
   const getTable = () => {
     axios
-      .post(`http://localhost:5000/ai/game/v1.0`, {
-        opponent_name: opponent
-      })
+      .post(
+        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
+        {
+          opponent_name: opponent
+        }
+      )
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -42,7 +48,7 @@ function GameController(props) {
           version: res.data.version
         });
         setRoundDone(false);
-        setMessage("");
+        setMessage("Pick two cards and press play!");
         const picks = [];
         setIdxPicks(picks);
       });
@@ -87,9 +93,9 @@ function GameController(props) {
     }
 
     let winText = "";
-    winText += "Player: " + ppoints + "\nOpponent: " + opoints;
     if (ppoints > opoints) {
-      winText += "\nPlayer Wins";
+      winText +=
+        "\nPlayer Wins with " + ppoints + " points against " + opoints + "!";
       const new_score = [...score];
       new_score[0] += 1;
       setScore(new_score);
@@ -99,8 +105,10 @@ function GameController(props) {
       const new_score = [...score];
       new_score[1] += 1;
       setScore(new_score);
-      winText += "\nOpponent Wins!";
+      winText +=
+        "\nOpponent Wins with " + opoints + " points against " + ppoints + "!";
     }
+    winText += "  -- Press 'Deal Cards' to start a new round.";
     setRoundDone(true);
     setMessage(winText);
   };
@@ -145,26 +153,39 @@ function GameController(props) {
   };
 
   return (
-    <div>
-      <Opponent hand={table.opponent_hand} roundDone={roundDone}></Opponent>
-      <div className={styles.row}>
-        <Score score={score[0]} player={true}></Score>
-        <GameTable table={table} roundDone={roundDone} pickCard={pickCard} />
-        <Score score={score[1]} player={false}></Score>
+    <>
+      <div>
+        <Opponent
+          hand={table.opponent_hand}
+          roundDone={roundDone}
+          message={message}
+        ></Opponent>
+        <div className={styles.row}>
+          <Score score={score[0]} player={true}></Score>
+          <GameTable
+            setOpponent={setOpponent}
+            table={table}
+            message={message}
+            roundDone={roundDone}
+          />
+          <Score score={score[1]} player={false}></Score>
+        </div>
+        <Player
+          dealCards={getTable}
+          playCards={playCards}
+          hand={table.player_hand}
+          pickCard={pickCard}
+          unpickCard={unpickCard}
+          picks={idxPicks}
+        ></Player>
+        <SettingsBox
+          setOpponent={setOpponent}
+          dealCards={getTable}
+          playCards={playCards}
+          message={message}
+        ></SettingsBox>
       </div>
-      <Player
-        hand={table.player_hand}
-        pickCard={pickCard}
-        unpickCard={unpickCard}
-        picks={idxPicks}
-      ></Player>
-      <SettingsBox
-        dealCards={getTable}
-        playCards={playCards}
-        message={message}
-        setOpponent={setOpponent}
-      ></SettingsBox>
-    </div>
+    </>
   );
 }
 export default GameController;

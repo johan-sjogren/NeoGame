@@ -12,8 +12,8 @@ from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.PolicyGradient import ReInforce
 from pyneogame.Agent.DeepQAgent import DeepQAgent
 
-app = Flask(__name__,
-            static_folder="Web/build/static",
+app = Flask(__name__, 
+            static_folder="Web/build/",
             template_folder="Web/build")
 CORS(app)  # , support_credentials=True)
 

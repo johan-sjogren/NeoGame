@@ -4,11 +4,16 @@ import styles from "./settingsBox.module.css";
 function SettingsBox(props) {
   const [opponents, setOpponents] = useState([]);
   const { setOpponent } = props;
+
   useEffect(() => {
-    axios.get(`http://localhost:5000/ai/game/v1.0`).then(res => {
-      setOpponents(res.data.opponents);
-      setOpponent(res.data.opponents[0]);
-    });
+    axios
+      .get(
+        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`
+      )
+      .then(res => {
+        setOpponents(res.data.opponents);
+        setOpponent(res.data.opponents[0]);
+      });
   }, [setOpponent]);
 
   return (
