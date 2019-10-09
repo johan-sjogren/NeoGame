@@ -28,7 +28,7 @@ from .Engine import Game
 
 class Gym:
 
-    def __init__(self, player, opponent, game=Game()):
+    def __init__(self, player, opponent, game=Game(), name="autosave_model.h5"):
 
         self.game = game
         self.player = player
@@ -43,6 +43,8 @@ class Gym:
         self.num_test = None
         self.optimal_wins = None
         self.optimal_losses = None
+        self.name = name
+        self.last_test = None
 
     def _get_reward(self, player_score, opponent_score):
         """Get the reward of one round
@@ -55,8 +57,7 @@ class Gym:
 
         TODO: Implement other reward functions?
         """
-
-        return 1 if player_score-opponent_score > 0 else -1
+        return player_score - opponent_score
 
     def train(self, num_episodes=10000):
         """Train the player agent against the opponent
@@ -99,7 +100,10 @@ class Gym:
             self.player.learn(player_state,
                               player_action,
                               reward)
-
+            self.player.learn(opponent_state,
+                              opponent_action,
+                              -reward)
+        
         print("Training done!")
 
     def eval_exp_table(self):
@@ -193,3 +197,8 @@ class Gym:
         print("\tWins   {0:.2f}%".format(100.0 * ratio_player_win / ratio_optimal_win))
         print("\tLosses {0:.2f}%".format(100.0 * ratio_opponent_win / ratio_optimal_loose))
         print("\tScore {0:.2f}%".format(100.0 * relative_result))
+
+        if self.last_test is not None:
+            print("Diff from last test score is {0:.2f}%".format(100.0 * (relative_result - self.last_test)))
+        self.last_test = relative_result
+
