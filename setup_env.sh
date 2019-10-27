@@ -1,22 +1,41 @@
-#/usr/bin/sh
-# Prerequisite Ubuntu 16.04
+#!/bin/sh
+# Prerequisite: Ubuntu 18.04
+
+DEFAULT_JSPM=yarn
+
+install_jspm()
+{
+    case $1 in
+    yarn)
+        sudo apt-get install npm
+        sudo npm install -g yarn 
+        ;;
+    npm) 
+        sudo apt-get install npm 
+        ;;
+    *)
+        echo JSON package manager \'$1\' not supported  
+        exit 1
+        ;;
+    esac
+}
 
 print_help()
 {
     echo "To setup environment"
-    echo "$ ./setup_env setup_env"
-    echo "To run locally:"
-    echo "$ ./setup_env run_local"
+    echo "$ ./setup_env.sh setup_env"
+    echo "To run Flask app locally:"
+    echo "$ ./setup_env.sh run_local"
 }
 
 setup_env() 
 {
-    # Setup NPM
-    sudo apt-get install npm
-    cd Web; npm install; cd ..
+    # Setup JS packages
+    [ -x $DEFAULT_JSPM ] || install_jspm $DEFAULT_JSPM
+    cd Web; $DEFAULT_JSPM install; cd ..
 
     # Python virtualenv
-    [ -d ./env ] | virtualenv --python=python3 env
+    [ -d ./env ] || virtualenv --python=python3 env
     . env/bin/activate
     pip install -r requirements.txt
 
@@ -25,15 +44,18 @@ setup_env()
 }
 
 run_local() {
-    cd Web; npm build; cd ..
+    cd Web; $DEFAULT_JSPM build; cd ..
     python run_flask.py
 }
 
 case $1 in
     setup_env)
-        setup_env ;;
+        setup_env
+        ;;
     run_local) 
-        run_local ;;
+        run_local
+        ;;
     *)
-        print_help ;;
+        print_help 
+        ;;
 esac
