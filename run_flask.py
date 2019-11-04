@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------
+import argparse
 from flask import Flask, jsonify, request, send_file, render_template
 from flask_cors import CORS, cross_origin
+from waitress import serve
 from collections import defaultdict
 # Holds flask configurations
 import config
@@ -80,7 +82,6 @@ def post_game():
 
 
 if __name__ == '__main__':
-    import argparse
 
     parser = argparse.ArgumentParser(description='Changing between development and production')
     parser.add_argument('--env', metavar='N', type=str, required=True,
@@ -88,6 +89,6 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     if 'prod' in args['env']:
-        app.run(host='0.0.0.0')
+        serve(app, host='0.0.0.0', port=8080)
     else:
         app.run(debug=True)
