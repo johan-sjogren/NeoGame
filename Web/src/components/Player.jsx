@@ -1,14 +1,24 @@
-import {Hand} from './Hand';
-import {Table} from './Table';
+import React from "react";
+import styles from "./player.module.css";
+import Card from './Card';
+function Player(props) {
 
-function Player () {
-  return (
-    <div>
-      <Hand />
-      <Table />
-      This is the Player, containing a hand and a table
+return(
+  <div className={styles.playerContainer}>
+    <div className={styles.playerCards}>
+      {props.hand.map((id, idx) =>
+        <Card
+          key={idx}
+          cardId={id}
+          idx={idx}
+          pickCard={props.pickCard}
+          unpickCard={props.unpickCard}
+          picked = {props.picks.includes(idx)}
+        />
+      )}
     </div>
-  )
+  </div>
+  );
 }
 
 export default Player;

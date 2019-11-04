@@ -1,0 +1,16 @@
+.playerContainer {
+  width: 100%;
+  padding: 2rem 0;
+  clip-path: polygon(0 0, 100% 9%, 100% 96%, 0 100%);
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  background-color: #ff7fa4;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, 0.247);
+}
+
+.playerCards {
+  width: 60%;
+  display: flex;
+  justify-content: space-evenly;
+}

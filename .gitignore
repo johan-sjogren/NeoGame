@@ -106,5 +106,33 @@ venv.bak/
 # vscode
 .vscode/
 
-# None of Johans testcrap
-test*.*
+# Don't save the DNN model files
+*.h5 
+# Unless they are in the right place
+!/AI/models/*.h5
+
+###############
+# React/Front #
+###############
+
+# dependencies
+/Web/node_modules
+/Web/.pnp
+/Web/.pnp.js
+
+# testing
+/Web/coverage
+
+# production
+/Web/build
+
+# misc
+/Web/.DS_Store
+/Web/.env.local
+/Web/.env.development.local
+/Web/.env.test.local
+/Web/.env.production.local
+
+/Web/npm-debug.log*
+/Web/yarn-debug.log*
+/Web/yarn-error.log*
