@@ -36,12 +36,11 @@ function GameTable(props) {
     let playerCards = props.playerActionCards;
     //console.log(Object.values(playerCards)[2]);
 
-    return Object.keys(playerCards).length !== 0 ? (
+    return playerCards.length !== 0 ? (
       <>
+        <Card front cardId={playerCards[0].value}></Card>
+        <Card front cardId={playerCards[1].value}></Card>
         {console.log(playerCards)}
-        <Card front cardId={playerCards["card_0"].value}></Card>
-        <Card front cardId={playerCards["card_1"].value}></Card>
-
         <Droppable droppableId="pickedCardFirst">
           {provided => (
             <div
@@ -49,13 +48,13 @@ function GameTable(props) {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {Object.keys(playerCards).length > 2 ? (
+              {playerCards.length > 2 ? (
                 <Card
-                  key={Object.values(playerCards)[2].id}
+                  key={playerCards[2].id}
                   draggable
                   front
-                  dragId={Object.values(playerCards)[2].id}
-                  cardId={Object.values(playerCards)[2].value}
+                  dragId={playerCards[2].id}
+                  cardId={playerCards[2].value}
                 ></Card>
               ) : (
                 provided.placeholder
@@ -70,13 +69,13 @@ function GameTable(props) {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {Object.keys(playerCards).length > 3 ? (
+              {playerCards.length > 3 ? (
                 <Card
-                  key={Object.values(playerCards)[3].id}
+                  key={playerCards[3].id}
                   draggable
                   front
-                  dragId={Object.values(playerCards)[3].id}
-                  cardId={Object.values(playerCards)[3].value}
+                  dragId={playerCards[3].id}
+                  cardId={playerCards[3].value}
                 ></Card>
               ) : (
                 provided.placeholder

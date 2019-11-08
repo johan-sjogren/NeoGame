@@ -21,11 +21,10 @@ function GameController(props) {
     card_5: { id: "card_5", value: 0 },
     card_6: { id: "card_6", value: 0 }
   });
-  const [playerActionCards, setPlayerActionCards] = useState({
-    card_0: { id: "card_0", value: 0 },
-    card_1: { id: "card_1", value: 0 }
-  });
-
+  const [playerActionCards, setPlayerActionCards] = useState([
+    { id: "card_0", value: 0 },
+    { id: "card_1", value: 0 }
+  ]);
   const [handOrder, setHandOrder] = useState([
     "card_2",
     "card_3",
@@ -33,8 +32,6 @@ function GameController(props) {
     "card_5",
     "card_6"
   ]);
-
-  const [pickCard1, setpickCard1] = useState("");
 
   const [score, setScore] = useState([0, 0]);
   const [oPoints, setOPoints] = useState(0);
@@ -49,7 +46,6 @@ function GameController(props) {
   const [roundDone, setRoundDone] = useState(false);
 
   const getTable = () => {
-    console.log(handOrder);
     axios
       .post(
         `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
@@ -58,7 +54,6 @@ function GameController(props) {
         }
       )
       .then(res => {
-        console.log(res);
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
         const opponent_hand = Array.from(res.data.opponent_hand);
@@ -80,10 +75,10 @@ function GameController(props) {
           card_5: { id: "card_5", value: res.data.player_hand[3] },
           card_6: { id: "card_6", value: res.data.player_hand[4] }
         });
-        setPlayerActionCards({
-          card_0: { id: "card_0", value: playerCards[0] },
-          card_1: { id: "card_1", value: playerCards[1] }
-        });
+        setPlayerActionCards([
+          { id: "card_0", value: playerCards[0] },
+          { id: "card_1", value: playerCards[1] }
+        ]);
       });
   };
 
@@ -128,7 +123,6 @@ function GameController(props) {
         }
       }
     }
-    console.log(ppoints, opoints);
     setPPoints(ppoints);
     setOPoints(opoints);
     if (ppoints > opoints) {
@@ -158,25 +152,29 @@ function GameController(props) {
 
   const playCards = () => {
     //Plays a round if two cards are given by the player.
-    if (Object.keys(playerActionCards).length === 4) {
+    if (playerActionCards.length === 4) {
       getWinner();
     }
   };
 
-  const pickCard = (card_id, index) => {
+  const pickCard = (card_id, index, box) => {
+    const action_idx = box === "pickedCardFirst" ? 2 : 3;
     // Picks a card from the player hand
     const newCardOrder = Array.from(handOrder);
     newCardOrder.splice(index, 1);
     setHandOrder(newCardOrder);
 
-    const newPlayerActionCards = { ...playerActionCards };
-    newPlayerActionCards[card_id] = { ...playerHand[card_id] };
-    delete playerHand[card_id];
-
+    const newPlayerActionCards = [...playerActionCards];
+    newPlayerActionCards.splice(action_idx, 0, { ...playerHand[card_id] });
     setPlayerActionCards(newPlayerActionCards);
-    setpickCard1(card_id);
+
+    const newPlayerHand = { ...playerHand };
+    delete newPlayerHand[card_id];
+    setPlayerHand(newPlayerHand);
   };
-  const unpickCard = (card_id, index) => {
+  const unpickCard = (card_id, index, box) => {
+    const action_idx = box === "pickedCardFirst" ? 2 : 3;
+
     // Picks a card from the player hand
     const newCardOrder = Array.from(handOrder);
     newCardOrder.splice(index, 0, card_id);
@@ -185,15 +183,38 @@ function GameController(props) {
     const newPlayerHand = { ...playerHand };
     newPlayerHand[card_id] = { ...playerActionCards[card_id] };
     setPlayerHand(newPlayerHand);
-    console.log(playerHand);
-    console.log(card_id);
-    const newPlayerActionCards = { ...playerActionCards };
-    console.log("npac", newPlayerActionCards);
-    console.log(delete newPlayerActionCards[card_id]);
-    console.log("npac2", newPlayerActionCards);
 
+    const newPlayerActionCards = [...playerActionCards];
+    newPlayerActionCards.splice(action_idx, 1);
     setPlayerActionCards(newPlayerActionCards);
-    console.log("pac", playerActionCards);
+  };
+  const replaceCard = (card_h, index, box) => {
+    console.log("Players action cards: ", playerActionCards);
+    console.log("Players handorder", handOrder);
+    console.log("Players cards", playerHand);
+    console.log(Object.values(playerActionCards));
+    const action_idx = box === "pickedCardFirst" ? 2 : 3;
+
+    //Hand order
+    const newHandOrder = Array.from(handOrder);
+    console.log(playerActionCards, action_idx);
+    newHandOrder.splice(index, 1, playerActionCards[action_idx].id); //From cardOrder, remove chosen card, and add the card from the droppableId box.
+    setHandOrder(newHandOrder);
+
+    //Player action cards
+    const newPlayerActionCards = [...playerActionCards];
+    newPlayerActionCards.splice(action_idx, 1);
+    newPlayerActionCards.splice(action_idx, 0, { ...playerHand[card_h] });
+    setPlayerActionCards(newPlayerActionCards);
+
+    //Player hand
+    const newPlayerHand = { ...playerHand }; // We need to modify the player hand to add the unpicked card
+    newPlayerHand[playerActionCards[action_idx].id] = {
+      ...playerActionCards[action_idx]
+    };
+    delete newPlayerHand[card_h];
+    setPlayerHand(newPlayerHand);
+    console.log(newPlayerHand);
   };
 
   const onDragEnd = result => {
@@ -213,18 +234,13 @@ function GameController(props) {
       source.droppableId === "playerCards" &&
       destination.droppableId === "pickedCardFirst"
     ) {
-      if (Object.keys(playerActionCards).length < 4) {
+      if (playerActionCards.length <= 4) {
         //if not a card has been picked to this slot, add the card
-        if (Object.keys(playerActionCards).length === 2) {
+        if (playerActionCards.length === 2) {
           pickCard(draggableId, source.index);
         } else {
           console.log("replace");
-          console.log(pickCard1);
-          console.log(draggableId);
-
-          console.log("playeractioncard before ", playerActionCards);
-          unpickCard(pickCard1);
-          console.log("playeractioncard after ", playerActionCards);
+          replaceCard(draggableId, source.index, destination.droppableId);
         }
       }
       return;
@@ -233,8 +249,11 @@ function GameController(props) {
       source.droppableId === "playerCards" &&
       destination.droppableId === "pickedCardSecond"
     ) {
-      if (Object.keys(playerActionCards).length < 4) {
-        pickCard(draggableId, source.index);
+      if (playerActionCards.length < 4) {
+        pickCard(draggableId, source.index, destination.droppableId);
+      } else {
+        console.log("replace");
+        replaceCard(draggableId, source.index, destination.droppableId);
       }
       return;
     }
@@ -242,14 +261,14 @@ function GameController(props) {
       source.droppableId === "pickedCardFirst" &&
       destination.droppableId === "playerCards"
     ) {
-      unpickCard(draggableId, destination.index);
+      unpickCard(draggableId, destination.index, destination.droppableId);
       return;
     }
     if (
       source.droppableId === "pickedCardSecond" &&
       destination.droppableId === "playerCards"
     ) {
-      unpickCard(draggableId, destination.index);
+      unpickCard(draggableId, destination.index, destination.droppableId);
       return;
     }
 
