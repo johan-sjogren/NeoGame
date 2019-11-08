@@ -1,54 +1,91 @@
 import React from "react";
 import styles from "./gameTable.module.css";
+import { Droppable } from "react-beautiful-dnd";
+import Card from "./Card";
 
 function GameTable(props) {
   const renderOpponentCards = () => {
-    let cards = props.table.opponent_cards.map((card, idx) => {
+    let cards = props.opponentActionCards.map((card, idx) => {
       if (props.roundDone) {
         return (
-          <div
+          <Card
+            front
+            opponent
             key={idx}
-            className={styles.frontCard + " " + styles.card}
-            style={{
-              backgroundImage: `url(/cards/project_${card}.svg)`
-            }}
-          ></div>
+            className={styles.opponent}
+            cardId={card}
+          ></Card>
         );
       } else if (idx < 2) {
         return (
-          <div
+          <Card
+            front
+            opponent
             key={idx}
-            className={styles.frontCard + " " + styles.card}
-            style={{
-              backgroundImage: `url(/cards/project_${card}.svg)`
-            }}
-          ></div>
+            className={styles.opponent}
+            cardId={card}
+          ></Card>
         );
       } else {
-        return (
-          <div key={idx} className={styles.backCard + " " + styles.card}></div>
-        );
+        return <Card key={idx} className={styles.opponent}></Card>;
       }
     });
     return cards;
   };
   const renderPlayerCards = () => {
-    let cards = props.table.player_cards.map((card, idx) => {
-      return (
-        <div
-          key={idx}
-          className={styles.frontCard + " " + styles.card}
-          style={{
-            backgroundImage: `url(/cards/team_${card}.svg)`
-          }}
-        ></div>
-      );
-    });
+    let playerCards = props.playerActionCards;
+    //console.log(Object.values(playerCards)[2]);
 
-    while (cards.length < 4) {
-      cards.push(<div className={styles.frontCard + " " + styles.card}></div>);
-    }
-    return cards;
+    return Object.keys(playerCards).length !== 0 ? (
+      <>
+        {console.log(playerCards)}
+        <Card front cardId={playerCards["card_0"].value}></Card>
+        <Card front cardId={playerCards["card_1"].value}></Card>
+
+        <Droppable droppableId="pickedCardFirst">
+          {provided => (
+            <div
+              className={styles.frontCard + " " + styles.card}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {Object.keys(playerCards).length > 2 ? (
+                <Card
+                  key={Object.values(playerCards)[2].id}
+                  draggable
+                  front
+                  dragId={Object.values(playerCards)[2].id}
+                  cardId={Object.values(playerCards)[2].value}
+                ></Card>
+              ) : (
+                provided.placeholder
+              )}
+            </div>
+          )}
+        </Droppable>
+        <Droppable droppableId="pickedCardSecond">
+          {provided => (
+            <div
+              className={styles.frontCard + " " + styles.card}
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {Object.keys(playerCards).length > 3 ? (
+                <Card
+                  key={Object.values(playerCards)[3].id}
+                  draggable
+                  front
+                  dragId={Object.values(playerCards)[3].id}
+                  cardId={Object.values(playerCards)[3].value}
+                ></Card>
+              ) : (
+                provided.placeholder
+              )}
+            </div>
+          )}
+        </Droppable>
+      </>
+    ) : null;
   };
   return (
     <div className={styles.theTable}>

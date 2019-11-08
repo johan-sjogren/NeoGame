@@ -1,7 +1,7 @@
 .card {
-  height: 8rem;
+  height: 10rem;
+  width: 7rem;
   line-height: 8rem;
-  width: 5.8rem;
   margin: 0.2rem;
   border-radius: 0.5rem;
   font-size: 3rem;
@@ -11,6 +11,12 @@
   cursor: pointer;
   background-color: #fff;
   background-size: cover;
+}
+
+.sm {
+  height: 5rem;
+  width: 3.5rem;
+  border-radius: 0.25rem;
 }
 
 .card:active {
@@ -28,4 +34,7 @@
 .pickedCard {
   box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.2);
   background-color: rgb(240, 240, 240);
+}
+.opponent {
+  transform: rotate(180deg);
 }
