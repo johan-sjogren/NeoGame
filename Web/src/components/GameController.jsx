@@ -181,7 +181,10 @@ function GameController(props) {
     setHandOrder(newCardOrder);
 
     const newPlayerHand = { ...playerHand };
-    newPlayerHand[card_id] = { ...playerActionCards[card_id] };
+    newPlayerHand[playerActionCards[action_idx].id] = {
+      ...playerActionCards[action_idx]
+    };
+    console.log(newPlayerHand);
     setPlayerHand(newPlayerHand);
 
     const newPlayerActionCards = [...playerActionCards];
@@ -189,15 +192,10 @@ function GameController(props) {
     setPlayerActionCards(newPlayerActionCards);
   };
   const replaceCard = (card_h, index, box) => {
-    console.log("Players action cards: ", playerActionCards);
-    console.log("Players handorder", handOrder);
-    console.log("Players cards", playerHand);
-    console.log(Object.values(playerActionCards));
     const action_idx = box === "pickedCardFirst" ? 2 : 3;
 
     //Hand order
     const newHandOrder = Array.from(handOrder);
-    console.log(playerActionCards, action_idx);
     newHandOrder.splice(index, 1, playerActionCards[action_idx].id); //From cardOrder, remove chosen card, and add the card from the droppableId box.
     setHandOrder(newHandOrder);
 
@@ -214,7 +212,6 @@ function GameController(props) {
     };
     delete newPlayerHand[card_h];
     setPlayerHand(newPlayerHand);
-    console.log(newPlayerHand);
   };
 
   const onDragEnd = result => {
@@ -239,7 +236,6 @@ function GameController(props) {
         if (playerActionCards.length === 2) {
           pickCard(draggableId, source.index);
         } else {
-          console.log("replace");
           replaceCard(draggableId, source.index, destination.droppableId);
         }
       }
@@ -252,7 +248,6 @@ function GameController(props) {
       if (playerActionCards.length < 4) {
         pickCard(draggableId, source.index, destination.droppableId);
       } else {
-        console.log("replace");
         replaceCard(draggableId, source.index, destination.droppableId);
       }
       return;
@@ -261,14 +256,14 @@ function GameController(props) {
       source.droppableId === "pickedCardFirst" &&
       destination.droppableId === "playerCards"
     ) {
-      unpickCard(draggableId, destination.index, destination.droppableId);
+      unpickCard(draggableId, destination.index, source.droppableId);
       return;
     }
     if (
       source.droppableId === "pickedCardSecond" &&
       destination.droppableId === "playerCards"
     ) {
-      unpickCard(draggableId, destination.index, destination.droppableId);
+      unpickCard(draggableId, destination.index, source.droppableId);
       return;
     }
 
