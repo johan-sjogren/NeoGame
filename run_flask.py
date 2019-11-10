@@ -86,9 +86,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Changing between development and production')
     parser.add_argument('--env', metavar='N', type=str, required=True,
                         help='dev or prod.')
+    parser.add_argument('--host', type=str, required=False, default='0.0.0.0',
+                        help='host')
+    parser.add_argument('--port', type=str, required=False, default='8080',
+                        help='port')
+
     args = vars(parser.parse_args())
 
     if 'prod' in args['env']:
-        serve(app, host='0.0.0.0', port=8080)
-    else:
+        serve(app, host=args['host'], port=args['port'])
+    elif 'dev' in args['env']:
         app.run(debug=True)
