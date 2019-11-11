@@ -14,7 +14,6 @@ import tensorflow as tf
 
 from . import DeepQAgent
 
-
 class ReInforce_v2(DeepQAgent.DeepQAgent):
     """ ReInforce PolicyGradient Agent:
         Picks cards (two in this case) from the DNN
@@ -259,3 +258,9 @@ class ReInforce(DeepQAgent.DeepQAgent):
             model.compile(loss=self.reward_loss,
                           optimizer='adam')
         self.dnn_model=model
+
+    def save(self, filename):
+        raise NotImplementedError
+
+    def load(self, filename):
+        raise NotImplementedError

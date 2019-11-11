@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
+
 from . import BaseAgent
-from pyneogame.Engine import Game
+from ..Engine import Game
 
 class GreedyAgent(BaseAgent.BaseAgent):
 
@@ -39,3 +40,9 @@ class GreedyAgent(BaseAgent.BaseAgent):
     def learn(self, state, action, reward, new_state=None):
         # Static strategy, just return self
         return self
+
+    def save(self, filename):
+        raise NotImplementedError
+
+    def load(self, filename):
+        raise NotImplementedError
