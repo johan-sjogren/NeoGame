@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-import context
+from .context import pyneogame
 from pyneogame.Engine import Game
 from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
