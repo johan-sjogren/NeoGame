@@ -38,7 +38,7 @@ if __name__ == "__main__":
                         update_interval=train_iter//train_episodes, 
                         filename="/".join([output, TASK_NAME]))
     opponent = GreedyAgent()
-    gym = Gym(player, opponent, game)
+    gym = Gym(player, opponent, game, disable_progress_bar=True)
 
     # Train
     for i in range(train_episodes):
