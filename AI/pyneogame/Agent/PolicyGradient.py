@@ -258,9 +258,3 @@ class ReInforce(DeepQAgent.DeepQAgent):
             model.compile(loss=self.reward_loss,
                           optimizer='adam')
         self.dnn_model=model
-
-    def save(self, filename):
-        raise NotImplementedError
-
-    def load(self, filename):
-        raise NotImplementedError

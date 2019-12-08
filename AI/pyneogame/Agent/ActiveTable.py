@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict
 
-from . import BaseAgent
 from . import QTableAgent
 
 class ActiveTable(QTableAgent.QTableAgent):
@@ -43,11 +42,5 @@ class ActiveTable(QTableAgent.QTableAgent):
         self.state_count[state_str] += 1
 
         return self
-
-    def save(self, filename):
-        raise NotImplementedError
-
-    def load(self, filename):
-        raise NotImplementedError
 
 

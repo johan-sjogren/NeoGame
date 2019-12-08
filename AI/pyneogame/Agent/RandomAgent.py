@@ -22,7 +22,7 @@ class RandomAgent(BaseAgent.BaseAgent):
         return self
 
     def save(self, filename):
-        raise NotImplementedError
+        pass
 
     def load(self, filename):
-        raise NotImplementedError
+        pass
