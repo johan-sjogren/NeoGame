@@ -4,11 +4,12 @@ from collections import deque
 import random
 from os import path
 from keras import Model
-from keras. models import save_model, load_model
+from keras.models import save_model, load_model
 from keras.layers import Input, Dense, Embedding, Flatten, LSTM, Bidirectional
 from keras.layers import Dropout
 from keras.callbacks import EarlyStopping
 from keras.regularizers import l2
+import h5py
 
 from . import BaseAgent
 
@@ -64,22 +65,25 @@ class DeepQAgent(BaseAgent.BaseAgent):
     def __str__(self):
         return "Deep Q Agent"
 
-    def save(self, filename, method='h5'):
-        if filename.split('.')[-1].lower() != 'h5':
-            print("Warning: Default method is to save as a H5 file." +
-                  "Advised to use appropriate ending")
+    def save(self, filename):
+        """Saving DeepQ agent as filename (default extension .h5)"""
+        filename += '.h5'
         self.dnn_model.save(filename)
         return self
 
     def load(self, filename, custom_objects=None, compile=True):
-        if path.isfile('./'+filename):
-            print('Model loaded')
-            self.dnn_model = load_model(filename,
-                                        custom_objects=custom_objects,
-                                        compile=compile)
-            self.dnn_model._make_predict_function()
-        else:
-            print("File doesn't exist no model loaded")
+        if not path.isfile(filename):
+            raise IOError("No model can be loaded since {} does not exist".format(filename))
+        if not h5py.is_hdf5(filename):
+            raise ValueError('No model can be loaded since {} is not an HDF5 file'.format(filename))
+
+        self.dnn_model = load_model(filename,
+                                    custom_objects=custom_objects,
+                                    compile=compile)
+        self.dnn_model._make_predict_function()
+        
+        print('Model loaded')
+
         return self
 
     def _make_model(self):

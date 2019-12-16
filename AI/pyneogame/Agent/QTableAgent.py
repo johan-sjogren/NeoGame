@@ -1,7 +1,9 @@
+import os
+
 import pandas as pd
 import numpy as np
-from . import BaseAgent
 
+from . import BaseAgent
 
 class QTableAgent(BaseAgent.BaseAgent):
 
@@ -133,10 +135,14 @@ class QTableAgent(BaseAgent.BaseAgent):
             return self.q
 
     def save(self, filename):
+        filename += ".csv"
         self.get_qtable(as_dataframe=True).to_csv(filename)
         return self
 
     def load(self, filename):
+        filename += ".csv"
+        if not os.path.isfile(filename):
+            raise IOError("No model can be loaded since {} does not exist".format(filename))
         self.q = pd.read_csv(filename,
                              dtype={0: str}
                              ).set_index('Unnamed: 0').to_dict()

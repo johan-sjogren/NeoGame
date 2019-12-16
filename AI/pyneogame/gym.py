@@ -25,10 +25,9 @@ from tqdm import tqdm
 
 from .Engine import Game
 
-
 class Gym:
 
-    def __init__(self, player, opponent, game=Game(), name="autosave_model.h5"):
+    def __init__(self, player, opponent, game=Game(), disable_progress_bar=False):
 
         self.game = game
         self.player = player
@@ -37,14 +36,14 @@ class Gym:
         # Placeholder for bookkeeping visited states (?)
         self.exp_states = None
 
-        # Placeholder for bookkeeping wins
         self.player_wins = None
         self.opponent_wins = None
         self.num_test = None
         self.optimal_wins = None
         self.optimal_losses = None
-        self.name = name
         self.last_test = None
+
+        self.disable_progress_bar = disable_progress_bar
 
     def _get_reward(self, player_score, opponent_score):
         """Get the reward of one round
@@ -72,7 +71,7 @@ class Gym:
 
         self.exp_states = defaultdict(int)
 
-        for i in tqdm(range(num_episodes)):
+        for i in tqdm(range(num_episodes), disable=self.disable_progress_bar):
 
             self.game.deal_cards()
 
