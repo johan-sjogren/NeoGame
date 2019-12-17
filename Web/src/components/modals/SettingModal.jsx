@@ -14,7 +14,7 @@ function SettingModal(props) {
         setOpponents(res.data.opponents);
         setOpponent(res.data.opponents[0]);
       });
-  }, [setOpponent]);
+  }, []);
 
   return (
     <>

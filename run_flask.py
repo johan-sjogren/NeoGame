@@ -29,7 +29,7 @@ pg_agent = ReInforce(state_size=len(game.get_player_state()),
 pg_agent.load(PG_FILE, custom_objects={'reward_loss': pg_agent.reward_loss})
 
 dq_agent = DeepQAgent(state_size=len(game.get_player_state()),
-                      actions=game.get_actions()).load(DQ_FILE)
+                     actions=game.get_actions()).load(DQ_FILE)
 
 # All agents included is listed here
 agent_dict = {'Random': RandomAgent(),

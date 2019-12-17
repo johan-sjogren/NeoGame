@@ -3,21 +3,6 @@ import styles from "./player.module.css";
 import Card from "./Card";
 import { Droppable } from "react-beautiful-dnd";
 
-function renderCards(props) {
-  for (let [key, value] of Object.entries(props.hand)) {
-    return (
-      <Card
-        key={key}
-        cardId={value}
-        idx={0}
-        pickCard={props.pickCard}
-        unpickCard={props.unpickCard}
-        picked={props.picks.includes(0)}
-      />
-    );
-  }
-}
-
 function Player(props) {
   return (
     <div className={styles.playerContainer}>

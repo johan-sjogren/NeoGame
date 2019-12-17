@@ -184,7 +184,6 @@ function GameController(props) {
     newPlayerHand[playerActionCards[action_idx].id] = {
       ...playerActionCards[action_idx]
     };
-    console.log(newPlayerHand);
     setPlayerHand(newPlayerHand);
 
     const newPlayerActionCards = [...playerActionCards];
@@ -272,8 +271,8 @@ function GameController(props) {
       destination.droppableId === "playerCards"
     ) {
       const newCardOrder = Array.from(handOrder);
-      newCardOrder.splice(source.index, 1);
-      newCardOrder.splice(destination.index, 0, draggableId);
+      const [removed] = newCardOrder.splice(source.index, 1);
+      newCardOrder.splice(destination.index, 0, removed);
       setHandOrder(newCardOrder);
     }
   };
