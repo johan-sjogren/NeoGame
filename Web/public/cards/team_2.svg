@@ -15,8 +15,8 @@
    viewBox="0 0 372.04722 524.40944"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="mb_neocard_simplified.architect.svg">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="team_2.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -36,16 +36,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="-59.765198"
+     inkscape:cx="-182.2652"
      inkscape:cy="255.5707"
      inkscape:document-units="px"
-     inkscape:current-layer="layer22"
+     inkscape:current-layer="g4235"
      showgrid="false"
      inkscape:snap-object-midpoints="true"
-     inkscape:window-width="2495"
-     inkscape:window-height="1416"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -158,15 +158,15 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="-309.10669"
        y="23.878862"
-       id="text4218"
-       sodipodi:linespacing="125%"><tspan
+       id="text4218"><tspan
          sodipodi:role="line"
          id="tspan4220"
          x="-309.10669"
-         y="23.878862" /></text>
+         y="23.878862"
+         style="font-size:40px;line-height:1.25"> </tspan></text>
   </g>
   <g
      style="display:inline"
@@ -185,33 +185,52 @@
           <g
              transform="translate(14.939996,0)"
              id="g4253">
-            <text
-               sodipodi:linespacing="125%"
-               id="text4594"
-               y="-19.634789"
-               x="-390.85742"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:source-sans;-inkscape-font-specification:source-sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-               xml:space="preserve"><tspan
-                 id="tspan4596"
-                 y="-19.634789"
-                 x="-390.85742"
-                 sodipodi:role="line"><tspan
-                   id="tspan4598"
-                   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
-                   y="-19.634789"
-                   x="-390.85742"> RCHITECT</tspan></tspan></text>
-            <text
-               sodipodi:linespacing="125%"
-               id="text4249"
-               y="-19.154787"
-               x="-421.57742"
-               style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-               xml:space="preserve"><tspan
-                 style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:60px;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Semi-Bold'"
-                 y="-19.154787"
-                 x="-421.57742"
-                 id="tspan4251"
-                 sodipodi:role="line">A</tspan></text>
+            <g
+               aria-label=" RCHITECT"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:source-sans;-inkscape-font-specification:source-sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+               id="text4594">
+              <path
+                 d="m -379.88867,-19.634789 h 6.24 v -9.16 h 3.04 l 4.8,9.16 h 6.96 l -5.8,-10.32 c 2.68,-1.28 4.48,-3.72 4.48,-7.52 0,-6.28 -4.64,-8.2 -10.16,-8.2 h -9.56 z m 6.24,-14.08 v -7.04 h 2.84 c 2.96,0 4.56,0.8 4.56,3.28 0,2.48 -1.6,3.76 -4.56,3.76 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15637" />
+              <path
+                 d="m -344.16117,-19.154789 c 3.28,0 6.16,-1.24 8.44,-3.84 l -3.24,-3.68 c -1.24,1.32 -2.88,2.16 -5,2.16 -3.64,0 -6.08,-3 -6.08,-8.2 0,-5.04 2.76,-8.08 6.2,-8.08 1.84,0 3.2,0.6 4.48,1.8 l 3.28,-3.76 c -1.8,-1.88 -4.52,-3.4 -7.92,-3.4 -6.56,0 -12.4,5 -12.4,13.68 0,8.8 5.6,13.32 12.24,13.32 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15639" />
+              <path
+                 d="m -331.8418,-19.634789 h 6.24 v -10.72 h 8.6 v 10.72 h 6.2 v -26.04 h -6.2 v 9.92 h -8.6 v -9.92 h -6.24 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15641" />
+              <path
+                 d="m -304.81055,-19.634789 h 6.24 v -26.04 h -6.24 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15643" />
+              <path
+                 d="m -287.46492,-19.634789 h 6.2 v -20.84 h 7.08 v -5.2 h -20.36 v 5.2 h 7.08 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15645" />
+              <path
+                 d="m -270.20117,-19.634789 h 16.88 v -5.2 h -10.64 v -5.56 h 8.76 v -5.2 h -8.76 v -4.88 h 10.24 v -5.2 h -16.48 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15647" />
+              <path
+                 d="m -237.12992,-19.154789 c 3.28,0 6.16,-1.24 8.44,-3.84 l -3.24,-3.68 c -1.24,1.32 -2.88,2.16 -5,2.16 -3.64,0 -6.08,-3 -6.08,-8.2 0,-5.04 2.76,-8.08 6.2,-8.08 1.84,0 3.2,0.6 4.48,1.8 l 3.28,-3.76 c -1.8,-1.88 -4.52,-3.4 -7.92,-3.4 -6.56,0 -12.4,5 -12.4,13.68 0,8.8 5.6,13.32 12.24,13.32 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15649" />
+              <path
+                 d="m -220.1993,-19.634789 h 6.2 v -20.84 h 7.08 v -5.2 h -20.36 v 5.2 h 7.08 z"
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold'"
+                 id="path15651" />
+            </g>
+            <g
+               aria-label="A"
+               style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+               id="text4249">
+              <path
+                 d="m -408.49742,-39.914787 c 1.26,-4.14 2.4,-8.58 3.42,-12.9 h 0.24 c 1.14,4.26 2.28,8.76 3.54,12.9 l 1.32,4.68 h -9.84 z m -13.2,20.76 h 7.26 l 3,-10.5 h 13.02 l 3,10.5 h 7.56 l -12.72,-39.24 h -8.4 z"
+                 style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:60px;line-height:1.25;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Semi-Bold'"
+                 id="path15654" />
+            </g>
           </g>
         </g>
       </g>

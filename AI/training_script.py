@@ -16,7 +16,9 @@ TEST_ITERATIONS = 10000
 # a) Setup the agents
 game = Game()
 player = DeepQAgent(state_size=len(game.get_player_state()),
-                       actions=game.get_actions(), update_interval=UPDATE_INTERVAL, filename=FILE_NAME)
+                    actions=game.get_actions(), 
+                    update_interval=UPDATE_INTERVAL, 
+                    filename=FILE_NAME)
 opponent = GreedyAgent()
 
 # b) Setup the gym
@@ -33,4 +35,4 @@ for i in range(NUM_EPISODES):
 gym.test(TEST_ITERATIONS)
 gym.eval()
 
-player.save(FILE_NAME + ".h5")
+player.save(FILE_NAME)
