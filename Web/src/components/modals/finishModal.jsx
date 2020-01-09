@@ -26,7 +26,11 @@ function FinishModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-sm">
-            {"Round Finished"}
+            {props.pPoints > props.oPoints
+              ? props.pPoints + "-" + props.oPoints + " You won!"
+              : props.pPoints === props.oPoints
+              ? props.pPoints + "-" + props.oPoints + " Tie!"
+              : props.pPoints + "-" + props.oPoints + " Opponent won!"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -47,7 +51,11 @@ function FinishModal(props) {
               {props.opponentActionCards.map(value => {
                 return <Card sm front opponent cardId={value}></Card>;
               })}
-              {props.oPoints + " points"}
+              <div
+                style={{ position: "absolute", left: "350px", top: "210px" }}
+              >
+                {"Opponent's score: " + props.oPoints + " points"}
+              </div>
             </div>
             <div
               className={"CardRow"}
@@ -56,7 +64,11 @@ function FinishModal(props) {
               {playerActionCards.map(value => {
                 return <Card sm front cardId={value}></Card>;
               })}
-              {props.pPoints + " points"}
+              <div
+                style={{ position: "absolute", left: "350px", top: "320px" }}
+              >
+                {"Your score: " + props.pPoints + " points"}
+              </div>
             </div>
             <br />
             <div
@@ -67,12 +79,6 @@ function FinishModal(props) {
                 return <Card sm front cardId={value}></Card>;
               })}
             </div>
-          </div>
-          <div style={{ float: "right" }}>
-            Some text...Some text... Some text...Some text...Some text...Some
-            text...Some text...Some text...Some text...Some text...Some
-            text...Some text...Some text...Some text...Some text...Some
-            text...Some text...Some text...
           </div>
         </Modal.Body>
       </Modal>
