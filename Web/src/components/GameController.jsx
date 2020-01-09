@@ -8,6 +8,8 @@ import MessageModal from "./modals/MessageModal";
 import SettingModal from "./modals/SettingModal";
 import FinishModal from "./modals/finishModal";
 import { DragDropContext } from "react-beautiful-dnd";
+import { IoIosHelpCircleOutline, IoIosSettings } from "react-icons/io";
+import HelpModal from "./modals/helpModal";
 
 function GameController(props) {
   const [opponent, setOpponent] = useState("Greedy");
@@ -44,15 +46,13 @@ function GameController(props) {
   const [lgShow, setLgShow] = useState(false);
   const [finishShow, setFinishShow] = useState(false);
   const [roundDone, setRoundDone] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const getTable = () => {
     axios
-      .post(
-        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
-        {
-          opponent_name: opponent
-        }
-      )
+      .post(`http://${window.location.hostname}:5000/ai/game/v1.0`, {
+        opponent_name: opponent
+      })
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -307,6 +307,7 @@ function GameController(props) {
           pPoints={pPoints}
           setRoundDone={setRoundDone}
         ></FinishModal>
+        <HelpModal showHelp={showHelp} setShowHelp={setShowHelp}></HelpModal>
 
         <DragDropContext onDragEnd={onDragEnd.bind(this)}>
           <div className={styles.row}>
@@ -323,6 +324,34 @@ function GameController(props) {
               roundDone={roundDone}
               playCards={playCards}
             ></GameTable>
+            <div
+              onClick={() => {
+                setShowHelp(true);
+              }}
+              style={{
+                color: "black",
+                cursor: "pointer",
+                position: "absolute",
+                top: "10px",
+                left: "1640px"
+              }}
+            >
+              <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
+            </div>
+            <div
+              onClick={() => {
+                setShowSettings(true);
+              }}
+              style={{
+                color: "black",
+                cursor: "pointer",
+                position: "absolute",
+                top: "10px",
+                left: "1600px"
+              }}
+            >
+              <IoIosSettings size={32}></IoIosSettings>
+            </div>
             <button
               onClick={() => {
                 playCards();

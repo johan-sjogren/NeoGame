@@ -8,7 +8,7 @@ function SettingModal(props) {
   useEffect(() => {
     axios
       .get(
-        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`
+        `http://${window.location.hostname}:5000/ai/game/v1.0`
       )
       .then(res => {
         setOpponents(res.data.opponents);
