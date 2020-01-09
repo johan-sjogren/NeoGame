@@ -13,8 +13,18 @@
 }
 
 .playButton {
-  border-radius: 0.4rem;
   margin: auto;
-  height: 4rem;
+  height: 3rem;
   width: 4rem;
+  border: 0.1rem solid #000000;
+  border-radius: 0.4rem;
+  font-weight: 300;
+  color: #000000;
+  background-color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+}
+
+.playButton:hover {
+  background-color: #0067a5;
 }
