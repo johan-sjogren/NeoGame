@@ -333,7 +333,7 @@ function GameController(props) {
                 cursor: "pointer",
                 position: "absolute",
                 top: "10px",
-                left: "1640px"
+                left: "10px" //"1640px"
               }}
             >
               <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
@@ -347,7 +347,7 @@ function GameController(props) {
                 cursor: "pointer",
                 position: "absolute",
                 top: "10px",
-                left: "1600px"
+                left: "50px" //"1600px"
               }}
             >
               <IoIosSettings size={32}></IoIosSettings>
