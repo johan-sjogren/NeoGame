@@ -50,9 +50,12 @@ function GameController(props) {
 
   const getTable = () => {
     axios
-      .post(`http://${window.location.hostname}:5000/ai/game/v1.0`, {
-        opponent_name: opponent
-      })
+      .post(
+        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
+        {
+          opponent_name: opponent
+        }
+      )
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -335,6 +338,7 @@ function GameController(props) {
                 top: "10px",
                 left: "10px" //"1640px"
               }}
+              title="Instructions"
             >
               <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
             </div>
@@ -349,6 +353,7 @@ function GameController(props) {
                 top: "10px",
                 left: "50px" //"1600px"
               }}
+              title="Agent settings"
             >
               <IoIosSettings size={32}></IoIosSettings>
             </div>
