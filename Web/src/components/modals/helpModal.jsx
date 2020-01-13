@@ -14,13 +14,24 @@ function HelpModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-sm">
-            {"The game"}
+            {"Instructions"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {
-            "NeoGame is a 2 player card game, where one player takes the role of the development team and the other will play as the dreaded IT-project. The deck is shuffled for each round, then each player receives two cards lying face-up and a hand of five cards. The players selects two cards from their hand and places them on the table. The players score is calculated as follows: For each card, points are rewarded for everyone of the opponent's card that it beats.  Cards beat each other according to a circle chain where level one cards (Bugg/Product owner) beats level two cards (Scrummaster/Specifications) and so on."
-          }
+          <span style={{ whiteSpace: "pre-wrap" }}>
+            NeoGame is a 2 player card game, where one player takes the role of
+            the development team and the other will play as the dreaded
+            IT-project.{"\n"}
+            {"\n"}The deck is shuffled for each round, then each player receives
+            two cards lying face-up and a hand of five cards. The players
+            selects two cards from their hand and places them on the table.
+            {"\n"}
+            {"\n"}The players score is calculated as follows: For each card,
+            points are rewarded for everyone of the opponent's card that it
+            beats. Cards beat each other according to a circle chain where level
+            one cards (Bugg/Product owner) beats level two cards
+            (Scrummaster/Specifications) and so on.
+          </span>
         </Modal.Body>
       </Modal>
     </>

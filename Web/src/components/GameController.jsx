@@ -289,6 +289,7 @@ function GameController(props) {
           showSettings={showSettings}
           setShowSettings={setShowSettings}
           setOpponent={setOpponent}
+          opponent={opponent}
         ></SettingModal>
         <MessageModal
           title={messageTitle}
@@ -332,7 +333,7 @@ function GameController(props) {
                 setShowHelp(true);
               }}
               style={{
-                color: "black",
+                color: "white",
                 cursor: "pointer",
                 position: "absolute",
                 top: "10px",
@@ -347,7 +348,7 @@ function GameController(props) {
                 setShowSettings(true);
               }}
               style={{
-                color: "black",
+                color: "white",
                 cursor: "pointer",
                 position: "absolute",
                 top: "10px",

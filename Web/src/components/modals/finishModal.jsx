@@ -42,6 +42,7 @@ function FinishModal(props) {
               {props.opponentHand.map(value => {
                 return <Card sm front opponent cardId={value}></Card>;
               })}
+              {"Opponent's hand"}
             </div>
             <br />
             <div
@@ -78,6 +79,7 @@ function FinishModal(props) {
               {playerHand.map(value => {
                 return <Card sm front cardId={value}></Card>;
               })}
+              {"Your hand"}
             </div>
           </div>
         </Modal.Body>

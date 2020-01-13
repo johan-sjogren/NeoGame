@@ -23,7 +23,6 @@ function SettingModal(props) {
         show={props.showSettings}
         onHide={() => {
           props.dealCards();
-
           props.setShowSettings(false);
         }}
         aria-labelledby="example-modal-sizes-title-lg"
@@ -38,6 +37,7 @@ function SettingModal(props) {
             onChange={event => {
               props.setOpponent(event.target.value);
             }}
+            value={props.opponent}
           >
             {opponents.map(opponent => {
               return (
@@ -48,16 +48,6 @@ function SettingModal(props) {
             })}
           </select>
         </Modal.Body>
-        {/*<Modal.Footer>
-          <button
-            variant="primary"
-            onClick={() => {
-              props.setShowSettings(false);
-            }}
-          >
-            OK
-          </button>
-          </Modal.Footer>*/}
       </Modal>
     </>
   );
