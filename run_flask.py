@@ -36,8 +36,8 @@ dq_agent = DeepQAgent(state_size=len(game.get_player_state()),
 # All agents included is listed here
 agent_dict = {'Random': RandomAgent(),
               'Greedy': GreedyAgent(),
-              'DeepQ': dq_agent,
-              'PolicyGrad': pg_agent
+              'DeepQ': dq_agent
+#               'PolicyGrad': pg_agent
               }
 
 
@@ -70,9 +70,18 @@ def post_game():
     actions = game.get_actions()
     game.deal_cards()
     return_dict['version'] = '0.1'
-    return_dict['opponent_action'] = agent.get_action(
-        game.get_opponent_state(),
-        actions).tolist()
+    # get_action has to be treated in two separate ways due to an
+    # early(and poor) choice on how to implement the epsilon greed
+    # explore vs exploit strategy. # TODO: Strategy as a building block
+    if isinstance(agent, (DeepQAgent, ReInforce)):
+        return_dict['opponent_action'] = agent.get_action(
+            game.get_opponent_state(),
+            actions,
+            explore_exploit='exploit').tolist()
+    else:
+        return_dict['opponent_action'] = agent.get_action(
+            game.get_opponent_state(),
+            actions).tolist()
 
     return_dict['player_hand'] = game.player_hand.tolist()
     return_dict['player_table'] = game.player_table.tolist()
