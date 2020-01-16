@@ -11,8 +11,8 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { IoIosHelpCircleOutline, IoIosSettings } from "react-icons/io";
 import HelpModal from "./modals/helpModal";
 
-function GameController(props) {
-  const [opponent, setOpponent] = useState("Greedy");
+function GameController() {
+  const [opponent, setOpponent] = useState("Random");
   const [opponentHand, setOpponentHand] = useState([0, 0, 0, 0, 0]);
   const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
 
@@ -51,7 +51,7 @@ function GameController(props) {
   const getTable = () => {
     axios
       .post(
-        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
+        `http://${window.location.hostname}:${window.location.hostname}/ai/game/v1.0`,
         {
           opponent_name: opponent
         }
@@ -290,6 +290,7 @@ function GameController(props) {
           setShowSettings={setShowSettings}
           setOpponent={setOpponent}
           opponent={opponent}
+          setScore={setScore}
         ></SettingModal>
         <MessageModal
           title={messageTitle}

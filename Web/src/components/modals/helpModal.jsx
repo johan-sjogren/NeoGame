@@ -32,6 +32,17 @@ function HelpModal(props) {
             one cards (Bugg/Product owner) beats level two cards
             (Scrummaster/Specifications) and so on.
           </span>
+          <div
+            style={{
+              backgroundImage: `url(/cards/circle2.svg)`,
+              height: "300px",
+              width: "80%",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "auto",
+              position: "relative",
+              left: "220px"
+            }}
+          ></div>
         </Modal.Body>
       </Modal>
     </>

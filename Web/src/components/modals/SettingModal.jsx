@@ -5,6 +5,8 @@ import axios from "axios";
 function SettingModal(props) {
   const [opponents, setOpponents] = useState([]);
   const { setOpponent } = props;
+  const [changedOpp, setchangedOpp] = useState(false);
+
   useEffect(() => {
     axios
       .get(
@@ -13,6 +15,7 @@ function SettingModal(props) {
       .then(res => {
         setOpponents(res.data.opponents);
         setOpponent(res.data.opponents[0]);
+        props.dealCards();
       });
   }, []);
 
@@ -22,7 +25,12 @@ function SettingModal(props) {
         size="lg"
         show={props.showSettings}
         onHide={() => {
-          props.dealCards();
+          props.setShowSettings(false);
+          if (changedOpp) {
+            props.dealCards();
+            props.setScore([0, 0]);
+            setchangedOpp(false);
+          }
           props.setShowSettings(false);
         }}
         aria-labelledby="example-modal-sizes-title-lg"
@@ -36,6 +44,7 @@ function SettingModal(props) {
           <select
             onChange={event => {
               props.setOpponent(event.target.value);
+              setchangedOpp(true);
             }}
             value={props.opponent}
           >
