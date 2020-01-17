@@ -9,11 +9,13 @@ import FinishModal from "./modals/finishModal";
 import { DragDropContext } from "react-beautiful-dnd";
 import { IoIosHelpCircleOutline, IoIosSettings } from "react-icons/io";
 import HelpModal from "./modals/helpModal";
+import useWindowSize from "./useWindowSize";
 
 function GameController() {
   const [opponent, setOpponent] = useState("Random");
   const [opponentHand, setOpponentHand] = useState([0, 0, 0, 0, 0]);
   const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
+  const size = useWindowSize();
 
   const [playerHand, setPlayerHand] = useState({
     card_2: { id: "card_2", value: 0 },
@@ -45,9 +47,12 @@ function GameController() {
 
   const getTable = () => {
     axios
-      .post(`http://${window.location.hostname}:5000/ai/game/v1.0`, {
-        opponent_name: opponent
-      })
+      .post(
+        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
+        {
+          opponent_name: opponent
+        }
+      )
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -301,7 +306,6 @@ function GameController() {
               <Score score={score[1]} player={false}></Score>
               <Score score={score[0]} player={true}></Score>
             </div>
-
             <GameTable
               setOpponent={setOpponent}
               playerActionCards={playerActionCards}
@@ -348,6 +352,7 @@ function GameController() {
             >
               Play
             </button>
+            }
           </div>
 
           <Player
