@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GameTable from "./GameTable";
 import axios from "axios";
 import styles from "./gameController.module.css";
@@ -13,6 +13,7 @@ import HelpModal from "./modals/helpModal";
 
 function GameController() {
   const [opponent, setOpponent] = useState("Random");
+  const [click, setClick] = useState({ clicked: false, id: -1, idx: -1 });
   const [opponentHand, setOpponentHand] = useState([0, 0, 0, 0, 0]);
   const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
 
@@ -50,12 +51,9 @@ function GameController() {
 
   const getTable = () => {
     axios
-      .post(
-        `http://${window.location.hostname}:${window.location.hostname}/ai/game/v1.0`,
-        {
-          opponent_name: opponent
-        }
-      )
+      .post(`http://${window.location.hostname}:5000/ai/game/v1.0`, {
+        opponent_name: opponent
+      })
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -84,6 +82,23 @@ function GameController() {
         ]);
       });
   };
+
+  useEffect(() => {
+    if (click.idx >= 0 && click.clicked) {
+      console.log("playerActionCards", playerActionCards);
+      if (playerActionCards.length !== 4) {
+        pickCard(click.id, click.idx);
+        setClick({ clicked: false, id: -1, idx: -1 });
+      }
+    } else if (!click.idx) {
+      let loc =
+        playerActionCards[2].id === click.id
+          ? "pickedCardFirst"
+          : "pickedCardSec";
+      unpickCard(click.id, 6, loc);
+      setClick({ clicked: false, id: -1, idx: -1 });
+    }
+  }, [click]);
 
   const actionBoolToIndex = action => {
     // Maps the boolean opponent action outputted from the model to normal indices
@@ -177,7 +192,6 @@ function GameController() {
   };
   const unpickCard = (card_id, index, box) => {
     const action_idx = box === "pickedCardFirst" ? 2 : 3;
-
     // Picks a card from the player hand
     const newCardOrder = Array.from(handOrder);
     newCardOrder.splice(index, 0, card_id);
@@ -217,7 +231,6 @@ function GameController() {
   };
 
   const onDragEnd = result => {
-    console.log(result);
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
@@ -328,6 +341,7 @@ function GameController() {
               message={message}
               roundDone={roundDone}
               playCards={playCards}
+              setClick={setClick}
             ></GameTable>
             <div
               onClick={() => {
@@ -338,7 +352,7 @@ function GameController() {
                 cursor: "pointer",
                 position: "absolute",
                 top: "10px",
-                left: "10px" //"1640px"
+                left: "10px"
               }}
               title="Instructions"
             >
@@ -353,7 +367,7 @@ function GameController() {
                 cursor: "pointer",
                 position: "absolute",
                 top: "10px",
-                left: "50px" //"1600px"
+                left: "50px"
               }}
               title="Agent settings"
             >
@@ -369,7 +383,11 @@ function GameController() {
             </button>
           </div>
 
-          <Player hand={playerHand} handOrder={handOrder}></Player>
+          <Player
+            hand={playerHand}
+            handOrder={handOrder}
+            setClick={setClick}
+          ></Player>
         </DragDropContext>
       </div>
     </>

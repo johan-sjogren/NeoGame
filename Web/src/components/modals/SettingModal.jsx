@@ -4,18 +4,16 @@ import axios from "axios";
 
 function SettingModal(props) {
   const [opponents, setOpponents] = useState([]);
-  const { setOpponent } = props;
+  const { setOpponent, dealCards } = props;
   const [changedOpp, setchangedOpp] = useState(false);
 
   useEffect(() => {
     axios
-      .get(
-        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`
-      )
+      .get(`http://${window.location.hostname}:5000/ai/game/v1.0`)
       .then(res => {
         setOpponents(res.data.opponents);
         setOpponent(res.data.opponents[0]);
-        props.dealCards();
+        dealCards();
       });
   }, []);
 
@@ -27,7 +25,7 @@ function SettingModal(props) {
         onHide={() => {
           props.setShowSettings(false);
           if (changedOpp) {
-            props.dealCards();
+            dealCards();
             props.setScore([0, 0]);
             setchangedOpp(false);
           }

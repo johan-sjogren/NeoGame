@@ -14,6 +14,7 @@ function GameTable(props) {
             key={idx}
             className={styles.opponent}
             cardId={card}
+            setClick={props.setClick}
           ></Card>
         );
       } else if (idx < 2) {
@@ -24,6 +25,7 @@ function GameTable(props) {
             key={idx}
             className={styles.opponent}
             cardId={card}
+            setClick={props.setClick}
           ></Card>
         );
       } else {
@@ -38,9 +40,16 @@ function GameTable(props) {
 
     return playerCards.length !== 0 ? (
       <>
-        <Card front cardId={playerCards[0].value}></Card>
-        <Card front cardId={playerCards[1].value}></Card>
-        {console.log(playerCards)}
+        <Card
+          front
+          cardId={playerCards[0].value}
+          setClick={props.setClick}
+        ></Card>
+        <Card
+          front
+          cardId={playerCards[1].value}
+          setClick={props.setClick}
+        ></Card>
         <Droppable droppableId="pickedCardFirst">
           {provided => (
             <div
@@ -55,6 +64,7 @@ function GameTable(props) {
                   front
                   dragId={playerCards[2].id}
                   cardId={playerCards[2].value}
+                  setClick={props.setClick}
                 ></Card>
               ) : (
                 provided.placeholder
@@ -76,6 +86,7 @@ function GameTable(props) {
                   front
                   dragId={playerCards[3].id}
                   cardId={playerCards[3].value}
+                  setClick={props.setClick}
                 ></Card>
               ) : (
                 provided.placeholder

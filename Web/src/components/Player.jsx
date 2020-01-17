@@ -22,6 +22,7 @@ function Player(props) {
                   dragId={props.hand[card]["id"]}
                   cardId={props.hand[card]["value"]}
                   idx={idx}
+                  setClick={props.setClick}
                 />
               ) : (
                 <Card></Card>

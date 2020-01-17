@@ -26,6 +26,10 @@ const Card = props => {
             backgroundImage: front_url,
             ...provided.draggableProps.style
           }}
+          onDoubleClick={() => {
+            console.log("propsincard", props);
+            props.setClick({ clicked: true, id: props.dragId, idx: props.idx });
+          }}
         ></div>
       )}
     </Draggable>
