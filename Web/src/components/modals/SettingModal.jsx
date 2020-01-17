@@ -15,7 +15,7 @@ function SettingModal(props) {
         setOpponent(res.data.opponents[0]);
         dealCards();
       });
-  }, []);
+  }, [setOpponent]);
 
   return (
     <>

@@ -39,8 +39,8 @@ function FinishModal(props) {
               className={"CardRow"}
               style={{ display: "flex", width: "100%" }}
             >
-              {props.opponentHand.map(value => {
-                return <Card sm front opponent cardId={value}></Card>;
+              {props.opponentHand.map((value, idx) => {
+                return <Card sm front opponent cardId={value} key={idx}></Card>;
               })}
               {"Opponent's hand"}
             </div>
@@ -49,8 +49,8 @@ function FinishModal(props) {
               className={"CardRow"}
               style={{ display: "flex", width: "100%" }}
             >
-              {props.opponentActionCards.map(value => {
-                return <Card sm front opponent cardId={value}></Card>;
+              {props.opponentActionCards.map((value, idx) => {
+                return <Card sm front opponent cardId={value} key={idx}></Card>;
               })}
               <div
                 style={{ position: "absolute", left: "350px", top: "210px" }}
@@ -62,8 +62,8 @@ function FinishModal(props) {
               className={"CardRow"}
               style={{ display: "flex", width: "100%" }}
             >
-              {playerActionCards.map(value => {
-                return <Card sm front cardId={value}></Card>;
+              {playerActionCards.map((value, idx) => {
+                return <Card sm front cardId={value} key={idx}></Card>;
               })}
               <div
                 style={{ position: "absolute", left: "350px", top: "320px" }}
@@ -76,8 +76,8 @@ function FinishModal(props) {
               className={"CardRow"}
               style={{ display: "flex", width: "100%" }}
             >
-              {playerHand.map(value => {
-                return <Card sm front cardId={value}></Card>;
+              {playerHand.map((value, idx) => {
+                return <Card sm front cardId={value} key={idx}></Card>;
               })}
               {"Your hand"}
             </div>

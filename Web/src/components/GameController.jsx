@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import GameTable from "./GameTable";
 import axios from "axios";
 import styles from "./gameController.module.css";
 import Player from "./Player";
 import Score from "./Score";
-import MessageModal from "./modals/MessageModal";
 import SettingModal from "./modals/SettingModal";
 import FinishModal from "./modals/finishModal";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -13,7 +12,6 @@ import HelpModal from "./modals/helpModal";
 
 function GameController() {
   const [opponent, setOpponent] = useState("Random");
-  const [click, setClick] = useState({ clicked: false, id: -1, idx: -1 });
   const [opponentHand, setOpponentHand] = useState([0, 0, 0, 0, 0]);
   const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
 
@@ -40,11 +38,7 @@ function GameController() {
   const [oPoints, setOPoints] = useState(0);
   const [pPoints, setPPoints] = useState(0);
 
-  const [message, setMessage] = useState("");
-  const [messageTitle, setMessageTitle] = useState("");
   const [showSettings, setShowSettings] = useState(true);
-  const [smShow, setSmShow] = useState(false);
-  const [lgShow, setLgShow] = useState(false);
   const [finishShow, setFinishShow] = useState(false);
   const [roundDone, setRoundDone] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -82,23 +76,6 @@ function GameController() {
         ]);
       });
   };
-
-  useEffect(() => {
-    if (click.idx >= 0 && click.clicked) {
-      console.log("playerActionCards", playerActionCards);
-      if (playerActionCards.length !== 4) {
-        pickCard(click.id, click.idx);
-        setClick({ clicked: false, id: -1, idx: -1 });
-      }
-    } else if (!click.idx) {
-      let loc =
-        playerActionCards[2].id === click.id
-          ? "pickedCardFirst"
-          : "pickedCardSec";
-      unpickCard(click.id, 6, loc);
-      setClick({ clicked: false, id: -1, idx: -1 });
-    }
-  }, [click]);
 
   const actionBoolToIndex = action => {
     // Maps the boolean opponent action outputted from the model to normal indices
@@ -295,7 +272,6 @@ function GameController() {
 
   return (
     <>
-      {console.log("render")}
       <div>
         <SettingModal
           dealCards={getTable}
@@ -305,14 +281,6 @@ function GameController() {
           opponent={opponent}
           setScore={setScore}
         ></SettingModal>
-        <MessageModal
-          title={messageTitle}
-          message={message}
-          smShow={smShow}
-          setSmShow={setSmShow}
-          lgShow={lgShow}
-          setLgShow={setLgShow}
-        ></MessageModal>
         <FinishModal
           dealCards={getTable}
           setFinishShow={setFinishShow}
@@ -338,10 +306,9 @@ function GameController() {
               setOpponent={setOpponent}
               playerActionCards={playerActionCards}
               opponentActionCards={opponentActionCards}
-              message={message}
               roundDone={roundDone}
               playCards={playCards}
-              setClick={setClick}
+              unpickCard={unpickCard}
             ></GameTable>
             <div
               onClick={() => {
@@ -386,7 +353,8 @@ function GameController() {
           <Player
             hand={playerHand}
             handOrder={handOrder}
-            setClick={setClick}
+            pickCard={pickCard}
+            playerActionCards={playerActionCards}
           ></Player>
         </DragDropContext>
       </div>

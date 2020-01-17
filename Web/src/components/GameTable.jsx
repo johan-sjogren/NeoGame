@@ -9,27 +9,39 @@ function GameTable(props) {
       if (props.roundDone) {
         return (
           <Card
+            hand={false}
             front
             opponent
             key={idx}
+            idx={idx}
             className={styles.opponent}
             cardId={card}
-            setClick={props.setClick}
+            unpickCard={props.unpickCard}
           ></Card>
         );
       } else if (idx < 2) {
         return (
           <Card
+            hand={false}
             front
             opponent
             key={idx}
+            idx={idx}
             className={styles.opponent}
             cardId={card}
-            setClick={props.setClick}
+            unpickCard={props.unpickCard}
           ></Card>
         );
       } else {
-        return <Card key={idx} className={styles.opponent}></Card>;
+        return (
+          <Card
+            hand={false}
+            key={idx}
+            idx={idx}
+            className={styles.opponent}
+            unpickCard={props.unpickCard}
+          ></Card>
+        );
       }
     });
     return cards;
@@ -41,14 +53,18 @@ function GameTable(props) {
     return playerCards.length !== 0 ? (
       <>
         <Card
+          hand={false}
           front
           cardId={playerCards[0].value}
-          setClick={props.setClick}
+          unpickCard={props.unpickCard}
+          playerActionCards={props.playerActionCards}
         ></Card>
         <Card
+          hand={false}
           front
           cardId={playerCards[1].value}
-          setClick={props.setClick}
+          unpickCard={props.unpickCard}
+          playerActionCards={props.playerActionCards}
         ></Card>
         <Droppable droppableId="pickedCardFirst">
           {provided => (
@@ -59,12 +75,15 @@ function GameTable(props) {
             >
               {playerCards.length > 2 ? (
                 <Card
+                  hand={false}
                   key={playerCards[2].id}
                   draggable
                   front
                   dragId={playerCards[2].id}
                   cardId={playerCards[2].value}
-                  setClick={props.setClick}
+                  idx={0}
+                  unpickCard={props.unpickCard}
+                  playerActionCards={props.playerActionCards}
                 ></Card>
               ) : (
                 provided.placeholder
@@ -81,12 +100,15 @@ function GameTable(props) {
             >
               {playerCards.length > 3 ? (
                 <Card
+                  hand={false}
                   key={playerCards[3].id}
                   draggable
                   front
                   dragId={playerCards[3].id}
                   cardId={playerCards[3].value}
-                  setClick={props.setClick}
+                  idx={1}
+                  unpickCard={props.unpickCard}
+                  playerActionCards={props.playerActionCards}
                 ></Card>
               ) : (
                 provided.placeholder

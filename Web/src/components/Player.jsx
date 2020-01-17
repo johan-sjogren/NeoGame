@@ -9,23 +9,28 @@ function Player(props) {
       <Droppable droppableId="playerCards" direction="horizontal">
         {provided => (
           <div
-            class={styles.playerCards}
+            className={styles.playerCards}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
             {props.handOrder.map((card, idx) =>
               props.hand[card] !== undefined ? (
                 <Card
+                  hand={true}
                   front
                   draggable
                   key={props.hand[card]["id"]}
                   dragId={props.hand[card]["id"]}
                   cardId={props.hand[card]["value"]}
                   idx={idx}
-                  setClick={props.setClick}
+                  pickCard={props.pickCard}
+                  playerActionCards={props.playerActionCards}
                 />
               ) : (
-                <Card></Card>
+                <Card
+                  pickCard={props.pickCard}
+                  playerActionCards={props.playerActionCards}
+                ></Card>
               )
             )}
             {provided.placeholder}

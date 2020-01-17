@@ -9,7 +9,7 @@ const Card = props => {
 
   return !props.front ? (
     <div
-      class={props.sm ? styles.card + " " + styles.sm : styles.card}
+      className={props.sm ? styles.card + " " + styles.sm : styles.card}
       style={{
         backgroundImage: `url(/cards/mb_neocard_back_blue.svg)`
       }}
@@ -18,7 +18,7 @@ const Card = props => {
     <Draggable draggableId={props.dragId} index={props.idx}>
       {provided => (
         <div
-          class={props.sm ? styles.card + " " + styles.sm : styles.card}
+          className={props.sm ? styles.card + " " + styles.sm : styles.card}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
@@ -27,15 +27,24 @@ const Card = props => {
             ...provided.draggableProps.style
           }}
           onDoubleClick={() => {
-            console.log("propsincard", props);
-            props.setClick({ clicked: true, id: props.dragId, idx: props.idx });
+            props.hand
+              ? props.playerActionCards.length < 4 &&
+                props.pickCard(props.dragId, props.idx)
+              : props.unpickCard(
+                  props.dragId,
+                  6,
+                  props.playerActionCards[2] &&
+                    props.playerActionCards[2].id === props.dragId
+                    ? "pickedCardFirst"
+                    : "pickedCardSec"
+                );
           }}
         ></div>
       )}
     </Draggable>
   ) : (
     <div
-      class={props.sm ? styles.card + " " + styles.sm : styles.card}
+      className={props.sm ? styles.card + " " + styles.sm : styles.card}
       style={{
         backgroundImage: front_url
       }}
