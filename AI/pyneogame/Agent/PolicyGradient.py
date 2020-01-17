@@ -14,7 +14,6 @@ import tensorflow as tf
 
 from . import DeepQAgent
 
-
 class ReInforce_v2(DeepQAgent.DeepQAgent):
     """ ReInforce PolicyGradient Agent:
         Picks cards (two in this case) from the DNN

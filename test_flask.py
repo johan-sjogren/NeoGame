@@ -70,7 +70,7 @@ class FlaskTests(unittest.TestCase):
                 prev = x[cardlist]
             # TODO: This limit should depend upon the length of the lists and 
             # the range of numbers included
-            self.assertLess(tot, int(iterations/2))
+            self.assertLess(tot, iterations - int(iterations/3))
 
     def _post_test(self, path, model=''):
         data = {"opponent_name": model}

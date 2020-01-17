@@ -1,6 +1,6 @@
 import random
-from . import BaseAgent # Work for python dev_script
 
+from . import BaseAgent # Work for python dev_script
 
 class RandomAgent(BaseAgent.BaseAgent):
 
@@ -21,4 +21,8 @@ class RandomAgent(BaseAgent.BaseAgent):
         # Static strategy, just return self
         return self
 
+    def save(self, filename):
+        pass
 
+    def load(self, filename):
+        pass
