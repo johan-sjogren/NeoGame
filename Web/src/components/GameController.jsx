@@ -1,28 +1,49 @@
 import React, { useState } from "react";
 import GameTable from "./GameTable";
 import axios from "axios";
-import SettingsBox from "./SettingsBox";
 import styles from "./gameController.module.css";
-import Opponent from "./Opponent";
 import Player from "./Player";
 import Score from "./Score";
+import SettingModal from "./modals/SettingModal";
+import FinishModal from "./modals/finishModal";
+import { DragDropContext } from "react-beautiful-dnd";
+import { IoIosHelpCircleOutline, IoIosSettings } from "react-icons/io";
+import HelpModal from "./modals/helpModal";
+import useWindowSize from "./useWindowSize";
 
-function GameController(props) {
-  const [table, setTable] = useState({
-    opponent_name: "No opponent",
-    opponent_cards: [0, 0, 0, 0],
-    player_cards: [0, 0, 0, 0],
-    player_hand: [0, 0, 0, 0, 0],
-    opponent_hand: [0, 0, 0, 0, 0],
-    version: 0.0
+function GameController() {
+  const [opponent, setOpponent] = useState("Random");
+  const [opponentHand, setOpponentHand] = useState([0, 0, 0, 0, 0]);
+  const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
+  const size = useWindowSize();
+
+  const [playerHand, setPlayerHand] = useState({
+    card_2: { id: "card_2", value: 0 },
+    card_3: { id: "card_3", value: 0 },
+    card_4: { id: "card_4", value: 0 },
+    card_5: { id: "card_5", value: 0 },
+    card_6: { id: "card_6", value: 0 }
   });
-  const [opponent, setOpponent] = useState("Greedy");
+  const [playerActionCards, setPlayerActionCards] = useState([
+    { id: "card_0", value: 0 },
+    { id: "card_1", value: 0 }
+  ]);
+  const [handOrder, setHandOrder] = useState([
+    "card_2",
+    "card_3",
+    "card_4",
+    "card_5",
+    "card_6"
+  ]);
+
   const [score, setScore] = useState([0, 0]);
-  const [message, setMessage] = useState(
-    "Press 'Deal Cards' to start a new round."
-  );
+  const [oPoints, setOPoints] = useState(0);
+  const [pPoints, setPPoints] = useState(0);
+
+  const [showSettings, setShowSettings] = useState(true);
+  const [finishShow, setFinishShow] = useState(false);
   const [roundDone, setRoundDone] = useState(false);
-  const [idxPicks, setIdxPicks] = useState([]);
+  const [showHelp, setShowHelp] = useState(false);
 
   const getTable = () => {
     axios
@@ -35,22 +56,29 @@ function GameController(props) {
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
+        const opponent_hand = Array.from(res.data.opponent_hand);
+        opponent_hand.splice(opponent_action[0], 1);
+        opponent_hand.splice(opponent_action[1] - 1, 1);
+
         opponentCards.push(res.data.opponent_hand[opponent_action[0]]);
         opponentCards.push(res.data.opponent_hand[opponent_action[1]]);
-        const playerCards = res.data.player_table;
 
-        setTable({
-          opponent_name: res.data.opponent_name,
-          opponent_cards: opponentCards,
-          player_cards: playerCards,
-          player_hand: res.data.player_hand,
-          opponent_hand: res.data.opponent_hand,
-          version: res.data.version
+        const playerCards = res.data.player_table;
+        setHandOrder(["card_2", "card_3", "card_4", "card_5", "card_6"]);
+        setOpponent(res.data.opponent_name);
+        setOpponentHand(opponent_hand);
+        setOpponentActionCards(opponentCards);
+        setPlayerHand({
+          card_2: { id: "card_2", value: res.data.player_hand[0] },
+          card_3: { id: "card_3", value: res.data.player_hand[1] },
+          card_4: { id: "card_4", value: res.data.player_hand[2] },
+          card_5: { id: "card_5", value: res.data.player_hand[3] },
+          card_6: { id: "card_6", value: res.data.player_hand[4] }
         });
-        setRoundDone(false);
-        setMessage("Pick two cards and press play!");
-        const picks = [];
-        setIdxPicks(picks);
+        setPlayerActionCards([
+          { id: "card_0", value: playerCards[0] },
+          { id: "card_1", value: playerCards[1] }
+        ]);
       });
   };
 
@@ -76,8 +104,12 @@ function GameController(props) {
 
   const getWinner = () => {
     //Retrieves the winner based on the current state
-    const playerCards = table.player_cards;
-    const opponentCards = table.opponent_cards;
+    //convert playercards card values to array, ugly solution but good enough for now
+    const playerCards = Object.values(playerActionCards).map(object => {
+      return object.value;
+    });
+    const opponentCards = opponentActionCards;
+
     let ppoints = 0;
     let opoints = 0;
 
@@ -91,99 +123,245 @@ function GameController(props) {
         }
       }
     }
-
-    let winText = "";
+    setPPoints(ppoints);
+    setOPoints(opoints);
     if (ppoints > opoints) {
-      winText +=
-        "\nPlayer Wins with " + ppoints + " points against " + opoints + "!";
+      console.log(
+        "\nThe player won with " + ppoints + " points against " + opoints + "!"
+      );
       const new_score = [...score];
       new_score[0] += 1;
       setScore(new_score);
     } else if (ppoints === opoints) {
-      winText += "\nRound is Draw!";
+      console.log("\nRound is Draw!");
     } else {
       const new_score = [...score];
       new_score[1] += 1;
       setScore(new_score);
-      winText +=
-        "\nOpponent Wins with " + opoints + " points against " + ppoints + "!";
+      console.log(
+        "\nThe opponent won with " +
+          opoints +
+          " points against " +
+          ppoints +
+          "!"
+      );
     }
-    winText += "  -- Press 'Deal Cards' to start a new round.";
     setRoundDone(true);
-    setMessage(winText);
+    setFinishShow(true);
   };
 
   const playCards = () => {
     //Plays a round if two cards are given by the player.
-    if (idxPicks.length === 2) {
+    if (playerActionCards.length === 4) {
       getWinner();
-      const picks = [];
-      setIdxPicks(picks);
-    } else {
-      setMessage("Please pick two cards!");
     }
   };
 
-  const pickCard = (card, idx) => {
+  const pickCard = (card_id, index, box) => {
+    const action_idx = box === "pickedCardFirst" ? 2 : 3;
     // Picks a card from the player hand
-    if (table.player_cards.length < 4) {
-      const newTable = { ...table };
+    const newCardOrder = Array.from(handOrder);
+    newCardOrder.splice(index, 1);
+    setHandOrder(newCardOrder);
 
-      newTable.player_cards.push(card);
-      setTable(newTable);
+    const newPlayerActionCards = [...playerActionCards];
+    newPlayerActionCards.splice(action_idx, 0, { ...playerHand[card_id] });
+    setPlayerActionCards(newPlayerActionCards);
 
-      const picks = [...idxPicks];
-      picks.push(idx);
-      setIdxPicks(picks);
-    }
+    const newPlayerHand = { ...playerHand };
+    delete newPlayerHand[card_id];
+    setPlayerHand(newPlayerHand);
+  };
+  const unpickCard = (card_id, index, box) => {
+    const action_idx = box === "pickedCardFirst" ? 2 : 3;
+    // Picks a card from the player hand
+    const newCardOrder = Array.from(handOrder);
+    newCardOrder.splice(index, 0, card_id);
+    setHandOrder(newCardOrder);
+
+    const newPlayerHand = { ...playerHand };
+    newPlayerHand[playerActionCards[action_idx].id] = {
+      ...playerActionCards[action_idx]
+    };
+    setPlayerHand(newPlayerHand);
+
+    const newPlayerActionCards = [...playerActionCards];
+    newPlayerActionCards.splice(action_idx, 1);
+    setPlayerActionCards(newPlayerActionCards);
+  };
+  const replaceCard = (card_h, index, box) => {
+    const action_idx = box === "pickedCardFirst" ? 2 : 3;
+
+    //Hand order
+    const newHandOrder = Array.from(handOrder);
+    newHandOrder.splice(index, 1, playerActionCards[action_idx].id); //From cardOrder, remove chosen card, and add the card from the droppableId box.
+    setHandOrder(newHandOrder);
+
+    //Player action cards
+    const newPlayerActionCards = [...playerActionCards];
+    newPlayerActionCards.splice(action_idx, 1);
+    newPlayerActionCards.splice(action_idx, 0, { ...playerHand[card_h] });
+    setPlayerActionCards(newPlayerActionCards);
+
+    //Player hand
+    const newPlayerHand = { ...playerHand }; // We need to modify the player hand to add the unpicked card
+    newPlayerHand[playerActionCards[action_idx].id] = {
+      ...playerActionCards[action_idx]
+    };
+    delete newPlayerHand[card_h];
+    setPlayerHand(newPlayerHand);
   };
 
-  const unpickCard = (card, idx) => {
-    //Unpicks a card
-    const newTable = { ...table };
+  const onDragEnd = result => {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
 
-    const idxToRemove = newTable.player_cards.lastIndexOf(card);
-    if (idxToRemove !== -1) newTable.player_cards.splice(idxToRemove, 1);
-    setTable(newTable);
+    if (
+      source.droppableId === "playerCards" &&
+      destination.droppableId === "pickedCardFirst"
+    ) {
+      if (playerActionCards.length <= 4) {
+        //if not a card has been picked to this slot, add the card
+        if (playerActionCards.length === 2) {
+          pickCard(draggableId, source.index);
+        } else {
+          replaceCard(draggableId, source.index, destination.droppableId);
+        }
+      }
+      return;
+    }
+    if (
+      source.droppableId === "playerCards" &&
+      destination.droppableId === "pickedCardSecond"
+    ) {
+      if (playerActionCards.length < 4) {
+        pickCard(draggableId, source.index, destination.droppableId);
+      } else {
+        replaceCard(draggableId, source.index, destination.droppableId);
+      }
+      return;
+    }
+    if (
+      source.droppableId === "pickedCardFirst" &&
+      destination.droppableId === "playerCards"
+    ) {
+      unpickCard(draggableId, destination.index, source.droppableId);
+      return;
+    }
+    if (
+      source.droppableId === "pickedCardSecond" &&
+      destination.droppableId === "playerCards"
+    ) {
+      unpickCard(draggableId, destination.index, source.droppableId);
+      return;
+    }
 
-    const picks = [...idxPicks];
-    const pickToRemove = picks.lastIndexOf(idx);
-    if (pickToRemove !== -1) picks.splice(pickToRemove, 1);
-    setIdxPicks(picks);
+    if (
+      source.droppableId === "playerCards" &&
+      destination.droppableId === "playerCards"
+    ) {
+      const newCardOrder = Array.from(handOrder);
+      const [removed] = newCardOrder.splice(source.index, 1);
+      newCardOrder.splice(destination.index, 0, removed);
+      setHandOrder(newCardOrder);
+    }
   };
 
   return (
     <>
       <div>
-        <Opponent
-          hand={table.opponent_hand}
-          roundDone={roundDone}
-          message={message}
-        ></Opponent>
-        <div className={styles.row}>
-          <Score score={score[0]} player={true}></Score>
-          <GameTable
-            setOpponent={setOpponent}
-            table={table}
-            message={message}
-            roundDone={roundDone}
-          />
-          <Score score={score[1]} player={false}></Score>
-        </div>
-        <Player
+        <SettingModal
           dealCards={getTable}
-          playCards={playCards}
-          hand={table.player_hand}
-          pickCard={pickCard}
-          unpickCard={unpickCard}
-          picks={idxPicks}
-        ></Player>
-        <SettingsBox
+          showSettings={showSettings}
+          setShowSettings={setShowSettings}
           setOpponent={setOpponent}
+          opponent={opponent}
+          setScore={setScore}
+        ></SettingModal>
+        <FinishModal
           dealCards={getTable}
-          playCards={playCards}
-          message={message}
-        ></SettingsBox>
+          setFinishShow={setFinishShow}
+          finishShow={finishShow}
+          opponentHand={opponentHand}
+          opponentActionCards={opponentActionCards}
+          playerActionCards={playerActionCards}
+          playerHand={playerHand}
+          oPoints={oPoints}
+          pPoints={pPoints}
+          setRoundDone={setRoundDone}
+        ></FinishModal>
+        <HelpModal showHelp={showHelp} setShowHelp={setShowHelp}></HelpModal>
+
+        <DragDropContext onDragEnd={onDragEnd.bind(this)}>
+          <div className={styles.row}>
+            <div className={styles.scores}>
+              <Score score={score[1]} player={false}></Score>
+              <Score score={score[0]} player={true}></Score>
+            </div>
+            <GameTable
+              setOpponent={setOpponent}
+              playerActionCards={playerActionCards}
+              opponentActionCards={opponentActionCards}
+              roundDone={roundDone}
+              playCards={playCards}
+              unpickCard={unpickCard}
+            ></GameTable>
+            <div
+              onClick={() => {
+                setShowHelp(true);
+              }}
+              style={{
+                color: "white",
+                cursor: "pointer",
+                position: "absolute",
+                top: "10px",
+                left: "10px"
+              }}
+              title="Instructions"
+            >
+              <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
+            </div>
+            <div
+              onClick={() => {
+                setShowSettings(true);
+              }}
+              style={{
+                color: "white",
+                cursor: "pointer",
+                position: "absolute",
+                top: "10px",
+                left: "50px"
+              }}
+              title="Agent settings"
+            >
+              <IoIosSettings size={32}></IoIosSettings>
+            </div>
+            <button
+              onClick={() => {
+                playCards();
+              }}
+              className={styles.playButton}
+            >
+              Play
+            </button>
+            }
+          </div>
+
+          <Player
+            hand={playerHand}
+            handOrder={handOrder}
+            pickCard={pickCard}
+            playerActionCards={playerActionCards}
+          ></Player>
+        </DragDropContext>
       </div>
     </>
   );

@@ -1,8 +1,8 @@
 .playerContainer {
   width: 100%;
   padding: 2rem 0;
-  clip-path: polygon(0 0, 100% 9%, 100% 96%, 0 100%);
-  margin: 1rem auto;
+  /*clip-path: polygon(0 0, 100% 6%, 100% 97%, 0 100%);*/
+  margin: 0rem auto;
   display: flex;
   justify-content: center;
   background-color: #ff7fa4;
@@ -10,7 +10,7 @@
 }
 
 .playerCards {
-  width: 60%;
+  width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center /*space-evenly*/;
 }

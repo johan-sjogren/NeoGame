@@ -7,7 +7,9 @@ function Opponent(props) {
         return (
           <div
             key={idx}
-            className={styles.frontCard + " " + styles.card}
+            className={
+              styles.opponent + " " + styles.frontCard + " " + styles.card
+            }
             style={{
               backgroundImage: `url(/cards/project_${card}.svg)`
             }}
@@ -15,7 +17,12 @@ function Opponent(props) {
         );
       } else {
         return (
-          <div key={idx} className={styles.backCard + " " + styles.card}></div>
+          <div
+            key={idx}
+            className={
+              styles.opponent + " " + styles.backCard + " " + styles.card
+            }
+          ></div>
         );
       }
     });

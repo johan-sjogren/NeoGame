@@ -67,8 +67,6 @@
   text-align: center;
 }
 
-.frontCard {
-}
 .backCard {
   background-image: url(/cards/mb_neocard_back_blue.svg);
   transform: rotateY(180deg);

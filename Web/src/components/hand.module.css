@@ -1,0 +1,5 @@
+.playerCards {
+  width: 60%;
+  display: flex;
+  justify-content: space-evenly;
+}
