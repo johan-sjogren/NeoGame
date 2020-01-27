@@ -48,7 +48,7 @@ function GameController() {
   const getTable = () => {
     axios
       .post(
-        `http://${window.location.hostname}:${window.location.port}/ai/game/v1.0`,
+        `http://${window.location.hostname}:5000/ai/game/v1.0`,
         {
           opponent_name: opponent
         }
@@ -126,9 +126,6 @@ function GameController() {
     setPPoints(ppoints);
     setOPoints(opoints);
     if (ppoints > opoints) {
-      console.log(
-        "\nThe player won with " + ppoints + " points against " + opoints + "!"
-      );
       const new_score = [...score];
       new_score[0] += 1;
       setScore(new_score);
@@ -138,13 +135,6 @@ function GameController() {
       const new_score = [...score];
       new_score[1] += 1;
       setScore(new_score);
-      console.log(
-        "\nThe opponent won with " +
-          opoints +
-          " points against " +
-          ppoints +
-          "!"
-      );
     }
     setRoundDone(true);
     setFinishShow(true);
@@ -352,7 +342,6 @@ function GameController() {
             >
               Play
             </button>
-            }
           </div>
 
           <Player

@@ -18,6 +18,7 @@ function HelpModal(props) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div>
           <span style={{ whiteSpace: "pre-wrap" }}>
             NeoGame is a 2 player card game, where one player takes the role of
             the development team and the other will play as the dreaded
@@ -29,20 +30,18 @@ function HelpModal(props) {
             {"\n"}The players score is calculated as follows: For each card,
             points are rewarded for everyone of the opponent's card that it
             beats. Cards beat each other according to a circle chain where level
-            one cards (Bugg/Product owner) beats level two cards
-            (Scrummaster/Specifications) and so on.
-          </span>
-          <div
+            one cards (Bug/Product owner) beats level two cards
+            (Scrum master/Specifications) and so on.        
+          <div 
             style={{
-              backgroundImage: `url(/cards/circle2.svg)`,
-              height: "300px",
-              width: "80%",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "auto",
+              content: `url(/cards/circle2.svg)`,
+              width: "40%",
               position: "relative",
-              left: "220px"
+              margin: "auto",
+              marginLeft: "auto",
+              marginRight: "auto"
             }}
-          ></div>
+          ></div></span></div>
         </Modal.Body>
       </Modal>
     </>
