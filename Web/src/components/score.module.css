@@ -10,9 +10,25 @@
   font-size: 1.5rem;
 }
 
+.board2 {
+  margin: 1rem auto;
+  width: 5rem;
+  height: 5rem;
+  line-height: 5rem;
+  text-align: center;
+  border: 0.1rem solid #000000;
+  border-radius: 0.4rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 15px
+}
+
 .player {
   background-color: #ff7fa4;
+  left: 35%
 }
 .opponent {
   background-color: #74f0c1;
+  left: 55%
 }

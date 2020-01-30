@@ -292,10 +292,17 @@ function GameController() {
 
         <DragDropContext onDragEnd={onDragEnd.bind(this)}>
           <div className={styles.row}>
+            {size.width > 700?
             <div className={styles.scores}>
-              <Score score={score[1]} player={false}></Score>
-              <Score score={score[0]} player={true}></Score>
+              <Score score={score[1]} player={false} width={size.width}></Score>
+              <Score score={score[0]} player={true} width={size.width}></Score>
             </div>
+            :
+            <div>
+            <Score score={score[1]} player={false} width={size.width}></Score>
+            <Score score={score[0]} player={true} width={size.width}></Score>
+            </div>
+            }
             <GameTable
               setOpponent={setOpponent}
               playerActionCards={playerActionCards}
@@ -334,6 +341,7 @@ function GameController() {
             >
               <IoIosSettings size={32}></IoIosSettings>
             </div>
+            {size.width > 700 ? 
             <button
               onClick={() => {
                 playCards();
@@ -341,9 +349,16 @@ function GameController() {
               className={styles.playButton}
             >
               Play
-            </button>
+            </button> :             
+            <button
+              onClick={() => {
+                playCards();
+              }}
+              className={styles.playButton2}
+            >
+              Play
+            </button>}
           </div>
-
           <Player
             hand={playerHand}
             handOrder={handOrder}

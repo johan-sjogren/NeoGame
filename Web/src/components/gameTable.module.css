@@ -20,16 +20,19 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   html {
     font-size: 75%;
   }
   .theTable {
-    width: 130%;
+    width: 90%;
+    top: 7rem;
+    left: 0%
   }
   .cardTable {
     width: 100% !important;
     height: 13rem;
+    left: 0%
   }
 }
 
