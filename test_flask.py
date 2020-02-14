@@ -1,4 +1,5 @@
 from run_flask import app
+from collections import Counter
 import unittest
 
 
@@ -52,25 +53,57 @@ class FlaskTests(unittest.TestCase):
     def test_api(self):
         path = '/ai/game/v1.0'
         results = []
-        # Run the tests for post and get a few times
-        iterations = 100
+        # Run the tests for post
+        iterations = 100  # iterations per opponent model
         for _ in range(iterations):
             models = self.test_get_data()
             for model in models + ['']:
                 results.append(self._post_test(path, model=model))
+        num_results = len(results)
 
-        # Check that cards are shuffled
-        for cardlist in ['opponent_action', 'opponent_hand', 'opponent_table',
-                         'player_hand', 'player_table']:
-            prev = None
-            tot = 0
+        self.assertTrue(num_results > 350,
+                        msg='Test based on {} samples'.format(num_results) +
+                        ' , review the number of iterations and models')
+
+        """ Check that cards are shuffled i.e. that the number of
+        different combinations are at least within the right ballpark"""
+        def get_combination_counter(results, card_str):
+            combination_list = []
             for x in results:
-                if prev is not None:
-                    tot += 1 if x[cardlist] == prev else 0
-                prev = x[cardlist]
-            # TODO: This limit should depend upon the length of the lists and 
-            # the range of numbers included
-            self.assertLess(tot, iterations - int(iterations/3))
+                combination_list.append(x[card_str])
+            return Counter(str(x) for x in combination_list)
+
+        count = get_combination_counter(results, 'opponent_action')
+        # Opponent action has 10 states (pick two places out of five)
+        self.assertTrue(len(count) > 9,
+                        msg='Got {} different states,'.format(len(count)) +
+                        ' expected 10 for the standard game implementation')
+        # Checking twice the expected mean
+        self.assertTrue(all([x < 80 for x in count.values()]),
+                        msg='Got too many examples of some states ' +
+                        '{}'.format(count.most_common(4)))
+
+        # Table has 25 states (5x5)
+        for table in ['opponent_table', 'player_table']:
+            count = get_combination_counter(results, table)
+            self.assertTrue(len(count) > 24,
+                            msg='Got {} different states,'.format(len(count)) +
+                            ' expected 25 for the standard game')
+        # Checking twice the expected mean
+            self.assertTrue(all([x < 32 for x in count.values()]),
+                            msg='Got too many examples of some states ' +
+                            '{}'.format(count.most_common(4)))
+
+        # Hands has many more states (5^5)
+        for hand in ['opponent_hand', 'player_hand']:
+            count = get_combination_counter(results, hand)
+            self.assertTrue(len(count) > num_results-int(num_results/4),
+                            msg='Got {} different states,'.format(len(count)) +
+                            ' expect a number close to number of ' +
+                            'results {} the standard game'.format(num_results))
+            self.assertTrue(all([x < 5 for x in count.values()]),
+                            msg='Got too many examples of some states ' +
+                            '{}'.format(count.most_common(4)))
 
     def _post_test(self, path, model=''):
         data = {"opponent_name": model}
