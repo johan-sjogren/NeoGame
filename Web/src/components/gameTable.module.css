@@ -25,14 +25,23 @@
     font-size: 75%;
   }
   .theTable {
-    width: 90%;
-    top: 7rem;
-    left: 0%
+    width: 98%;
+
+    position: absolute;
+    margin: 35% 0;
   }
   .cardTable {
     width: 100% !important;
     height: 13rem;
-    left: 0%
+    left: 0%;
+  }
+  .card {
+    transition: 0.3s;
+    height: 8.5rem !important;
+    width: 5.95rem !important;
+    border-radius: 0.2rem;
+    background-size: cover;
+    text-align: center;
   }
 }
 
@@ -73,4 +82,33 @@
 .backCard {
   background-image: url(/cards/mb_neocard_back_blue.svg);
   transform: rotateY(180deg);
+}
+
+.playButton2 {
+  height: 3rem;
+  width: 100%;
+  margin: 2rem 0;
+  border: 0.1rem solid #000000;
+  border-radius: 0.4rem;
+  font-weight: 300;
+  color: #000000;
+  background-color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+  bottom: 2rem;
+}
+.playButton2:active {
+  outline: none;
+}
+.playButton2:focus {
+  outline: 0;
+}
+
+.scores {
+  position: relative;
+  top: -9rem;
+}
+
+.frontCard {
+  background-color: rgb(247, 247, 247);
 }

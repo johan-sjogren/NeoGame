@@ -47,12 +47,9 @@ function GameController() {
 
   const getTable = () => {
     axios
-      .post(
-        `http://${window.location.hostname}:5000/ai/game/v1.0`,
-        {
-          opponent_name: opponent
-        }
-      )
+      .post(`http://${window.location.hostname}:5000/ai/game/v1.0`, {
+        opponent_name: opponent
+      })
       .then(res => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
@@ -266,82 +263,81 @@ function GameController() {
   };
 
   return (
-    <>
-      <div>
-        <SettingModal
-          dealCards={getTable}
-          showSettings={showSettings}
-          setShowSettings={setShowSettings}
-          setOpponent={setOpponent}
-          opponent={opponent}
-          setScore={setScore}
-        ></SettingModal>
-        <FinishModal
-          dealCards={getTable}
-          setFinishShow={setFinishShow}
-          finishShow={finishShow}
-          opponentHand={opponentHand}
-          opponentActionCards={opponentActionCards}
-          playerActionCards={playerActionCards}
-          playerHand={playerHand}
-          oPoints={oPoints}
-          pPoints={pPoints}
-          setRoundDone={setRoundDone}
-        ></FinishModal>
-        <HelpModal showHelp={showHelp} setShowHelp={setShowHelp}></HelpModal>
+    <div>
+      <SettingModal
+        dealCards={getTable}
+        showSettings={showSettings}
+        setShowSettings={setShowSettings}
+        setOpponent={setOpponent}
+        opponent={opponent}
+        setScore={setScore}
+      ></SettingModal>
+      <FinishModal
+        dealCards={getTable}
+        setFinishShow={setFinishShow}
+        finishShow={finishShow}
+        opponentHand={opponentHand}
+        opponentActionCards={opponentActionCards}
+        playerActionCards={playerActionCards}
+        playerHand={playerHand}
+        oPoints={oPoints}
+        pPoints={pPoints}
+        setRoundDone={setRoundDone}
+      ></FinishModal>
+      <HelpModal showHelp={showHelp} setShowHelp={setShowHelp}></HelpModal>
 
-        <DragDropContext onDragEnd={onDragEnd.bind(this)}>
-          <div className={styles.row}>
-            {size.width > 700?
+      <div
+        id={"helpButton"}
+        onClick={() => {
+          setShowHelp(true);
+        }}
+        style={{
+          color: "white",
+          cursor: "pointer",
+          position: "absolute",
+          top: "10px",
+          left: "10px"
+        }}
+        title="Instructions"
+      >
+        <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
+      </div>
+      <div
+        id={"settingsButton"}
+        onClick={() => {
+          setShowSettings(true);
+        }}
+        style={{
+          color: "white",
+          cursor: "pointer",
+          position: "absolute",
+          top: "10px",
+          left: "50px"
+        }}
+        title="Agent settings"
+      >
+        <IoIosSettings size={32}></IoIosSettings>
+      </div>
+      <DragDropContext onDragEnd={onDragEnd.bind(this)}>
+        <div className={styles.row}>
+          {size.width > 700 && (
             <div className={styles.scores}>
               <Score score={score[1]} player={false} width={size.width}></Score>
               <Score score={score[0]} player={true} width={size.width}></Score>
             </div>
-            :
-            <div>
-            <Score score={score[1]} player={false} width={size.width}></Score>
-            <Score score={score[0]} player={true} width={size.width}></Score>
-            </div>
-            }
-            <GameTable
-              setOpponent={setOpponent}
-              playerActionCards={playerActionCards}
-              opponentActionCards={opponentActionCards}
-              roundDone={roundDone}
-              playCards={playCards}
-              unpickCard={unpickCard}
-            ></GameTable>
-            <div
-              onClick={() => {
-                setShowHelp(true);
-              }}
-              style={{
-                color: "white",
-                cursor: "pointer",
-                position: "absolute",
-                top: "10px",
-                left: "10px"
-              }}
-              title="Instructions"
-            >
-              <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
-            </div>
-            <div
-              onClick={() => {
-                setShowSettings(true);
-              }}
-              style={{
-                color: "white",
-                cursor: "pointer",
-                position: "absolute",
-                top: "10px",
-                left: "50px"
-              }}
-              title="Agent settings"
-            >
-              <IoIosSettings size={32}></IoIosSettings>
-            </div>
-            {size.width > 700 ? 
+          )}
+          <GameTable
+            score={score}
+            setOpponent={setOpponent}
+            playerActionCards={playerActionCards}
+            opponentActionCards={opponentActionCards}
+            roundDone={roundDone}
+            playCards={playCards}
+            unpickCard={unpickCard}
+            screenWidth={size.width}
+          ></GameTable>
+
+          {size.width > 700 && (
             <button
               onClick={() => {
                 playCards();
@@ -349,25 +345,18 @@ function GameController() {
               className={styles.playButton}
             >
               Play
-            </button> :             
-            <button
-              onClick={() => {
-                playCards();
-              }}
-              className={styles.playButton2}
-            >
-              Play
-            </button>}
-          </div>
-          <Player
-            hand={playerHand}
-            handOrder={handOrder}
-            pickCard={pickCard}
-            playerActionCards={playerActionCards}
-          ></Player>
-        </DragDropContext>
-      </div>
-    </>
+            </button>
+          )}
+        </div>
+
+        <Player
+          hand={playerHand}
+          handOrder={handOrder}
+          pickCard={pickCard}
+          playerActionCards={playerActionCards}
+        ></Player>
+      </DragDropContext>
+    </div>
   );
 }
 export default GameController;

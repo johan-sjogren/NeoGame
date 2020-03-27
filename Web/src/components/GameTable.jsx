@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./gameTable.module.css";
+import Score from "./Score";
 import { Droppable } from "react-beautiful-dnd";
 import Card from "./Card";
 
@@ -121,10 +122,32 @@ function GameTable(props) {
   };
   return (
     <div className={styles.theTable}>
+      {props.screenWidth < 700 && (
+        <div className={styles.scores}>
+          <Score
+            score={props.score[1]}
+            player={false}
+            width={props.screenWidth}
+          ></Score>
+          <Score
+            score={props.score[0]}
+            player={true}
+            width={props.screenWidth}
+          ></Score>
+        </div>
+      )}
       <div className={styles.cardContainer}>
         <div className={styles.cardRow}>{renderOpponentCards()}</div>
         <div className={styles.cardRow}>{renderPlayerCards()}</div>
       </div>
+      {props.screenWidth < 700 && (
+        <button
+          className={styles.playButton2}
+          onClick={() => props.playCards()}
+        >
+          Play cards
+        </button>
+      )}
     </div>
   );
 }

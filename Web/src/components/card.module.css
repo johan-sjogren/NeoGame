@@ -13,6 +13,12 @@
   background-size: cover;
 }
 
+@media only screen and (max-width: 700px) {
+  .card {
+    height: 8.5rem;
+    width: 5.95rem;
+  }
+}
 .sm {
   height: 5rem;
   width: 3.5rem;
