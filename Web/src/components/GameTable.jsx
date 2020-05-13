@@ -68,7 +68,7 @@ function GameTable(props) {
           playerActionCards={props.playerActionCards}
         ></Card>
         <Droppable droppableId="pickedCardFirst">
-          {provided => (
+          {(provided) => (
             <div
               className={styles.frontCard + " " + styles.card}
               ref={provided.innerRef}
@@ -93,7 +93,7 @@ function GameTable(props) {
           )}
         </Droppable>
         <Droppable droppableId="pickedCardSecond">
-          {provided => (
+          {(provided) => (
             <div
               className={styles.frontCard + " " + styles.card}
               ref={provided.innerRef}
@@ -125,6 +125,7 @@ function GameTable(props) {
       {props.screenWidth < 700 && (
         <div className={styles.scores}>
           <Score
+            setScore={props.setScore}
             score={props.score[1]}
             player={false}
             width={props.screenWidth}

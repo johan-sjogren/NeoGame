@@ -9,10 +9,8 @@ function SettingModal(props) {
 
   useEffect(() => {
     axios
-      .get(
-        `http://${window.location.hostname}:5000/ai/game/v1.0`
-      )
-      .then(res => {
+      .get(`http://${window.location.hostname}:5000/ai/game/v1.0`)
+      .then((res) => {
         setOpponents(res.data.opponents);
         setOpponent(res.data.opponents[0]);
         dealCards();
@@ -41,22 +39,30 @@ function SettingModal(props) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <select
-            onChange={event => {
-              props.setOpponent(event.target.value);
-              setchangedOpp(true);
-            }}
-            value={props.opponent}
-          >
-            {opponents.map(opponent => {
-              return (
-                <option key={opponent} value={opponent}>
-                  {opponent}
-                </option>
-              );
-            })}
-          </select>
+          <div>
+            Choose an opponent
+            <br />
+            <select
+              onChange={(event) => {
+                props.setOpponent(event.target.value);
+                setchangedOpp(true);
+              }}
+              value={props.opponent}
+            >
+              {opponents.map((opponent) => {
+                return (
+                  <option key={opponent} value={opponent}>
+                    {opponent}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </Modal.Body>
+        <Modal.Footer>
+          The random opponent picks cards completely random and uses no logic
+          whatsoever. {/* GENERATE DESCRIPTION OF THE CHOSEN OPPONENT */}
+        </Modal.Footer>
       </Modal>
     </>
   );

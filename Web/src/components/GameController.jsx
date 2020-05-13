@@ -22,18 +22,18 @@ function GameController() {
     card_3: { id: "card_3", value: 0 },
     card_4: { id: "card_4", value: 0 },
     card_5: { id: "card_5", value: 0 },
-    card_6: { id: "card_6", value: 0 }
+    card_6: { id: "card_6", value: 0 },
   });
   const [playerActionCards, setPlayerActionCards] = useState([
     { id: "card_0", value: 0 },
-    { id: "card_1", value: 0 }
+    { id: "card_1", value: 0 },
   ]);
   const [handOrder, setHandOrder] = useState([
     "card_2",
     "card_3",
     "card_4",
     "card_5",
-    "card_6"
+    "card_6",
   ]);
 
   const [score, setScore] = useState([0, 0]);
@@ -48,9 +48,9 @@ function GameController() {
   const getTable = () => {
     axios
       .post(`http://${window.location.hostname}:5000/ai/game/v1.0`, {
-        opponent_name: opponent
+        opponent_name: opponent,
       })
-      .then(res => {
+      .then((res) => {
         const opponent_action = actionBoolToIndex(res.data.opponent_action);
         const opponentCards = res.data.opponent_table;
         const opponent_hand = Array.from(res.data.opponent_hand);
@@ -70,16 +70,16 @@ function GameController() {
           card_3: { id: "card_3", value: res.data.player_hand[1] },
           card_4: { id: "card_4", value: res.data.player_hand[2] },
           card_5: { id: "card_5", value: res.data.player_hand[3] },
-          card_6: { id: "card_6", value: res.data.player_hand[4] }
+          card_6: { id: "card_6", value: res.data.player_hand[4] },
         });
         setPlayerActionCards([
           { id: "card_0", value: playerCards[0] },
-          { id: "card_1", value: playerCards[1] }
+          { id: "card_1", value: playerCards[1] },
         ]);
       });
   };
 
-  const actionBoolToIndex = action => {
+  const actionBoolToIndex = (action) => {
     // Maps the boolean opponent action outputted from the model to normal indices
     let idxAction = [];
     action.forEach((val, idx) => {
@@ -102,7 +102,7 @@ function GameController() {
   const getWinner = () => {
     //Retrieves the winner based on the current state
     //convert playercards card values to array, ugly solution but good enough for now
-    const playerCards = Object.values(playerActionCards).map(object => {
+    const playerCards = Object.values(playerActionCards).map((object) => {
       return object.value;
     });
     const opponentCards = opponentActionCards;
@@ -168,7 +168,7 @@ function GameController() {
 
     const newPlayerHand = { ...playerHand };
     newPlayerHand[playerActionCards[action_idx].id] = {
-      ...playerActionCards[action_idx]
+      ...playerActionCards[action_idx],
     };
     setPlayerHand(newPlayerHand);
 
@@ -193,13 +193,13 @@ function GameController() {
     //Player hand
     const newPlayerHand = { ...playerHand }; // We need to modify the player hand to add the unpicked card
     newPlayerHand[playerActionCards[action_idx].id] = {
-      ...playerActionCards[action_idx]
+      ...playerActionCards[action_idx],
     };
     delete newPlayerHand[card_h];
     setPlayerHand(newPlayerHand);
   };
 
-  const onDragEnd = result => {
+  const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
@@ -273,6 +273,7 @@ function GameController() {
         setScore={setScore}
       ></SettingModal>
       <FinishModal
+        cardWins={cardWins}
         dealCards={getTable}
         setFinishShow={setFinishShow}
         finishShow={finishShow}
@@ -296,11 +297,11 @@ function GameController() {
           cursor: "pointer",
           position: "absolute",
           top: "10px",
-          left: "10px"
+          left: "10px",
         }}
         title="Instructions"
       >
-        <IoIosHelpCircleOutline size={32}></IoIosHelpCircleOutline>
+        <IoIosHelpCircleOutline size={20}></IoIosHelpCircleOutline>
       </div>
       <div
         id={"settingsButton"}
@@ -312,11 +313,11 @@ function GameController() {
           cursor: "pointer",
           position: "absolute",
           top: "10px",
-          left: "50px"
+          left: "40px",
         }}
         title="Agent settings"
       >
-        <IoIosSettings size={32}></IoIosSettings>
+        <IoIosSettings size={20}></IoIosSettings>
       </div>
       <DragDropContext onDragEnd={onDragEnd.bind(this)}>
         <div className={styles.row}>
@@ -327,6 +328,7 @@ function GameController() {
             </div>
           )}
           <GameTable
+            setScore={setScore}
             score={score}
             setOpponent={setOpponent}
             playerActionCards={playerActionCards}

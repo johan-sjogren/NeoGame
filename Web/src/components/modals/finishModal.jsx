@@ -3,12 +3,22 @@ import React from "react";
 import Card from "../Card";
 
 function FinishModal(props) {
-  const playerHand = Object.values(props.playerHand).map(object => {
+  const playerHand = Object.values(props.playerHand).map((object) => {
     return object.value;
   });
 
+  const getCardPoints = (card, opponentCards) => {
+    let points = 0;
+    opponentCards.forEach((oCard) => {
+      if (props.cardWins(card, oCard)) {
+        points += 1;
+      }
+    });
+    return points;
+  };
+
   const playerActionCards = Object.values(props.playerActionCards).map(
-    object => {
+    (object) => {
       return object.value;
     }
   );
@@ -26,63 +36,104 @@ function FinishModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-sm">
-            {props.pPoints > props.oPoints
-              ? props.pPoints + "-" + props.oPoints + " You won!"
-              : props.pPoints === props.oPoints
-              ? props.pPoints + "-" + props.oPoints + " Tie!"
-              : props.pPoints + "-" + props.oPoints + " Opponent won!"}
+            {"Summary "}
           </Modal.Title>
         </Modal.Header>
+        <Modal.Header>
+          {props.pPoints > props.oPoints
+            ? `Nicely done! You beat the opponent with ${props.pPoints} points against their ${props.oPoints}.`
+            : props.pPoints === props.oPoints
+            ? `You both got ${props.oPoints} points resulting in a tie. Keep going!`
+            : `Opponent won with ${props.oPoints} against your ${props.pPoints}, try harder!`}
+        </Modal.Header>
         <Modal.Body>
-          <div className={"cardsContainer"} style={{ float: "left" }}>
+          <div
+            className={"cardsContainer"}
+            style={{ float: "left", width: "100%" }}
+          >
             <div
               className={"CardRow"}
-              style={{ display: "flex", width: "100%" }}
+              style={{
+                textAlign: "center",
+                fontWeight: 600,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
             >
               {props.opponentHand.map((value, idx) => {
                 return <Card sm front opponent cardId={value} key={idx}></Card>;
               })}
-              {"Opponent's hand"}
             </div>
             <br />
             <div
               className={"CardRow"}
-              style={{ display: "flex", width: "100%" }}
+              style={{
+                textAlign: "center",
+                fontWeight: 600,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
             >
               {props.opponentActionCards.map((value, idx) => {
-                return <Card sm front opponent cardId={value} key={idx}></Card>;
+                return (
+                  <div>
+                    {getCardPoints(
+                      value,
+                      props.playerActionCards.map((c) => c.value)
+                    ) + " pts"}
+                    <Card sm front opponent cardId={value} key={idx}></Card>
+                  </div>
+                );
               })}
               <div
                 style={{ position: "absolute", left: "350px", top: "210px" }}
-              >
-                {"Opponent's score: " + props.oPoints + " points"}
-              </div>
+              ></div>
             </div>
             <div
               className={"CardRow"}
-              style={{ display: "flex", width: "100%" }}
+              style={{
+                textAlign: "center",
+                fontWeight: 600,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
             >
               {playerActionCards.map((value, idx) => {
-                return <Card sm front cardId={value} key={idx}></Card>;
+                return (
+                  <div>
+                    {getCardPoints(value, props.opponentActionCards) + " pts"}
+                    <Card sm front cardId={value} key={idx}></Card>
+                  </div>
+                );
               })}
               <div
                 style={{ position: "absolute", left: "350px", top: "320px" }}
-              >
-                {"Your score: " + props.pPoints + " points"}
-              </div>
+              ></div>
             </div>
             <br />
             <div
               className={"CardRow"}
-              style={{ display: "flex", width: "100%" }}
+              style={{
+                textAlign: "center",
+                fontWeight: 600,
+                display: "flex",
+                width: "100%",
+                justifyContent: "center",
+              }}
             >
               {playerHand.map((value, idx) => {
                 return <Card sm front cardId={value} key={idx}></Card>;
               })}
-              {"Your hand"}
             </div>
           </div>
         </Modal.Body>
+        <Modal.Footer style={{ justifyContent: "flex-start" }}>
+          Tip: Try to think two steps ahead if you play against a greedy AI.{" "}
+          {/* Generate random tip here */}
+        </Modal.Footer>
       </Modal>
     </>
   );
