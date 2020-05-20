@@ -105,4 +105,4 @@ if __name__ == '__main__':
     if 'prod' in args['env']:
         serve(app, host=args['host'], port=args['port'])
     elif 'dev' in args['env']:
-        app.run(debug=True)
+        app.run(debug=True, host='0.0.0.0') 

@@ -6,7 +6,9 @@ function SettingModal(props) {
   const [opponents, setOpponents] = useState([]);
   const { setOpponent, dealCards } = props;
   const [changedOpp, setchangedOpp] = useState(false);
-
+  const [footerText, setFooterText] = useState(
+    "The random opponent picks cards completely random and uses no logic whatsoever."
+  );
   useEffect(() => {
     axios
       .get(`http://${window.location.hostname}:5000/ai/game/v1.0`)
@@ -46,6 +48,16 @@ function SettingModal(props) {
               onChange={(event) => {
                 props.setOpponent(event.target.value);
                 setchangedOpp(true);
+
+                setFooterText(
+                  event.target.value === "Random"
+                    ? "The random opponent picks cards completely random and uses no logic whatsoever."
+                    : event.target.value === "Greedy"
+                    ? "The greedy opponent will always try to achieve the best score from a local states perspective."
+                    : event.target.value === "DeepQ"
+                    ? "DeepQ uses reinforcement learning and deep learning trained against the Greedy Algorithm(?)."
+                    : ""
+                );
               }}
               value={props.opponent}
             >
@@ -59,10 +71,7 @@ function SettingModal(props) {
             </select>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          The random opponent picks cards completely random and uses no logic
-          whatsoever. {/* GENERATE DESCRIPTION OF THE CHOSEN OPPONENT */}
-        </Modal.Footer>
+        <Modal.Footer>{footerText}</Modal.Footer>
       </Modal>
     </>
   );

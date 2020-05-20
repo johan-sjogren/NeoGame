@@ -2,11 +2,30 @@ import Modal from "react-bootstrap/Modal";
 import React from "react";
 import Card from "../Card";
 
+const tips = {
+  0: "Tip : Try to think two steps ahead if you play against a greedy AI.",
+  1: "Tip : The AI is stateless, learn how it behaves on certain situations.",
+  2: (
+    <a
+      href={
+        "https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/"
+      }
+      target="_blank"
+    >
+      Tip: Learn more about DeepQ here. (Kanske välja annan länk om lämpligt?)
+    </a>
+  ),
+};
+
 function FinishModal(props) {
   const playerHand = Object.values(props.playerHand).map((object) => {
     return object.value;
   });
 
+  const generateRandomTip = () => {
+    const key = Math.floor(Math.random() * (Object.keys(tips).length - 1 + 1));
+    return tips[key];
+  };
   const getCardPoints = (card, opponentCards) => {
     let points = 0;
     opponentCards.forEach((oCard) => {
@@ -131,7 +150,7 @@ function FinishModal(props) {
           </div>
         </Modal.Body>
         <Modal.Footer style={{ justifyContent: "flex-start" }}>
-          Tip: Try to think two steps ahead if you play against a greedy AI.{" "}
+          {generateRandomTip()}
           {/* Generate random tip here */}
         </Modal.Footer>
       </Modal>
