@@ -8,9 +8,11 @@ import SettingModal from "./modals/SettingModal";
 import FinishModal from "./modals/finishModal";
 import { DragDropContext } from "react-beautiful-dnd";
 import { IoIosHelpCircleOutline, IoIosSettings } from "react-icons/io";
+import { AiFillSound, AiOutlineSound } from "react-icons/ai";
 import HelpModal from "./modals/helpModal";
 import useWindowSize from "./useWindowSize";
 import logo from "../neodevlogo.png";
+import useSound from "use-sound";
 
 function GameController() {
   const [opponent, setOpponent] = useState("Random");
@@ -18,6 +20,10 @@ function GameController() {
   const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
   const [isDragging, setIsDragging] = useState(false);
   const size = useWindowSize();
+  const [mute, setMute] = useState(false);
+  const [playClick] = useSound("/sounds/Finger-Snap.mp3", {
+    volume: mute ? 0 : 1,
+  });
 
   const [playerHand, setPlayerHand] = useState({
     card_2: { id: "card_2", value: 0 },
@@ -147,6 +153,8 @@ function GameController() {
   };
 
   const pickCard = (card_id, index, box) => {
+    playClick();
+
     const action_idx = box === "pickedCardFirst" ? 2 : 3;
     // Picks a card from the player hand
     const newCardOrder = Array.from(handOrder);
@@ -162,6 +170,8 @@ function GameController() {
     setPlayerHand(newPlayerHand);
   };
   const unpickCard = (card_id, index, box) => {
+    playClick();
+
     const action_idx = box === "pickedCardFirst" ? 2 : 3;
     // Picks a card from the player hand
     const newCardOrder = Array.from(handOrder);
@@ -208,6 +218,8 @@ function GameController() {
   const onDragEnd = (result) => {
     setIsDragging(false);
     console.log(result);
+    playClick();
+
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
@@ -328,16 +340,27 @@ function GameController() {
         <IoIosSettings size={20} />
       </div>
       <div
-        id={"settingsButton"}
+        id={"soundOpt"}
         onClick={() => {
-          setShowSettings(true);
+          setMute((m) => !m);
         }}
+        style={{
+          color: "white",
+          cursor: "pointer",
+          position: "absolute",
+          top: "10px",
+          left: "70px",
+        }}
+        title={mute ? "Unmute sound" : "Mute sound"}
+      >
+        {mute ? <AiOutlineSound size={20} /> : <AiFillSound size={20} />}
+      </div>
+      <div
+        id={"logo"}
         style={{
           textAlign: "center",
           color: "white",
-          cursor: "pointer",
         }}
-        title="Agent settings"
       >
         <img className={styles.logo} src={logo} alt="Neodev" />
       </div>
