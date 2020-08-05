@@ -21,7 +21,7 @@ function GameController() {
   const [isDragging, setIsDragging] = useState(false);
   const size = useWindowSize();
   const [mute, setMute] = useState(false);
-  const [playClick] = useSound("/sounds/Finger-Snap.mp3", {
+  const [playClick] = useSound("/sounds/FingerSnap.mp3", {
     volume: mute ? 0 : 1,
   });
 
