@@ -38,7 +38,7 @@ const Card = (props) => {
         >
           <img
             className={props.sm ? clsx(styles.card, styles.sm) : styles.card}
-            alt="Neogame back card"
+            alt=""
             onMouseDown={() => setSurprised(true)}
             onDragStart={() => setSurprised(true)}
             onDragExit={() => setSurprised(false)}
@@ -67,7 +67,7 @@ const Card = (props) => {
     <img
       className={props.sm ? clsx(styles.card, styles.sm) : styles.card}
       src={front_url}
-      alt="Neogame Card"
+      alt=""
     />
   );
 };
