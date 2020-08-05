@@ -20,60 +20,58 @@ function SettingModal(props) {
   }, [setOpponent]);
 
   return (
-    <>
-      <Modal
-        size="lg"
-        show={props.showSettings}
-        onHide={() => {
-          props.setShowSettings(false);
-          if (changedOpp) {
-            dealCards();
-            props.setScore([0, 0]);
-            setchangedOpp(false);
-          }
-          props.setShowSettings(false);
-        }}
-        aria-labelledby="example-modal-sizes-title-lg"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            {"Settings"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            Choose an opponent
-            <br />
-            <select
-              onChange={(event) => {
-                props.setOpponent(event.target.value);
-                setchangedOpp(true);
+    <Modal
+      size="lg"
+      show={props.showSettings}
+      onHide={() => {
+        props.setShowSettings(false);
+        if (changedOpp) {
+          dealCards();
+          props.setScore([0, 0]);
+          setchangedOpp(false);
+        }
+        props.setShowSettings(false);
+      }}
+      aria-labelledby="example-modal-sizes-title-lg"
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="example-modal-sizes-title-lg">
+          {"Settings"}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div>
+          Choose an opponent
+          <br />
+          <select
+            onChange={(event) => {
+              props.setOpponent(event.target.value);
+              setchangedOpp(true);
 
-                setFooterText(
-                  event.target.value === "Random"
-                    ? "The random opponent picks cards completely random and uses no logic whatsoever."
-                    : event.target.value === "Greedy"
-                    ? "The greedy opponent will always try to achieve the best score from a local states perspective."
-                    : event.target.value === "DeepQ"
-                    ? "DeepQ uses reinforcement learning and deep learning trained against the Greedy Algorithm(?)."
-                    : ""
-                );
-              }}
-              value={props.opponent}
-            >
-              {opponents.map((opponent) => {
-                return (
-                  <option key={opponent} value={opponent}>
-                    {opponent}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>{footerText}</Modal.Footer>
-      </Modal>
-    </>
+              setFooterText(
+                event.target.value === "Random"
+                  ? "The random opponent picks cards completely random and uses no logic whatsoever."
+                  : event.target.value === "Greedy"
+                  ? "The greedy opponent will always try to use the current state to beat you."
+                  : event.target.value === "DeepQ"
+                  ? "DeepQ uses reinforcement learning agent trained to beat the Greedy agent."
+                  : ""
+              );
+            }}
+            value={props.opponent}
+          >
+            {opponents.map((opponent) => {
+              return (
+                <option key={opponent} value={opponent}>
+                  {opponent}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>{footerText}</Modal.Footer>
+    </Modal>
   );
 }
 

@@ -59,14 +59,14 @@ function GameTable(props) {
           cardId={playerCards[0].value}
           unpickCard={props.unpickCard}
           playerActionCards={props.playerActionCards}
-        ></Card>
+        />
         <Card
           hand={false}
           front
           cardId={playerCards[1].value}
           unpickCard={props.unpickCard}
           playerActionCards={props.playerActionCards}
-        ></Card>
+        />
         <Droppable droppableId="pickedCardFirst">
           {(provided) => (
             <div
@@ -85,7 +85,7 @@ function GameTable(props) {
                   idx={0}
                   unpickCard={props.unpickCard}
                   playerActionCards={props.playerActionCards}
-                ></Card>
+                />
               ) : (
                 provided.placeholder
               )}
@@ -110,7 +110,7 @@ function GameTable(props) {
                   idx={1}
                   unpickCard={props.unpickCard}
                   playerActionCards={props.playerActionCards}
-                ></Card>
+                />
               ) : (
                 provided.placeholder
               )}

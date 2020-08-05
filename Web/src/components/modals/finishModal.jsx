@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import React from "react";
 import Card from "../Card";
-
+import styles from "./finishModal.module.css";
 const tips = {
   0: "Tip : Try to think two steps ahead if you play against a greedy AI.",
   1: "Tip : The AI is stateless, learn how it behaves on certain situations.",
@@ -11,6 +11,7 @@ const tips = {
         "https://www.freecodecamp.org/news/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8/"
       }
       target="_blank"
+      rel="noopener noreferrer"
     >
       Tip: Learn more about DeepQ here. (Kanske välja annan länk om lämpligt?)
     </a>
@@ -66,42 +67,22 @@ function FinishModal(props) {
             : `Opponent won with ${props.oPoints} against your ${props.pPoints}, try harder!`}
         </Modal.Header>
         <Modal.Body>
-          <div
-            className={"cardsContainer"}
-            style={{ float: "left", width: "100%" }}
-          >
-            <div
-              className={"CardRow"}
-              style={{
-                textAlign: "center",
-                fontWeight: 600,
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
+          <div className={styles.cardsContainer}>
+            <div className={styles.cardRow}>
               {props.opponentHand.map((value, idx) => {
                 return <Card sm front opponent cardId={value} key={idx}></Card>;
               })}
             </div>
             <br />
-            <div
-              className={"CardRow"}
-              style={{
-                textAlign: "center",
-                fontWeight: 600,
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
+            <div className={styles.cardRow}>
               {props.opponentActionCards.map((value, idx) => {
                 return (
-                  <div>
+                  <div key={idx}>
                     {getCardPoints(
                       value,
                       props.playerActionCards.map((c) => c.value)
                     ) + " pts"}
+                    <br />
                     <Card sm front opponent cardId={value} key={idx}></Card>
                   </div>
                 );
@@ -110,39 +91,19 @@ function FinishModal(props) {
                 style={{ position: "absolute", left: "350px", top: "210px" }}
               ></div>
             </div>
-            <div
-              className={"CardRow"}
-              style={{
-                textAlign: "center",
-                fontWeight: 600,
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
+            <div className={styles.cardRow}>
               {playerActionCards.map((value, idx) => {
                 return (
-                  <div>
-                    {getCardPoints(value, props.opponentActionCards) + " pts"}
+                  <div key={idx}>
+                    {getCardPoints(value, props.opponentActionCards) + " pts"}{" "}
+                    <br />
                     <Card sm front cardId={value} key={idx}></Card>
                   </div>
                 );
               })}
-              <div
-                style={{ position: "absolute", left: "350px", top: "320px" }}
-              ></div>
             </div>
             <br />
-            <div
-              className={"CardRow"}
-              style={{
-                textAlign: "center",
-                fontWeight: 600,
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-              }}
-            >
+            <div className={styles.cardRow}>
               {playerHand.map((value, idx) => {
                 return <Card sm front cardId={value} key={idx}></Card>;
               })}

@@ -1,6 +1,8 @@
 .row {
   display: flex;
-  padding: 2.5rem 0;
+  padding-bottom: 2.5rem;
+  padding-top: 0.5rem;
+
   justify-content: center;
   background-color: #0067a5;
 }
@@ -17,19 +19,32 @@
 }
 
 .playButton {
+  box-shadow: 0 0 2px #000000;
   margin: auto;
   height: 3rem;
   width: 4rem;
-  border: 0.1rem solid #000000;
+  border: unset;
   border-radius: 0.4rem;
   font-weight: 300;
-  color: #000000;
-  background-color: #ffffff;
+  color: #fff;
+  background-color: #004480ff;
   text-align: center;
   font-weight: bold;
 }
+
+.logo {
+  width: 8rem;
+  margin-top: 2rem;
+}
+
+.playButton:hover {
+  box-shadow: 0 0 3px #000000;
+  outline: 0;
+}
 .playButton:active {
   outline: none;
+  box-shadow: 0 0 1px #000000;
+  transform: translateY(1px);
 }
 .playButton:focus {
   outline: 0;

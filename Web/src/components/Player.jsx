@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./player.module.css";
 import Card from "./Card";
 import { Droppable } from "react-beautiful-dnd";
@@ -7,7 +7,7 @@ function Player(props) {
   return (
     <div className={styles.playerContainer}>
       <Droppable droppableId="playerCards" direction="horizontal">
-        {provided => (
+        {(provided) => (
           <div
             className={styles.playerCards}
             ref={provided.innerRef}
@@ -16,6 +16,7 @@ function Player(props) {
             {props.handOrder.map((card, idx) =>
               props.hand[card] !== undefined ? (
                 <Card
+                  isDragging={props.isDragging}
                   hand={true}
                   front
                   draggable
@@ -26,14 +27,8 @@ function Player(props) {
                   pickCard={props.pickCard}
                   playerActionCards={props.playerActionCards}
                 />
-              ) : (
-                <Card
-                  pickCard={props.pickCard}
-                  playerActionCards={props.playerActionCards}
-                ></Card>
-              )
+              ) : null
             )}
-            {provided.placeholder}
           </div>
         )}
       </Droppable>

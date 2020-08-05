@@ -10,11 +10,13 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { IoIosHelpCircleOutline, IoIosSettings } from "react-icons/io";
 import HelpModal from "./modals/helpModal";
 import useWindowSize from "./useWindowSize";
+import logo from "../neodevlogo.png";
 
 function GameController() {
   const [opponent, setOpponent] = useState("Random");
   const [opponentHand, setOpponentHand] = useState([0, 0, 0, 0, 0]);
   const [opponentActionCards, setOpponentActionCards] = useState([0, 0, 0, 0]);
+  const [isDragging, setIsDragging] = useState(false);
   const size = useWindowSize();
 
   const [playerHand, setPlayerHand] = useState({
@@ -199,7 +201,13 @@ function GameController() {
     setPlayerHand(newPlayerHand);
   };
 
+  const onDragStart = (r) => {
+    console.log(playerHand[r.draggableId]);
+    setIsDragging(playerHand[r.draggableId]);
+  };
   const onDragEnd = (result) => {
+    setIsDragging(false);
+    console.log(result);
     const { destination, source, draggableId } = result;
     if (!destination) {
       return;
@@ -271,7 +279,7 @@ function GameController() {
         setOpponent={setOpponent}
         opponent={opponent}
         setScore={setScore}
-      ></SettingModal>
+      />
       <FinishModal
         cardWins={cardWins}
         dealCards={getTable}
@@ -284,8 +292,8 @@ function GameController() {
         oPoints={oPoints}
         pPoints={pPoints}
         setRoundDone={setRoundDone}
-      ></FinishModal>
-      <HelpModal showHelp={showHelp} setShowHelp={setShowHelp}></HelpModal>
+      />
+      <HelpModal showHelp={showHelp} setShowHelp={setShowHelp} />
 
       <div
         id={"helpButton"}
@@ -301,7 +309,7 @@ function GameController() {
         }}
         title="Instructions"
       >
-        <IoIosHelpCircleOutline size={20}></IoIosHelpCircleOutline>
+        <IoIosHelpCircleOutline size={20} />
       </div>
       <div
         id={"settingsButton"}
@@ -317,9 +325,26 @@ function GameController() {
         }}
         title="Agent settings"
       >
-        <IoIosSettings size={20}></IoIosSettings>
+        <IoIosSettings size={20} />
       </div>
-      <DragDropContext onDragEnd={onDragEnd.bind(this)}>
+      <div
+        id={"settingsButton"}
+        onClick={() => {
+          setShowSettings(true);
+        }}
+        style={{
+          textAlign: "center",
+          color: "white",
+          cursor: "pointer",
+        }}
+        title="Agent settings"
+      >
+        <img className={styles.logo} src={logo} alt="Neodev" />
+      </div>
+      <DragDropContext
+        onDragEnd={onDragEnd.bind(this)}
+        onDragStart={onDragStart.bind(this)}
+      >
         <div className={styles.row}>
           {size.width > 700 && (
             <div className={styles.scores}>
@@ -337,7 +362,7 @@ function GameController() {
             playCards={playCards}
             unpickCard={unpickCard}
             screenWidth={size.width}
-          ></GameTable>
+          />
 
           {size.width > 700 && (
             <button
@@ -352,11 +377,12 @@ function GameController() {
         </div>
 
         <Player
+          isDragging={isDragging}
           hand={playerHand}
           handOrder={handOrder}
           pickCard={pickCard}
           playerActionCards={playerActionCards}
-        ></Player>
+        />
       </DragDropContext>
     </div>
   );

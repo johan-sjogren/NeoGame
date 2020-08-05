@@ -1,11 +1,10 @@
 .theTable {
-  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 4px #000000;
   position: relative;
   width: 60%;
   height: 25rem;
   background-color: #ffffff;
   border-radius: 1rem;
-  border: 0.2rem solid #000000;
   margin: 0 auto;
   top: 0.5rem;
 }
@@ -28,7 +27,7 @@
     width: 98%;
 
     position: absolute;
-    margin: 10% 0;
+    margin: 25% 0;
   }
   .cardTable {
     width: 100% !important;
@@ -88,17 +87,20 @@
   height: 3rem;
   width: 100%;
   margin: 2rem 0;
-  border: 0.1rem solid #000000;
   border-radius: 0.4rem;
   font-weight: 300;
-  color: #000000;
-  background-color: #ffffff;
+  color: #fff;
+  border: unset;
+  background-color: #004480ff;
   text-align: center;
   font-weight: bold;
   bottom: 2rem;
+  box-shadow: 0 0 2px #000000;
 }
 .playButton2:active {
   outline: none;
+  box-shadow: 0 0 1px #000000;
+  transform: translateY(1px);
 }
 .playButton2:focus {
   outline: 0;
@@ -106,7 +108,8 @@
 
 .scores {
   position: relative;
-  top: -9rem;
+  top: -9.5rem;
+  right: 1rem;
 }
 
 .frontCard {
