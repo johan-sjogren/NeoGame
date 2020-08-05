@@ -1,6 +1,6 @@
 .playerContainer {
   width: 100%;
-  padding: 2rem 0;
+  padding: 1rem 0;
   /*clip-path: polygon(0 0, 100% 6%, 100% 97%, 0 100%);*/
   margin: 0rem auto;
   display: flex;
@@ -13,4 +13,11 @@
   width: 100%;
   display: flex;
   justify-content: center /*space-evenly*/;
+}
+
+@media only screen and (max-width: 700px) {
+  .playerContainer {
+    position: absolute;
+    bottom: 0;
+  }
 }

@@ -1,0 +1,12 @@
+.cardRow {
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  width: "100%";
+  justify-content: center;
+}
+
+.cardContainer {
+  float: left;
+  width: 100%;
+}

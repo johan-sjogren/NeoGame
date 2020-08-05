@@ -1,6 +1,6 @@
 .card {
   height: 10rem;
-  width: 7rem;
+  width: 7.1rem;
   line-height: 8rem;
   margin: 0.2rem;
   border-radius: 0.5rem;
@@ -11,8 +11,15 @@
   cursor: pointer;
   background-color: #fff;
   background-size: cover;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, 0.337);
 }
 
+@media only screen and (max-width: 700px) {
+  .card {
+    height: 8.5rem;
+    width: 5.95rem;
+  }
+}
 .sm {
   height: 5rem;
   width: 3.5rem;
@@ -20,7 +27,7 @@
 }
 
 .card:active {
-  transform: translateY(0px);
+  transform: translateY(-15px);
   box-shadow: 0 1px 4px 2px rgba(0, 0, 0, 0.2);
 }
 

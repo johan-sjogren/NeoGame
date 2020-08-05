@@ -1,11 +1,10 @@
 .theTable {
-  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 4px #000000;
   position: relative;
   width: 60%;
   height: 25rem;
   background-color: #ffffff;
   border-radius: 1rem;
-  border: 0.2rem solid #000000;
   margin: 0 auto;
   top: 0.5rem;
 }
@@ -20,16 +19,28 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   html {
     font-size: 75%;
   }
   .theTable {
-    width: 130%;
+    width: 98%;
+
+    position: absolute;
+    margin: 25% 0;
   }
   .cardTable {
     width: 100% !important;
     height: 13rem;
+    left: 0%;
+  }
+  .card {
+    transition: 0.3s;
+    height: 8.5rem !important;
+    width: 5.95rem !important;
+    border-radius: 0.2rem;
+    background-size: cover;
+    text-align: center;
   }
 }
 
@@ -70,4 +81,37 @@
 .backCard {
   background-image: url(/cards/mb_neocard_back_blue.svg);
   transform: rotateY(180deg);
+}
+
+.playButton2 {
+  height: 3rem;
+  width: 100%;
+  margin: 2rem 0;
+  border-radius: 0.4rem;
+  font-weight: 300;
+  color: #fff;
+  border: unset;
+  background-color: #004480ff;
+  text-align: center;
+  font-weight: bold;
+  bottom: 2rem;
+  box-shadow: 0 0 2px #000000;
+}
+.playButton2:active {
+  outline: none;
+  box-shadow: 0 0 1px #000000;
+  transform: translateY(1px);
+}
+.playButton2:focus {
+  outline: 0;
+}
+
+.scores {
+  position: relative;
+  top: -9.5rem;
+  right: 1rem;
+}
+
+.frontCard {
+  background-color: rgb(247, 247, 247);
 }
