@@ -348,8 +348,18 @@ function GameController() {
         <div className={styles.row}>
           {size.width > 700 && (
             <div className={styles.scores}>
-              <Score score={score[1]} player={false} width={size.width}></Score>
-              <Score score={score[0]} player={true} width={size.width}></Score>
+              <Score
+                score={score[1]}
+                setScore={setScore}
+                player={false}
+                width={size.width}
+              ></Score>
+              <Score
+                score={score[0]}
+                setScore={setScore}
+                player={true}
+                width={size.width}
+              ></Score>
             </div>
           )}
           <GameTable
