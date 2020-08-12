@@ -3,18 +3,26 @@
   margin: 1rem;
 }
 .StartpageBckg {
-  /*display: "flex";
-  flex-flow: "column";
-  height: "100%";
-  background-color: "#0067a5";*/
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  background-color: #0067a5;
 }
 .frontCardRbs {
+  height: 100%;
   border-radius: 0;
   border: unset;
   background-color: #004480ff;
   color: white;
-  height: 700px;
 }
+
+.contentCardRbs {
+  height: 100%;
+  border-radius: 0;
+  border: unset;
+  background-color: #fff;
+}
+
 .startButton {
   color: black;
   width: 8rem;
@@ -36,4 +44,25 @@
   justify-content: center;
   width: 100%;
   background-color: #fff;
+}
+
+.carouselControlNextIcon,
+.carouselControlPrevIcon {
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: no-repeat 50%/100% 100%;
+  margin: auto;
+}
+.carouselControlNextIcon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ff7fa4' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+.carouselControlPrevIcon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ff7fa4' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+.startPageControl {
+  margin-bottom: 1.5rem;
+  display: flex;
 }

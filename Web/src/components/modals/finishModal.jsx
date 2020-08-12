@@ -13,7 +13,7 @@ const tips = {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Tip: Learn more about DeepQ here. (Kanske välja annan länk om lämpligt?)
+      Tip: Learn more about DeepQ here by playing Doom.
     </a>
   ),
 };
@@ -70,7 +70,7 @@ function FinishModal(props) {
           <div className={styles.cardsContainer}>
             <div className={styles.cardRow}>
               {props.opponentHand.map((value, idx) => {
-                return <Card sm front opponent cardId={value} key={idx}></Card>;
+                return <Card sm front opponent cardId={value} key={idx} />;
               })}
             </div>
             <br />

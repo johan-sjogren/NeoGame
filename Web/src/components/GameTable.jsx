@@ -18,7 +18,7 @@ function GameTable(props) {
             className={styles.opponent}
             cardId={card}
             unpickCard={props.unpickCard}
-          ></Card>
+          />
         );
       } else if (idx < 2) {
         return (
@@ -31,7 +31,7 @@ function GameTable(props) {
             className={styles.opponent}
             cardId={card}
             unpickCard={props.unpickCard}
-          ></Card>
+          />
         );
       } else {
         return (
@@ -41,7 +41,7 @@ function GameTable(props) {
             idx={idx}
             className={styles.opponent}
             unpickCard={props.unpickCard}
-          ></Card>
+          />
         );
       }
     });
