@@ -81,7 +81,6 @@ class DeepQAgent(BaseAgent.BaseAgent):
                                     custom_objects=custom_objects,
                                     compile=compile)
         self.dnn_model._make_predict_function()
-        
         print('Model loaded')
 
         return self
@@ -192,10 +191,10 @@ class DeepQAgent(BaseAgent.BaseAgent):
 
     def get_entry(self):
         return self.state_size
-    
+
     def get_action_size(self):
         return len(self.actions)
-    
+
     def input_model(self, model):
         if model.optimizer==None:
             print("Compiling model, default loss and optimizer")

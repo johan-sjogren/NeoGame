@@ -12,7 +12,7 @@ class GreedyAgent(BaseAgent.BaseAgent):
     def __str__(self):
         return "Greedy Agent"
 
-    def get_action(self, state, actions, as_string=False):
+    def get_action(self, state, actions, as_string=False, explore_exploit='none'):
         player_hand = np.array(state[:5])
         opponent_table = np.array(state[-2:])
 

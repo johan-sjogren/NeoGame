@@ -102,7 +102,7 @@ class Gym:
             self.player.learn(opponent_state,
                               opponent_action,
                               -reward)
-        
+
         print("Training done!")
 
     def eval_exp_table(self):
@@ -144,7 +144,8 @@ class Gym:
                                                    explore_exploit='exploit')
             opponent_state = self.game.get_opponent_state()
             opponent_action = self.opponent.get_action(opponent_state,
-                                                       possible_actions)
+                                                       possible_actions,
+                                                       explore_exploit='exploit')
 
             (self.game.set_player_action(player_action)
                       .set_opponent_action(opponent_action))
@@ -201,3 +202,22 @@ class Gym:
             print("Diff from last test score is {0:.2f}%".format(100.0 * (relative_result - self.last_test)))
         self.last_test = relative_result
 
+    def get_results(self):
+        playername = "Player model"
+        opponent_name = str(self.opponent)
+        n_wins = self.player_wins
+        n_losses = self.opponent_wins
+        n_ties = self.num_test - self.player_wins - self.opponent_wins
+
+        result = "tied with"
+        if n_wins > n_losses:
+            result = "won against"
+        elif n_losses > n_wins:
+            result = "lost to"
+
+        print("\n{} {} {} with the results:".format(playername, result, opponent_name))
+        print("\tWins   {}".format(n_wins))
+        print("\tLosses {}".format(n_losses))
+        print("\tTie {}".format(n_ties))
+
+        return n_wins, n_losses
