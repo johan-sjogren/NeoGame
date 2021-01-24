@@ -34,7 +34,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
                  verbose=0,
                  loss="mse",
                  reg_lambda=0.0001,
-                 filename="dq_agent",
+                 filename="dq_agent.h5",
                  preprocess=True):
 
         self.actions = actions
@@ -67,7 +67,6 @@ class DeepQAgent(BaseAgent.BaseAgent):
 
     def save(self, filename):
         """Saving DeepQ agent as filename (default extension .h5)"""
-        filename += '.h5'
         self.dnn_model.save(filename)
         return self
 
@@ -87,15 +86,20 @@ class DeepQAgent(BaseAgent.BaseAgent):
 
     def _make_model(self):
         '''Start with a simple default model for now'''
+        # Edit/add/remove layers here to create your own DQ Agent
         input_layer = Input(shape=(self.state_size,))
         embedding = Embedding(input_dim=5, output_dim=4)(input_layer)
+        # the flat layer has size 36
         flat = Flatten()(embedding)
         dense_1 = Dense(32, activation='relu', use_bias=True,
             kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(flat)  # input_layer)
-        x = Dense(32, activation='relu', use_bias=True,
+        dense_2 = Dense(32, activation='relu', use_bias=True,
             kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_1)
+        dense_3 = Dense(16, activation='relu', use_bias=True,
+            kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_2)
+        # the output layer has size 10
         output = Dense(len(self.actions), use_bias=True,
-            kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(x) # Linear as it is predicting a Q value
+            kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_3) # Linear as it is predicting a Q value
         model = Model(inputs=input_layer, outputs=output)
         model.compile(loss=self.loss,
                       optimizer='adam')
@@ -138,14 +142,14 @@ class DeepQAgent(BaseAgent.BaseAgent):
         self.remember(state, action, reward, new_state)
         self.episode_counter += 1
         self.r_sum += reward
-        if self.verbose > 0:
+        if self.verbose > 2:
             print(self.episode_counter)
         if self.episode_counter >= self.update_dnn_interval:
             self.avg_r_sum.append(self.r_sum/self.episode_counter)
             self.episode_counter = 0
             self.r_sum = 0
             self.replay_experience()
-            checkpoint_name = self.filename + "_chkpt" + str(self.training_iterations) + ".h5"
+            checkpoint_name = self.filename.replace('.h5', '')  + "_chkpt" + str(self.training_iterations) + '.h5'
             self.save(checkpoint_name)
             self.training_iterations += 1
 
@@ -159,7 +163,7 @@ class DeepQAgent(BaseAgent.BaseAgent):
         return state
 
     def replay_experience(self, batch_size=64, epochs=30):
-        if self.verbose > 0:
+        if self.verbose > 1:
             print('Doing replay')
         # Extract data from the experience buffer
         player_mem = np.asarray(self.memory)

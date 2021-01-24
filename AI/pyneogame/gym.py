@@ -58,7 +58,7 @@ class Gym:
         """
         return player_score - opponent_score
 
-    def train(self, num_episodes=10000):
+    def train(self, num_episodes=10000, explore_exploit='explore'):
         """Train the player agent against the opponent
 
         During training the player agent deploys an exploration strategy
@@ -80,7 +80,7 @@ class Gym:
             player_state = self.game.get_player_state()
             player_action = self.player.get_action(player_state,
                                                    possible_actions,
-                                                   explore_exploit='explore')
+                                                   explore_exploit=explore_exploit)
 
             # Bookkeep visited states (?)
             player_state_str = np.array2string(player_state)
@@ -88,7 +88,8 @@ class Gym:
 
             opponent_state = self.game.get_opponent_state()
             opponent_action = self.opponent.get_action(opponent_state,
-                                                       possible_actions)
+                                                       possible_actions,
+                                                       explore_exploit='exploit')
 
             self.game.set_player_action(player_action)\
                      .set_opponent_action(opponent_action)
@@ -177,16 +178,16 @@ class Gym:
         print("\nPlayer Test Results:")
         print("\tWins   {0:.2f}%".format(100.0 * ratio_player_win))
         print("\tLosses {0:.2f}%".format(100.0 * ratio_opponent_win))
-        print("\tTie {0:.2f}%".format(100.0 * ratio_tie))
+        print("\tTies {0:.2f}%".format(100.0 * ratio_tie))
 
         ratio_optimal_win = self.optimal_wins / self.num_test
         ratio_optimal_loose = self.optimal_losses / self.num_test
         ratio_optimal_tie = 1.0 - ratio_optimal_win - ratio_optimal_loose
 
         print("\nOptimal Results:")
-        print("\tPlayer   {0:.2f}%".format(100.0 * ratio_optimal_win))
-        print("\tOpponent {0:.2f}%".format(100.0 * ratio_optimal_loose))
-        print("\tTie {0:.2f}%".format(100.0 * ratio_optimal_tie))
+        print("\tWins   {0:.2f}%".format(100.0 * ratio_optimal_win))
+        print("\tLosses {0:.2f}%".format(100.0 * ratio_optimal_loose))
+        print("\tTies {0:.2f}%".format(100.0 * ratio_optimal_tie))
 
         # Ratio of win, loss diff between player and optimal
         # positive if the player beats opponent

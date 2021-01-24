@@ -6,7 +6,9 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Engine import Game
 
 
-BENCHMARK_FILE = 'models/dq_agent.h5'
+
+MODEL_NAME = "models/new_dq_agent.h5"
+
 DQ_FILE = 'models/dq_agent.h5'
 
 print("Starting Evaluation.....")
@@ -14,11 +16,11 @@ N_GAMES = 1000
 
 
 
-print("Benchmarking model: {}".format(BENCHMARK_FILE))
+print("Benchmarking model: {}".format(MODEL_NAME))
 game = Game()
 player = DeepQAgent(state_size=len(game.get_player_state()),
                        actions=game.get_actions())
-player.load(BENCHMARK_FILE)
+player.load(MODEL_NAME)
 random_agent = RandomAgent()
 greedy_agent = GreedyAgent()
 dq_agent = DeepQAgent(state_size=len(game.get_player_state()),
