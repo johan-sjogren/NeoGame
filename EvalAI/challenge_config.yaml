@@ -39,11 +39,11 @@ challenge_phases:
     max_submissions: 50
     submission_meta_attributes:
       - name: Name
-        description: Name
+        description: Required
         type: text
         is_visible: True
       - name: Email
-        description: Email
+        description: Required
         type: text
         is_visible: False
     is_restricted_to_select_one_submission: False
