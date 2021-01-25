@@ -23,13 +23,13 @@ TEST_ITERATIONS = 10000
 
 game = Game()
 player = DeepQAgent(state_size=len(game.get_player_state()),
-                       actions=game.get_actions(), update_interval=UPDATE_INTERVAL)
+                       actions=game.get_actions(), update_interval=UPDATE_INTERVAL, verbose=1)
 player.load(MODEL_NAME)
 
 random_agent = RandomAgent()
 greedy_agent = GreedyAgent()
 dq_agent = DeepQAgent(state_size=len(game.get_player_state()),
-                     actions=game.get_actions()).load(DQ_FILE)
+                     actions=game.get_actions(), verbose=1).load(DQ_FILE)
 
 # Choose which agent your model will train against (random_agent, greedy_agent, or dq_agent)
 opponent = greedy_agent
@@ -43,5 +43,6 @@ for i in range(NUM_EPISODES):
     gym.eval_exp_table()
     gym.test(TEST_ITERATIONS)
     gym.eval()
+    player.save(MODEL_NAME)
 
 player.save(MODEL_NAME)

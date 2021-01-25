@@ -81,6 +81,8 @@ class DeepQAgent(BaseAgent.BaseAgent):
                                     compile=compile)
         self.dnn_model._make_predict_function()
         print('Model loaded')
+        if self.verbose:
+            print(self.dnn_model.summary())
 
         return self
 
@@ -88,18 +90,16 @@ class DeepQAgent(BaseAgent.BaseAgent):
         '''Start with a simple default model for now'''
         # Edit/add/remove layers here to create your own DQ Agent
         input_layer = Input(shape=(self.state_size,))
-        embedding = Embedding(input_dim=5, output_dim=4)(input_layer)
+        embedding = Embedding(input_dim=5, output_dim=4, embeddings_regularizer=l2(self.reg_lambda))(input_layer)
         # the flat layer has size 36
         flat = Flatten()(embedding)
         dense_1 = Dense(32, activation='relu', use_bias=True,
             kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(flat)  # input_layer)
         dense_2 = Dense(32, activation='relu', use_bias=True,
             kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_1)
-        dense_3 = Dense(16, activation='relu', use_bias=True,
-            kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_2)
         # the output layer has size 10
         output = Dense(len(self.actions), use_bias=True,
-            kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_3) # Linear as it is predicting a Q value
+            kernel_regularizer=l2(self.reg_lambda), bias_regularizer=l2(self.reg_lambda))(dense_2) # Linear as it is predicting a Q value
         model = Model(inputs=input_layer, outputs=output)
         model.compile(loss=self.loss,
                       optimizer='adam')

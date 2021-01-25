@@ -33,10 +33,10 @@ dq_agent = DeepQAgent(state_size=len(game.get_player_state()),
                      actions=game.get_actions()).load(DQ_FILE)
 
 # Choose which agent your model will train against (random_agent, greedy_agent, or dq_agent)
-opponent = random_agent
+opponent = greedy_agent
 
 # b) Setup the gym
-gym = Gym(player, random_agent, game)
+gym = Gym(player, opponent, game)
 
 # c) Run training
 for i in range(NUM_EPISODES):

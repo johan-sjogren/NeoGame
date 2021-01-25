@@ -12,7 +12,7 @@ MODEL_NAME = "models/new_dq_agent.h5"
 DQ_FILE = 'models/dq_agent.h5'
 
 print("Starting Evaluation.....")
-N_GAMES = 1000
+N_GAMES = 20000
 
 
 
