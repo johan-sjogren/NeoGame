@@ -5,7 +5,8 @@ by Neodev AB.
 The challenge is to create and train your own DeepQ model, and test it versus
 other agents. You can find the challenge at https://eval.ai/web/challenges/list.
 The challenge is based on the NeoGame cardgame. You can access this source code
-at https://github.com/neodev-ab/NeoGame and try playing the game at http://cardgame.neodev.se.
+at https://github.com/neodev-ab/NeoGame ('development' branch)
+and try playing the game at http://cardgame.neodev.se.
 For any questions regarding the challenge or the code contact nura.mahmod@neodev.se
 The process is divided into four parts
 
@@ -21,6 +22,8 @@ You can use anaconda for installing dependencies https://docs.anaconda.com/anaco
 
 Setup a conda env for NeoGame with 'conda create --name neogame --file AI/requirements.txt'
 and 'conda activate neogame'
+All of the code that is relevant for this challenge lies in the 'AI' folder, the rest of the code
+is related to the webserver that is hosting the cardgame.
 
 # Creating your own model
 DeepQAgent.py contains the logic for using a keras model (.h5 file) to predict the best move.
@@ -35,7 +38,7 @@ and choose the action with the best possible expected reward.
 ## _make_model()
 The _make_model() function creates this keras model, layer by layer. We are encouraging the
 contestants to edit this function for creating the best keras model for NeoGame.
-Edit/add/remove layers to create your own model. You are allowed to edit this however
+Edit/add/remove layers to create your own model. You are allowed to edit this function however
 you want but it is adviceable to keep the 'input_layer', 'embedding', 'flat' and 'output'
 layers intact since the sizes of these need to match the sizes of the inputs and outputs
 of the agent. 
@@ -82,5 +85,3 @@ with DeepQAgent.py.
 Go to the submit tab and upload your model. The model will be automatically
 evaluated and your model should show up on the leaderboard as long as nothing
 went wrong during the evaluation.
-
-

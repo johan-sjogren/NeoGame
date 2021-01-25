@@ -19,7 +19,7 @@ def evaluate(test_annotation_file, user_submission_file, phase_codename, **kwarg
     }
     ]
 
-    N_GAMES = 10000
+    N_GAMES = 100000
     DQ_FILE = str(Path(__file__).parent.absolute())+'/models/dq_agent.h5'
 
     print("Evaluating model: {}".format(user_submission_file))
