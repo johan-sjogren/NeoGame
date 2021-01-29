@@ -7,7 +7,7 @@ class RandomAgent(BaseAgent.BaseAgent):
     def __str__(self):
         return "Random Agent"
 
-    def get_action(self, state, actions, as_string=False):
+    def get_action(self, state, actions, as_string=False, explore_exploit='none'):
 
         action = random.choice(actions)
 

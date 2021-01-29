@@ -1,0 +1,63 @@
+# If you are not sure what all these fields mean, please refer our documentation here:
+# https://evalai.readthedocs.io/en/latest/configuration.html
+title: NeoGame AI Challenge
+short_description: Train your own AI for the NeoGame CardGame
+description: templates/description.html
+evaluation_details: templates/evaluation_details.html
+terms_and_conditions: templates/terms_and_conditions.html
+image: neogame.png
+submission_guidelines: templates/submission_guidelines.html
+leaderboard_description: AI's with the best total score
+evaluation_script: evaluation_script.zip
+remote_evaluation: False
+is_docker_based: False
+start_date: 2019-01-01 00:00:00
+end_date: 2099-05-31 23:59:59
+published: True
+
+leaderboard:
+  - id: 1
+    schema:
+      {
+        "labels": ["Total", "Score_vs_Random", "Score_vs_Greedy", "Score_vs_DeepQ"],
+        "default_order_by": "Total",
+      }
+
+challenge_phases:
+  - id: 1
+    name: Test Phase
+    description: templates/challenge_test_description.html
+    leaderboard_public: True
+    is_public: True
+    is_submission_public: True
+    start_date: 2021-01-01 00:00:00
+    end_date: 2022-01-01 00:00:00
+    test_annotation_file: annotations/test_annotations_testsplit.json
+    codename: test
+    max_submissions_per_day: 5
+    max_submissions_per_month: 50
+    max_submissions: 50
+    submission_meta_attributes:
+      - name: Name
+        description: Required
+        type: text
+        is_visible: True
+      - name: Email
+        description: Required
+        type: text
+        is_visible: False
+    is_restricted_to_select_one_submission: False
+    is_partial_submission_evaluation_enabled: False
+
+dataset_splits:
+  - id: 1
+    name: Test Split
+    codename: test_split
+
+challenge_phase_splits:
+  - challenge_phase_id: 1
+    leaderboard_id: 1
+    dataset_split_id: 1
+    visibility: 3
+    leaderboard_decimal_precision: 2
+    is_leaderboard_order_descending: True

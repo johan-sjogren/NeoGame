@@ -6,7 +6,7 @@ class BaseAgent(ABC):
         pass
 
     @abstractmethod
-    def get_action(self, state, actions):
+    def get_action(self, state, actions, explore_exploit):
         pass
 
     @abstractmethod
