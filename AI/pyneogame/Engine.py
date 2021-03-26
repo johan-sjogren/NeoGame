@@ -10,52 +10,6 @@ except ImportError:
     HAS_GYM = False
 
 
-class OAIGame(Game):
-    """ This is a subclass of the card game that implements
-        the api components of Open AI gym environments.
-    """
-
-    def __init__(self, opponent, **kwargs):
-        # Opponent has to be an agent as well
-        self.opponent = opponent
-        super().__init__(**kwargs)
-
-    @property
-    def observation_space(self):
-        if HAS_GYM:
-            pass
-        else:
-            return self.get_player_state().shape
-
-    @property
-    def action_space(self):
-        if HAS_GYM:
-            pass
-        else:
-            return self.player_hand.shape
-        pass
-
-    def reset(self):
-        return self.deal_cards().get_player_state()
-
-    def step(self, action):
-        new_state = None
-        done = True
-        player_score, opponent_score = self.game.get_scores()
-        reward = player_score - opponent_score
-
-        return new_state, reward, done, {}
-
-    def render(self):
-        pass
-
-    def close(self):
-        pass
-
-    def seed(self, seed=None):
-        seed(seed)
-
-
 class Game(object):
 
     def __init__(self,
@@ -177,22 +131,24 @@ class Game(object):
 
     def set_player_action(self, action):
         self.player_action = action.astype(bool)
+        self.player_table = np.concatenate(
+            [self.player_table,
+             self.player_hand[self.player_action]])
+        self.player_hand = self.player_hand[~self.player_action]
         return self
 
     def set_opponent_action(self, action):
         self.opponent_action = action.astype(bool)
+        self.opponent_table = np.concatenate(
+            [self.opponent_table,
+             self.opponent_hand[self.opponent_action]])
+        self.opponent_hand[~self.opponent_action]
         return self
 
     def get_scores(self):
-        player_cards = np.concatenate(
-            [self.player_table,
-             self.player_hand[self.player_action]])
-        opponent_cards = np.concatenate(
-            [self.opponent_table,
-             self.opponent_hand[self.opponent_action]])
-        player_score = Game.calc_score(player_cards, opponent_cards)
+        player_score = Game.calc_score(self.player_table, self.opponent_table)
         self.player_score.append(player_score)
-        opp_score = Game.calc_score(opponent_cards, player_cards)
+        opp_score = Game.calc_score(self.opponent_table, self.player_table)
         self.opponent_score.append(opp_score)
         return player_score, opp_score
 
@@ -235,3 +191,50 @@ class Game(object):
         """ Cleans all history an saved information """
         self.player_score = deque(maxlen=self.memory_length)
         self.opponent_score = deque(maxlen=self.memory_length)
+
+
+class OAIGame(Game):
+    """ This is a subclass of the card game that implements
+        the api components of Open AI gym environments.
+    """
+
+    def __init__(self, opponent, **kwargs):
+        # Opponent has to be an agent as well
+        self.opponent = opponent
+        super().__init__(**kwargs)
+
+    @property
+    def observation_space(self):
+        if HAS_GYM:
+            pass
+        else:
+            return self.get_player_state().shape
+
+    @property
+    def action_space(self):
+        if HAS_GYM:
+            pass
+        else:
+            return self.player_hand.shape
+        pass
+
+    def reset(self):
+        return self.deal_cards().get_player_state()
+
+    def step(self, action):
+        opp_action = self.opponent.get_action(self.get_opponent_state())
+        player_score, opponent_score = (self.set_player_action(action)
+                                            .set_opponent_action(opp_action)
+                                            .get_scores())
+        reward = player_score - opponent_score
+        new_state = self.get_player_state()
+        return new_state, reward, True, {}
+
+    def render(self):
+        pass
+
+    def close(self):
+        pass
+
+    def seed(self, seed=None):
+        seed(seed)
