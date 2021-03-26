@@ -1,7 +1,59 @@
-from random import shuffle
+from random import shuffle, seed
 from itertools import permutations
 from collections import deque
 import numpy as np
+
+try:
+    import gym
+    HAS_GYM = True
+except ImportError:
+    HAS_GYM = False
+
+
+class OAIGame(Game):
+    """ This is a subclass of the card game that implements
+        the api components of Open AI gym environments.
+    """
+
+    def __init__(self, opponent, **kwargs):
+        # Opponent has to be an agent as well
+        self.opponent = opponent
+        super().__init__(**kwargs)
+
+    @property
+    def observation_space(self):
+        if HAS_GYM:
+            pass
+        else:
+            return self.get_player_state().shape
+
+    @property
+    def action_space(self):
+        if HAS_GYM:
+            pass
+        else:
+            return self.player_hand.shape
+        pass
+
+    def reset(self):
+        return self.deal_cards().get_player_state()
+
+    def step(self, action):
+        new_state = None
+        done = True
+        player_score, opponent_score = self.game.get_scores()
+        reward = player_score - opponent_score
+
+        return new_state, reward, done, {}
+
+    def render(self):
+        pass
+
+    def close(self):
+        pass
+
+    def seed(self, seed=None):
+        seed(seed)
 
 
 class Game(object):
