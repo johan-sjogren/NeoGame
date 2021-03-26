@@ -111,6 +111,9 @@ venv.bak/
 # Unless they are in the right place
 !/AI/models/*.h5
 
+# EvalAI 
+/EvalAI/test/
+
 ###############
 # React/Front #
 ###############

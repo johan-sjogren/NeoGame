@@ -1,15 +1,15 @@
 import random
 import os
 import zipfile
-from pyneogame.gym import Gym
-from pyneogame.Agent.GreedyAgent import GreedyAgent
-from pyneogame.Agent.DeepQAgent import DeepQAgent
-from pyneogame.Agent.RandomAgent import RandomAgent
-from pyneogame.Engine import Game
+from .pyneogame.gym import Gym
+from .pyneogame.Agent.GreedyAgent import GreedyAgent
+from .pyneogame.Agent.DeepQAgent import DeepQAgent
+from .pyneogame.Agent.RandomAgent import RandomAgent
+from .pyneogame.Engine import Game
 from pathlib import Path
 
 
-class SimulationError(Exception):
+class BadSubmissionError(Exception):
     """Exception raised for incorrect submission files."""
 
     def __init__(self):
@@ -29,8 +29,8 @@ def evaluate(test_annotation_file, user_submission_file,
         }
     ]
 
-    N_GAMES = 50
-    DQ_FILE = str(Path(__file__).parent.absolute())+'/models/dq_agent.h5'    
+    N_GAMES = 5000
+    DQ_FILE = str(Path(__file__).parent.absolute())+'/models/dq_agent.h5'
     game = Game()
 
     print("Evaluating model: {}".format(user_submission_file))
@@ -39,6 +39,10 @@ def evaluate(test_annotation_file, user_submission_file,
     zipf = zipfile.ZipFile(user_submission_file)
     agentfile = [x for x in zipf.namelist() if 'CustomAgent.py' in x]
     h5file = [x for x in zipf.namelist() if 'CustomAgent.h5' in x]
+    csvfile = [x for x in zipf.namelist() if 'CustomAgent.csv' in x]
+    if len(h5file) + len(csvfile) > 2:
+        raise BadSubmissionError()
+
     if len(agentfile) == 1:
         agentfile = agentfile[0]
         files_to_remove.append(zipf.extract(agentfile))
@@ -51,10 +55,18 @@ def evaluate(test_annotation_file, user_submission_file,
     else:
         h5file = None
 
+    if len(csvfile) == 1:
+        csvfile = csvfile[0]
+        files_to_remove.append(zipf.extract(csvfile))
+    else:
+        csvfile = None
+
     print('Instantiating submitted agent')
     from CustomAgent import CustomAgent
     if h5file is not None:
         player = CustomAgent.from_game_and_h5(game, h5file)
+    elif csvfile is not None:
+        player = CustomAgent.from_game_and_csv(game, csvfile)
     else:
         player = CustomAgent.from_game(game)
 
