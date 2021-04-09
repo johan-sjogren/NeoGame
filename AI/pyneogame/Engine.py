@@ -102,8 +102,8 @@ class Game(object):
         return ((self.opponent_hand, self.opponent_table),
                 (self.player_hand, self.player_table))
 
-    @lry_cache
-    def _generate_actions(n_ones, n_zeros, n_in_hand):
+    @lru_cache()
+    def _generate_actions(self, n_ones, n_zeros, n_in_hand):
         # Generate all permutations
         perms = permutations(n_ones*[1]+n_zeros * [0], n_in_hand)
         # Remove duplicates
@@ -112,7 +112,7 @@ class Game(object):
         actions = np.array(list(perms))
         # Create a map
         action_map = {x: act for x, act in zip(range(len(actions)), actions)}
-        return actions, actions_dict
+        return actions, action_map
 
     def get_actions(self):
         '''
@@ -165,7 +165,7 @@ class Game(object):
     def set_opponent_action(self, action):
         self.opponent_action = action.astype(bool)
         self.opponent_table = np.concatenate(
-            [self.opponent_table, e
+            [self.opponent_table,
              self.opponent_hand[self.opponent_action]])
         self.opponent_hand[~self.opponent_action]
         return self
@@ -293,7 +293,7 @@ class OAIGame(Game):
         reward = player_score - opponent_score
         new_state = self.get_player_state_dict()
         done = False
-        if self.one_shot = True:
+        if self.one_shot == True:
             done = True
         elif len(self.player_hand) == 0:
             done = True
