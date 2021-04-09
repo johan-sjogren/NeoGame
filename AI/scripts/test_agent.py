@@ -17,7 +17,6 @@ player.load(name)
 opponent = GreedyAgent()
 
 
-
 # b) Setup the gym
 gym = Gym(player, opponent)
 

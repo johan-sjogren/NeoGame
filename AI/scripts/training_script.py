@@ -10,6 +10,7 @@ from pyneogame.Engine import Game
 
 # change this to what you want to name your model
 MODEL_NAME = "models/new_dq_agent.h5"
+RELOAD = False
 
 # DQ model for training opponent
 DQ_FILE = 'models/dq_agent.h5'
@@ -26,6 +27,9 @@ player = DeepQAgent(state_size=len(game.get_player_state()),
                     update_interval=UPDATE_INTERVAL, 
                     filename=MODEL_NAME,
                     verbose=1)
+
+if RELOAD:
+    player.load(MODEL_NAME)
 
 random_agent = RandomAgent()
 greedy_agent = GreedyAgent()
