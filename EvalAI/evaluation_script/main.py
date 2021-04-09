@@ -1,7 +1,7 @@
 import random
 import os
 import zipfile
-from .pyneogame.gym import Gym
+from .pyneogame.Trainer import Gym
 from .pyneogame.Agent.GreedyAgent import GreedyAgent
 from .pyneogame.Agent.DeepQAgent import DeepQAgent
 from .pyneogame.Agent.RandomAgent import RandomAgent
@@ -83,10 +83,13 @@ def evaluate(test_annotation_file, user_submission_file,
     except IOError:
         print('DQ file not found. Excluded from test')
 
+    print('Testing agent')
+    game.test_player(player)
+
     print('Running test cycle')
     total_score = 0
     for agent_name in agent_dict:
-        gym = Gym(player, agent_dict[agent_name])
+        gym = Gym(player, agent_dict[agent_name], game=game)
         gym.test(N_GAMES)
         n_wins, n_losses = gym.get_results()
         score = n_wins - n_losses
