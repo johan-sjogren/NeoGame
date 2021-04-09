@@ -1,7 +1,7 @@
 # !/usr/bin/python3
 """A sample training script for training and testing agents playing NeoGame"""
 
-from pyneogame.gym import Gym
+from pyneogame.Trainer import Gym
 from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.DeepQAgent import DeepQAgent
