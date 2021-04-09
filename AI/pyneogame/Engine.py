@@ -221,9 +221,9 @@ class Game(object):
 class OAIGame(Game):
     """ This is a subclass of the card game that implements
         the API components of Open AI gym environments.
-        Note that the enivronment is dynamic i.e. the 
-        observation and action spaces changes as cards are 
-        played. 
+        Note that the enivronment is dynamic i.e. the
+        observation and action spaces changes as cards are
+        played.
     """
 
     def __init__(self, opponent, **kwargs):
@@ -293,7 +293,7 @@ class OAIGame(Game):
         reward = player_score - opponent_score
         new_state = self.get_player_state_dict()
         done = False
-        if self.one_shot == True:
+        if self.one_shot is True:
             done = True
         elif len(self.player_hand) == 0:
             done = True

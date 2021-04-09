@@ -74,6 +74,7 @@ class TestEngine(unittest.TestCase):
 
     def setUp(self):
         self.game = Game()
+
     def test_engine(self):
         """
         Checking basic functionality of the Game class
