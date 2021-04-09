@@ -3,7 +3,6 @@ import unittest
 
 import numpy as np
 
-from context import pyneogame
 from pyneogame.Engine import Game
 from pyneogame.Agent.QTableAgent import QTableAgent
 from pyneogame.Agent.GreedyAgent import GreedyAgent
@@ -12,52 +11,54 @@ from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.PolicyGradient import ReInforce, ReInforce_v2
 
-# %%
-class test(unittest.TestCase):
+
+class TestAgent(unittest.TestCase):
 
     def setUp(self):
         self.game = Game()
-        
+
     def test_random(self):
         print("Running routine agent test for Random Agent")
-        self.game.test_player(RandomAgent()) 
+        self.game.test_player(RandomAgent())
 
     def test_QTable(self):
         print("Running routine agent test for Q Table")
-        self.game.test_player(QTableAgent()) 
+        self.game.test_player(QTableAgent())
 
     def test_DeepQAgent(self):
         print("Running routine agent test for Deep Q Agent")
-        self.game.test_player(DeepQAgent(state_size=len(self.game.get_player_state()),
+        self.game.test_player(
+            DeepQAgent(state_size=len(self.game.get_player_state()),
                        actions=self.game.get_actions()))
 
     def test_ReInforce(self):
         print("Running routine agent test for ReInforce")
-        self.game.test_player(ReInforce(state_size=len(self.game.get_player_state()),
-                       actions=self.game.get_actions()))
+        self.game.test_player(
+            ReInforce(state_size=len(self.game.get_player_state()),
+                      actions=self.game.get_actions()))
 
     def test_ReInforce_v2(self):
         print("Running routine agent test for ReInforce v2")
-        self.game.test_player(ReInforce_v2(state_size=len(self.game.get_player_state()),
-                       actions=self.game.get_actions()))
-            
+        self.game.test_player(
+            ReInforce_v2(state_size=len(self.game.get_player_state()),
+                         actions=self.game.get_actions()))
+
     def test_greedy(self):
         """
         Checking basic functionality of the greedy agent class
-        """    
+        """
         print("Running 3 tests on the greedy agent + routine agent test")
         self.game.test_player(GreedyAgent())
-        
+
         actions = self.game.get_actions()
-        #print(actions)
         agent = GreedyAgent(value_func=self.game.calc_score)
 
         state_1 = [1, 2, 3, 4, 4, 0, 0, 1, 3]
         action_1 = agent.get_action(state_1, actions).tolist()
         # There are three equally good solutions here...
         self.assertTrue(action_1 == [1, 1, 0, 0, 0] or
-                    action_1 == [1, 0, 1, 0, 0] or
-                    action_1 == [0, 1, 1, 0, 0])
+                        action_1 == [1, 0, 1, 0, 0] or
+                        action_1 == [0, 1, 1, 0, 0])
 
         state_2 = [2, 3, 3, 4, 4, 0, 4, 1, 4]
         action_2 = agent.get_action(state_2, actions).tolist()
@@ -67,7 +68,13 @@ class test(unittest.TestCase):
         action_3 = agent.get_action(state_3, actions).tolist()
         self.assertTrue(action_3 == [0, 1, 1, 0, 0])
         print("Greedy agent passed all tests")
-        
+
+
+class TestEngine(unittest.TestCase):
+
+    def setUp(self):
+        self.game = Game()
+
     def test_engine(self):
         """
         Checking basic functionality of the Game class
@@ -76,11 +83,13 @@ class test(unittest.TestCase):
 
         # Make sure that deal_cards function actually randomizes
         for _ in range(10):
-            setup_1, setup_2 = self.game.get_env(), self.game.deal_cards().get_env()
+            setup_1 = self.game.get_env()
+            setup_2 = self.game.deal_cards().get_env()
             com_arrs = [np.array_equal(a, b) for x, y in zip(
                 setup_1, setup_2) for a, b in zip(x, y)]
             # There is a chance that arrays will be similar just by chance
-            self.assertTrue(sum(com_arrs) < 3, msg= [com_arrs,setup_1,setup_2])
+            self.assertTrue(sum(com_arrs) < 3,
+                            msg=[com_arrs, setup_1, setup_2])
 
         # Test that the scoring function returns expected values
         self.assertTrue(self.game.calc_score([1, 1, 1, 1, 1], [2, 3, 4, 0, 0]) == 5)
@@ -96,7 +105,8 @@ class test(unittest.TestCase):
             arr2 = np.random.randint(0, 5, 4)
 
             max_score = (self.game.n_cards_on_table + self.game.n_cards_to_play)**2
-            self.assertTrue(self.game.calc_score(arr1, arr2) <= max_score, msg=[arr1,arr2,_,500+_])
+            self.assertTrue(self.game.calc_score(arr1, arr2) <= max_score,
+                            msg=[arr1, arr2, _, 500+_])
 
         # Scoring should be insensitive to permutations
         for _ in range(4):
@@ -115,9 +125,6 @@ class test(unittest.TestCase):
 
         print('Engine tests completed')
 
-# %%
+
 if __name__ == "__main__":
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
-
-
-#%%

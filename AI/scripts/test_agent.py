@@ -2,7 +2,7 @@
 #/usr/bin/python3
 """load a trained model and test it!"""
 
-from pyneogame.gym import Gym
+from pyneogame.Trainer import Gym
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Engine import Game
@@ -15,7 +15,6 @@ player = DeepQAgent(state_size=len(game.get_player_state()),
                        actions=game.get_actions())
 player.load(name)
 opponent = GreedyAgent()
-
 
 
 # b) Setup the gym

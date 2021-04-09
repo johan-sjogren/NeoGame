@@ -1,5 +1,5 @@
 import random
-from pyneogame.gym import Gym
+from pyneogame.Trainer import Gym
 from pyneogame.Agent.GreedyAgent import GreedyAgent
 from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Agent.RandomAgent import RandomAgent
