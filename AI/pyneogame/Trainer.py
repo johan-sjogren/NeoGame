@@ -1,10 +1,9 @@
-
 # !/usr/bin/python3
-"""The Gym module used for training and
+"""The Trainer module used for training and
     evaluating agents playing NeoGame
 
 Usage:
-    from pyneogame.Gym import Gym
+    from pyneogame.Trainer import Gym
 
     gym = Gym(<Agent>, <Agent>, <Game>)
 
@@ -25,9 +24,14 @@ from tqdm import tqdm
 
 from .Engine import Game
 
+
 class Gym:
 
-    def __init__(self, player, opponent, game=Game(), disable_progress_bar=False):
+    def __init__(self,
+                 player,
+                 opponent,
+                 game=Game(),
+                 disable_progress_bar=False):
 
         self.game = game
         self.player = player
@@ -78,18 +82,17 @@ class Gym:
             possible_actions = self.game.get_actions()
 
             player_state = self.game.get_player_state()
-            player_action = self.player.get_action(player_state,
-                                                   possible_actions,
-                                                   explore_exploit=explore_exploit)
+            player_action = self.player.get_action(
+                player_state, possible_actions,
+                explore_exploit=explore_exploit)
 
             # Bookkeep visited states (?)
             player_state_str = np.array2string(player_state)
             self.exp_states[player_state_str] += 1
 
             opponent_state = self.game.get_opponent_state()
-            opponent_action = self.opponent.get_action(opponent_state,
-                                                       possible_actions,
-                                                       explore_exploit='exploit')
+            opponent_action = self.opponent.get_action(
+                opponent_state, possible_actions, explore_exploit='exploit')
 
             self.game.set_player_action(player_action)\
                      .set_opponent_action(opponent_action)
@@ -140,13 +143,11 @@ class Gym:
             possible_actions = self.game.get_actions()
 
             player_state = self.game.get_player_state()
-            player_action = self.player.get_action(player_state,
-                                                   possible_actions,
-                                                   explore_exploit='exploit')
+            player_action = self.player.get_action(
+                player_state, possible_actions, explore_exploit='exploit')
             opponent_state = self.game.get_opponent_state()
-            opponent_action = self.opponent.get_action(opponent_state,
-                                                       possible_actions,
-                                                       explore_exploit='exploit')
+            opponent_action = self.opponent.get_action(
+                opponent_state, possible_actions, explore_exploit='exploit')
 
             (self.game.set_player_action(player_action)
                       .set_opponent_action(opponent_action))
@@ -216,9 +217,9 @@ class Gym:
         elif n_losses > n_wins:
             result = "lost to"
 
-        print("\n{} {} {} with the results:".format(playername, result, opponent_name))
-        print("\tWins   {}".format(n_wins))
-        print("\tLosses {}".format(n_losses))
-        print("\tTie {}".format(n_ties))
+        print(f"\n{playername} {result} {opponent_name} with the results:")
+        print(f"\tWins   {n_wins}")
+        print(f"\tLosses {n_losses}")
+        print(f"\tTie {n_ties}")
 
         return n_wins, n_losses
