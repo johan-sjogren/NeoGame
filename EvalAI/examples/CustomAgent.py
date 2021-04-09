@@ -28,7 +28,7 @@ class CustomAgent:
     def __str__(self):
         return "Random Agent"
 
-    def get_action(self, state, actions, as_string=False, explore_exploit='none'):
+    def get_action(self, state, actions, explore_exploit='none'):
 
         action = random.choice(actions)
 
@@ -38,12 +38,6 @@ class CustomAgent:
             return action
         return 0
 
-    def learn(self, state, action, reward, new_state=None):
+    def learn(self, state, action, reward):
         # Static strategy, just return self
         return self
-
-    def save(self, filename):
-        pass
-
-    def load(self, filename):
-        pass
