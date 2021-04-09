@@ -12,7 +12,7 @@ from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Agent.PolicyGradient import ReInforce, ReInforce_v2
 
 
-class test(unittest.TestCase):
+class TestAgent(unittest.TestCase):
 
     def setUp(self):
         self.game = Game()
@@ -69,6 +69,11 @@ class test(unittest.TestCase):
         self.assertTrue(action_3 == [0, 1, 1, 0, 0])
         print("Greedy agent passed all tests")
 
+
+class TestEngine(unittest.TestCase):
+
+    def setUp(self):
+        self.game = Game()
     def test_engine(self):
         """
         Checking basic functionality of the Game class
