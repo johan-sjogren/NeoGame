@@ -16,5 +16,5 @@ rm -rf pyneogame
 rm -rf models
 cd ..
 mv evaluation_script/evaluation_script.zip evaluation_script.zip
-zip -r challenge_config.zip *  -x "*.DS_Store" -x "evaluation_script/*" -x "*.git" -x "run.sh" -x "code_upload_challenge_evaluation/*" -x "worker/*" -x "challenge_data/*" -x "github/*" -x ".github/*" -x "README.md" -x "test/*"-x "examples/*"
+zip -r challenge_config.zip *  -x "*.DS_Store" -x "evaluation_script/*" -x "*.git" -x "run.sh" -x "code_upload_challenge_evaluation/*" -x "worker/*" -x "challenge_data/*" -x "github/*" -x ".github/*" -x "README.md" -x "test/*"-x "examples/*" -x "make_submission.py"
 
