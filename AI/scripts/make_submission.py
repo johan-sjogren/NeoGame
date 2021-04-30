@@ -4,11 +4,9 @@ import os
 import zipfile
 from pathlib import Path
 
-sys.path.append(str(Path(Path(__file__).parent).resolve()))
+sys.path.append(str(Path(Path(__file__).parent, '..').resolve()))
 
 from pyneogame.Trainer import Gym
-from pyneogame.Agent.GreedyAgent import GreedyAgent
-from pyneogame.Agent.DeepQAgent import DeepQAgent
 from pyneogame.Agent.RandomAgent import RandomAgent
 from pyneogame.Engine import Game
 
